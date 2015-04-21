@@ -1,5 +1,8 @@
 [![Stories in Ready](https://badge.waffle.io/joshcass/sales_engine.png?label=ready&title=Ready)](https://waffle.io/joshcass/sales_engine)
 # Sales Engine
+Diagram: http://goo.gl/LMphHP
+Project reference: http://goo.gl/PKkxwD
+Use reference: http://goo.gl/BY21Pn
 
 **First CheckIn Goals - Thursday April 23rd**
 * Build repository classes for each data set
