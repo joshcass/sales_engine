@@ -7,6 +7,7 @@
 * Business Intelligence Part 1 (optional/may not be 100% complete)
 
 **Second CheckIn Goals - Tuesday April 28th**
+* Business Intelligence Part 1
 * Business Intelligence Part 2
 * Extensions (may not all be 100% complete)
 
