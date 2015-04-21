@@ -1,9 +1,14 @@
 [![Stories in Ready](https://badge.waffle.io/joshcass/sales_engine.png?label=ready&title=Ready)](https://waffle.io/joshcass/sales_engine)
 # Sales Engine
 
-(insert project completion goals for first check-in here)
+**First CheckIn Goals - Thursday April 23rd**
+* Build repository classes for each data set
+* Relationship functionality
+* Business Intelligence Part 1 (optinal/may not be 100% complete)
 
-(insert project completion goals for second check-in here)
+**Second CheckIn Goals - Tuesday April 28th**
+* Business Intelligence Part 2
+* Extensions (may not all be 100% complete)
 
 # Check-in Rubrics
 
