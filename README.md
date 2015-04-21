@@ -4,7 +4,7 @@
 **First CheckIn Goals - Thursday April 23rd**
 * Build repository classes for each data set
 * Relationship functionality
-* Business Intelligence Part 1 (optinal/may not be 100% complete)
+* Business Intelligence Part 1 (optional/may not be 100% complete)
 
 **Second CheckIn Goals - Tuesday April 28th**
 * Business Intelligence Part 2
