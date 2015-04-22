@@ -39,5 +39,5 @@ class SalesEngineTest < Minitest::Test
     assert invoice.invoice_items.all? { |invoice_item| invoice_item.invoice_id == 1 }
   end
 
-  
+
 end
