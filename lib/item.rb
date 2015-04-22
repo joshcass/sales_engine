@@ -1,35 +1,35 @@
 class Item
-  attr_reader :data
+  attr_reader :item
 
-  def initialize(data)
-    @data = data
+  def initialize(item)
+    @item = item
   end
 
   def id
-    @data[:id]
+    @item[:id]
   end
 
   def name
-    @data[:name]
+    @item[:name]
   end
 
   def description
-    @data[:description]
+    @item[:description]
   end
 
   def unit_price
-    @data[:unit_price]
+    @item[:unit_price]
   end
 
   def merchant_id
-    @data[:merchant_id]
+    @item[:merchant_id]
   end
 
   def created_at
-    @data[:created_at]
+    @item[:created_at]
   end
 
   def updated_at
-    @data[:updated_at]
+    @item[:updated_at]
   end
 end
