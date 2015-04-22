@@ -17,93 +17,63 @@ class TransactionRepository
   end
 
   def find_by_id(id)
-    transactions.detect do |transaction|
-      transaction.id == id
-    end
+    transactions.detect { |transaction| transaction.id == id }
   end
 
   def find_by_invoice_id(invoice_id)
-    transactions.detect do |transaction|
-      transaction.invoice_id == invoice_id
-    end
+    transactions.detect { |transaction| transaction.invoice_id == invoice_id }
   end
 
   def find_by_credit_card_number(credit_card_number)
-    transactions.detect do |transaction|
-      transaction.credit_card_number == credit_card_number
-    end
+    transactions.detect { |transaction| transaction.credit_card_number == credit_card_number }
   end
 
   def find_by_credit_card_expiration_date(credit_card_expiration_date)
-    transactions.detect do |transaction|
-      transaction.credit_card_expiration_date == credit_card_expiration_date
-    end
+    transactions.detect { |transaction| transaction.credit_card_expiration_date == credit_card_expiration_date }
   end
 
   def find_by_result(result)
-    transactions.detect do |transaction|
-      transaction.result == result
-    end
+    transactions.detect { |transaction| transaction.result == result }
   end
 
   def find_by_created_at(created)
-    transactions.detect do |transaction|
-      transaction.created_at == created
-    end
+    transactions.detect { |transaction| transaction.created_at == created }
   end
 
   def find_by_updated_at(updated)
-    transactions.detect do |transaction|
-      transaction.updated_at == updated
-    end
+    transactions.detect { |transaction| transaction.updated_at == updated }
   end
 
   def find_all_by_id(id)
-    transactions.select do |transaction|
-      transaction.id == id
-    end
+    transactions.select { |transaction| transaction.id == id }
   end
 
   def find_all_by_invoice_id(invoice_id)
-    transactions.select do |transaction|
-      transaction.invoice_id == invoice_id
-    end
+    transactions.select { |transaction| transaction.invoice_id == invoice_id }
   end
 
   def find_all_by_credit_card_number(credit_card_number)
-    transactions.select do |transaction|
-      transaction.credit_card_number == credit_card_number
-    end
+    transactions.select { |transaction| transaction.credit_card_number == credit_card_number }
   end
 
   def find_all_by_credit_card_expiration_date(credit_card_expiration_date)
-    transactions.select do |transaction|
-      transaction.credit_card_expiration_date == credit_card_expiration_date
-    end
+    transactions.select { |transaction| transaction.credit_card_expiration_date == credit_card_expiration_date }
   end
 
   def find_all_by_result(result)
-    transactions.select do |transaction|
-      transaction.result == result
-    end
+    transactions.select { |transaction| transaction.result == result }
   end
 
   def find_all_by_created_at(created)
-    transactions.select do |transaction|
-      transaction.created_at == created
-    end
+    transactions.select { |transaction| transaction.created_at == created }
   end
 
   def find_all_by_updated_at(updated)
-    transactions.select do |transaction|
-      transaction.updated_at == updated
-    end
+    transactions.select { |transaction| transaction.updated_at == updated }
   end
 
   private
   def parse_transactions(csv_data)
-    csv_data.map do |transaction|
-      Transaction.new(transaction)
-    end
+    csv_data.map { |transaction| Transaction.new(transaction) }
   end
 end
