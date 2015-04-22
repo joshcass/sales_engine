@@ -1,12 +1,12 @@
 gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/transactions_repository'
+require './lib/transaction_repository'
 
 class TransactionRepositoryTest < Minitest::Test
 
   def setup
-    @result = TransactionRepository.new('./test/transactions_test_data.csv')
+    @result = TransactionRepository.new('./test/transaction_test_data.csv')
   end
 
   def test_can_initialize_with_a_data_file
