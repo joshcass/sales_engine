@@ -54,7 +54,7 @@ class MerchantRepository
   end
 
   def find_all_invoices(merchant_id)
-    sales_engine.find_all_invoices_by_merhcant_id(merchant_id)
+    sales_engine.find_all_invoices_by_merchant_id(merchant_id)
   end
 
   private
