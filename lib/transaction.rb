@@ -33,4 +33,8 @@ class Transaction
   def updated_at
     transaction[:updated_at]
   end
+
+  def invoice
+    parent.find_invoice(invoice_id)
+  end
 end

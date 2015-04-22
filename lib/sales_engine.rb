@@ -21,6 +21,35 @@ class SalesEngine
     @invoice_repository = InvoiceRepository.new(SmarterCSV.process("#{directory}/invoices.csv"), self)
   end
 
+  def find_all_items_by_merchant_id(merchant_id)
+    item_repository.find_all_by_merchant_id(merchant_id)
+  end
 
+  def find_all_invoices_by_merchant_id(merchant_id)
+    invoice_repository.find_all_by_merchant_id(merchant_id)
+  end
 
+  def find_all_transactions_by_invoice_id(invoice_id)
+    transaction_repository.find_all_by_invoice_id(invoice_id)
+  end
+
+  def find_all_invoice_items_by_invoice_id(invoice_id)
+    invoice_item_repository.find_all_by_invoice_id(invoice_id)
+  end
+
+  def find_all_items_by_invoice_id(invoice_id)
+    find_all_invoice_items_by_invoice_id(invoice_id).map { |invoice_item| item_repository.find_by_id(invoice_item.item_id) }
+  end
+
+  def find_customer_by_customer_id_from_invoice(customer_id)
+    customer_repository.find_by_id(customer_id)
+  end
+
+  def find_merchant_by_merchant_id_from_invoice(merchant_id)
+    merchant_repository.find_by_id(merchant_id)
+  end
+
+  def find_invoice_by_invoice_id_from_transaction(invoice_id)
+    invoice_repository.find_by_id(invoice_id)
+  end
 end

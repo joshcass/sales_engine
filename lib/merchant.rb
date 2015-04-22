@@ -21,4 +21,12 @@ class Merchant
   def updated_at
     merchant[:updated_at]
   end
+
+  def items
+    parent.find_all_items(id)
+  end
+
+  def invoices
+    parent.find_all_invoices(id)
+  end
 end
