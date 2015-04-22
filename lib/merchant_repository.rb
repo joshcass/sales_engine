@@ -5,7 +5,7 @@ class MerchantRepository
   attr_reader :merchants
 
   def initialize(csv_data)
-    @merchants = parse_merchants(csv_data)
+    @merchants = parse_merchants(csv_data, self)
   end
 
   def all
@@ -49,8 +49,8 @@ class MerchantRepository
   end
 
   private
-  def parse_merchants(csv_data)
-    csv_data.map { |merchant| Merchant.new(merchant) }
+  def parse_merchants(csv_data, repo)
+    csv_data.map { |merchant| Merchant.new(merchant, repo) }
   end
 
 end

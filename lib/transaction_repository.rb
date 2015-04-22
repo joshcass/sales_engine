@@ -5,7 +5,7 @@ class TransactionRepository
   attr_reader :transactions
 
   def initialize(csv_data)
-    @transactions = parse_transactions(csv_data)
+    @transactions = parse_transactions(csv_data, self)
   end
 
   def all
@@ -73,7 +73,7 @@ class TransactionRepository
   end
 
   private
-  def parse_transactions(csv_data)
-    csv_data.map { |transaction| Transaction.new(transaction) }
+  def parse_transactions(csv_data, repo)
+    csv_data.map { |transaction| Transaction.new(transaction, repo) }
   end
 end
