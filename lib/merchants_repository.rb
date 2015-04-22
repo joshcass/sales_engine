@@ -17,57 +17,39 @@ class MerchantRepository
   end
 
   def find_by_id(id)
-    merchants.detect do |merchant|
-      merchant.id == id
-    end
+    merchants.detect {|merchant| merchant.id == id}
   end
 
   def find_by_name(name)
-    merchants.detect do |merchant|
-      merchant.name == name
-    end
+    merchants.detect { |merchant| merchant.name == name }
   end
 
   def find_by_created_at(created)
-    merchants.detect do |merchant|
-      merchant.created_at == created
-    end
+    merchants.detect { |merchant| merchant.created_at == created }
   end
 
   def find_by_updated_at(updated)
-    merchants.detect do |merchant|
-      merchant.updated_at == updated
-    end
+    merchants.detect { |merchant| merchant.updated_at == updated }
   end
 
   def find_all_by_id(id)
-    merchants.select do |merchant|
-      merchant.id == id
-    end
+    merchants.select { |merchant| merchant.id == id }
   end
 
   def find_all_by_name(name)
-    merchants.select do |merchant|
-      merchant.name == name
-    end
+    merchants.select { |merchant| merchant.name == name }
   end
 
   def find_all_by_created_at(created)
-    merchants.select do |merchant|
-      merchant.created_at == created
-    end
+    merchants.select { |merchant| merchant.created_at == created }
   end
 
   def find_all_by_updated_at(updated)
-    merchants.select do |merchant|
-      merchant.updated_at == updated
-    end
+    merchants.select { |merchant| merchant.updated_at == updated }
   end
 
   private
   def parse_merchants(csv_data)
-    csv_data.map do |merchant|
-      Merchant.new(merchant)
-    end
+    csv_data.map { |merchant| Merchant.new(merchant) }
   end
 end
