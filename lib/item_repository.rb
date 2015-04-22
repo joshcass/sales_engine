@@ -2,9 +2,8 @@ require 'smarter_csv'
 require_relative 'item'
 
 class ItemRepository
-  def initialize(filename = "./data/items.csv")
-    @csv_data = SmarterCSV.process(filename)
-    @items = @csv_data.map do |item| 
+  def initialize(csv_data)
+    @items = csv_data.map do |item|
       Item.new(item)
     end
   end

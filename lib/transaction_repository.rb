@@ -4,8 +4,8 @@ require_relative 'transaction'
 class TransactionRepository
   attr_reader :transactions
 
-  def initialize(file)
-    @transactions = parse_transactions(SmarterCSV.process(file))
+  def initialize(csv_data)
+    @transactions = parse_transactions(csv_data)
   end
 
   def all

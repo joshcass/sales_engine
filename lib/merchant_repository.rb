@@ -4,8 +4,8 @@ require_relative 'merchant'
 class MerchantRepository
   attr_reader :merchants
 
-  def initialize(file)
-    @merchants = parse_merchants(SmarterCSV.process(file))
+  def initialize(csv_data)
+    @merchants = parse_merchants(csv_data)
   end
 
   def all

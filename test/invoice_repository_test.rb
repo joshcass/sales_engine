@@ -1,12 +1,13 @@
 gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'smarter_csv'
 require './lib/invoice_repository'
 
 class InvoiceRepositoryTest < Minitest::Test
 
   def setup
-    @result = InvoiceRepository.new('./test/invoice_test_data.csv')
+    @result = InvoiceRepository.new(SmarterCSV.process('./test/invoice_test_data.csv'))
   end
 
   def test_can_initialize_with_a_data_file

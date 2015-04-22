@@ -4,8 +4,8 @@ require_relative 'invoice'
 class InvoiceRepository
   attr_reader :invoices
 
-  def initialize(file)
-    @invoices = parse_invoices(SmarterCSV.process(file))
+  def initialize(csv_data)
+    @invoices = parse_invoices(csv_data)
   end
 
   def all

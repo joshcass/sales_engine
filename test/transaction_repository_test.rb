@@ -6,7 +6,7 @@ require './lib/transaction_repository'
 class TransactionRepositoryTest < Minitest::Test
 
   def setup
-    @result = TransactionRepository.new('./test/transaction_test_data.csv')
+    @result = TransactionRepository.new(SmarterCSV.process('./test/transaction_test_data.csv'))
   end
 
   def test_can_initialize_with_a_data_file
