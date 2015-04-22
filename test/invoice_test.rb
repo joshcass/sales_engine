@@ -1,8 +1,8 @@
 gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/merchant'
+require './lib/invoice'
 
-class MerchantTest < Minitest::Test
+class InvoiceTest < Minitest::Test
 
 end
