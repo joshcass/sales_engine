@@ -1,27 +1,27 @@
 class Customer
-  attr_reader :data
+  attr_reader :customer
 
-  def initialize(data)
-    @data = data
+  def initialize(customer)
+    @customer = customer
   end
 
   def id
-    @data[:id]
+    @customer[:id]
   end
 
   def first_name
-    @data[:first_name]
+    @customer[:first_name]
   end
 
   def last_name
-    @data[:last_name]
+    @customer[:last_name]
   end
 
   def created_at
-    @data[:created_at]
+    @customer[:created_at]
   end
 
   def updated_at
-    @data[:updated_at]
+    @customer[:updated_at]
   end
 end
