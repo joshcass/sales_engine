@@ -1,14 +1,14 @@
 gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/customer_repository'
-require './lib/invoice_item_repository'
-require './lib/item_repository'
-require './lib/merchant_repository'
-require './lib/transaction_repository'
-require './lib/invoice_repository'
+require './lib/sales_engine'
 
 class SalesEngineTest < Minitest::Test
 
+  def setup
+    dir = File.expand_path('test_data', __dir__)
+    test_engine = SalesEngine.new(dir)
+    test_engine.startup
+  end
 
 end
