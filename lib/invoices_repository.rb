@@ -17,81 +17,55 @@ class InvoiceRepository
   end
 
   def find_by_id(id)
-    invoices.detect do |invoice|
-      invoice.id == id
-    end
+    invoices.detect { |invoice| invoice.id == id }
   end
 
   def find_by_customer_id(customer_id)
-    invoices.detect do |invoice|
-      invoice.customer_id == customer_id
-    end
+    invoices.detect { |invoice| invoice.customer_id == customer_id }
   end
 
   def find_by_merchant_id(merchant_id)
-    invoices.detect do |invoice|
-      invoice.merchant_id == merchant_id
-    end
+    invoices.detect { |invoice| invoice.merchant_id == merchant_id }
   end
 
   def find_by_status(status)
-    invoices.detect do |invoice|
-      invoice.status == status
-    end
+    invoices.detect { |invoice| invoice.status == status }
   end
 
   def find_by_created_at(created)
-    invoices.detect do |invoice|
-      invoice.created_at == created
-    end
+    invoices.detect { |invoice| invoice.created_at == created }
   end
 
   def find_by_updated_at(updated)
-    invoices.detect do |invoice|
-      invoice.updated_at == updated
-    end
+    invoices.detect { |invoice| invoice.updated_at == updated }
   end
 
   def find_all_by_id(id)
-    invoices.select do |invoice|
-      invoice.id == id
-    end
+    invoices.select { |invoice| invoice.id == id }
   end
 
   def find_all_by_customer_id(customer_id)
-    invoices.select do |invoice|
-      invoice.customer_id == customer_id
-    end
+    invoices.select { |invoice| invoice.customer_id == customer_id }
   end
 
   def find_all_by_merchant_id(merchant_id)
-    invoices.select do |invoice|
-      invoice.merchant_id == merchant_id
-    end
+    invoices.select { |invoice| invoice.merchant_id == merchant_id }
   end
 
   def find_all_by_status(status)
-    invoices.select do |invoice|
-      invoice.status == status
-    end
+    invoices.select { |invoice| invoice.status == status }
   end
 
   def find_all_by_created_at(created)
-    invoices.select do |invoice|
-      invoice.created_at == created
-    end
+    invoices.select { |invoice| invoice.created_at == created }
   end
 
   def find_all_by_updated_at(updated)
-    invoices.select do |invoice|
-      invoice.updated_at == updated
-    end
+    invoices.select { |invoice| invoice.updated_at == updated }
   end
 
   private
   def parse_invoices(csv_data)
-    csv_data.map do |invoice|
-      Invoice.new(invoice)
-    end
+    csv_data.map { |invoice| Invoice.new(invoice) }
   end
 end
