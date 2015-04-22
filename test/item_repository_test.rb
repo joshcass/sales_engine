@@ -10,7 +10,7 @@ require_relative '../lib/item_repository.rb'
 #"find_all_by_x(match)": find all items that have attribute x
 #for the Item repo, the attributes are:
 #id, name, description, unit_price, merchant_id, created_at, updated_at.
-#Text attributes (name, desc) should be case-sensitive.
+#Text attributes (name, desc) should be case-insensitive.
 
 class ItemRepositoryTest < Minitest::Test
   def setup
