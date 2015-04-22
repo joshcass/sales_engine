@@ -5,4 +5,5 @@ require './lib/transaction'
 
 class InvoiceTest < Minitest::Test
 
+
 end
