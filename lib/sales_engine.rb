@@ -41,5 +41,5 @@ class SalesEngine
     map.find_all_invoice_items_by_invoice_id(invoice_id) { |invoice_item| item_repository.find_by_item_id(invoice_item.item_id) }
   end
 
-  
+
 end
