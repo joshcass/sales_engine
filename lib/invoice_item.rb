@@ -1,35 +1,35 @@
 class InvoiceItem
-  attr_reader :data
+  attr_reader :item
 
-  def initialize(data)
-    @data = data
+  def initialize(item)
+    @item = item
   end
 
   def id
-    @data[:id]
+    @item[:id]
   end
 
   def item_id
-    @data[:item_id]
+    @item[:item_id]
   end
 
   def invoice_id
-    @data[:invoice_id]
+    @item[:invoice_id]
   end
 
   def quantity
-    @data[:quantity]
+    @item[:quantity]
   end
 
   def unit_price
-    @data[:unit_price]
+    @item[:unit_price]
   end
 
   def created_at
-    @data[:created_at]
+    @item[:created_at]
   end
 
   def updated_at
-    @data[:updated_at]
+    @item[:updated_at]
   end
 end
