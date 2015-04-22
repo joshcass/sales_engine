@@ -20,4 +20,5 @@ class Merchant
   def updated_at
     merchant[:updated_at]
   end
+
 end

@@ -52,4 +52,5 @@ class MerchantRepository
   def parse_merchants(csv_data)
     csv_data.map { |merchant| Merchant.new(merchant) }
   end
+
 end

@@ -5,4 +5,5 @@ require './lib/merchant'
 
 class MerchantTest < Minitest::Test
 
+
 end
