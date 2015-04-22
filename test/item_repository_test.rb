@@ -14,7 +14,7 @@ require_relative '../lib/item_repository.rb'
 
 class ItemRepositoryTest < Minitest::Test
   def setup
-    @test_item_repo = ItemRepository.new(SmarterCSV.process('./test/item_repository_test_fixture.csv'))
+    @test_item_repo = ItemRepository.new(SmarterCSV.process('./test/item_repository_test_fixture.csv'), self)
   end
 
   def test_all_method_returns_everything

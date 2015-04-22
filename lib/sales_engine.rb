@@ -13,12 +13,12 @@ class SalesEngine
   end
 
   def startup
-    @customer_repository = CustomerRepository.new(SmarterCSV.process('directory/customers.csv'))
-    @invoice_item_repository = InvoiceItemRepository.new(SmarterCSV.process('directory/invoice_items.csv'))
-    @item_repository = ItemRepository.new(SmarterCSV.process('directory/items.csv'))
-    @merchant_repository = MerchantRepository.new(SmarterCSV.process('directory/merchants.csv'))
-    @transaction_repository = TransactionRepository.new(SmarterCSV.process('directory/transactions.csv'))
-    @invoice_repository = InvoiceRepository.new(SmarterCSV.process('directory/invoices.csv'))
+    @customer_repository = CustomerRepository.new(SmarterCSV.process('directory/customers.csv'), self)
+    @invoice_item_repository = InvoiceItemRepository.new(SmarterCSV.process('directory/invoice_items.csv'), self)
+    @item_repository = ItemRepository.new(SmarterCSV.process('directory/items.csv'), self)
+    @merchant_repository = MerchantRepository.new(SmarterCSV.process('directory/merchants.csv'), self)
+    @transaction_repository = TransactionRepository.new(SmarterCSV.process('directory/transactions.csv'), self)
+    @invoice_repository = InvoiceRepository.new(SmarterCSV.process('directory/invoices.csv'), self)
   end
 
 

@@ -6,7 +6,7 @@ require './lib/merchant_repository'
 class MerchantRepositoryTest < Minitest::Test
 
   def setup
-    @result = MerchantRepository.new(SmarterCSV.process('./test/merchant_test_data.csv'))
+    @result = MerchantRepository.new(SmarterCSV.process('./test/merchant_test_data.csv'), self)
   end
 
   def test_can_initialize_with_a_data_file
