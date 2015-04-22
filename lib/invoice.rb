@@ -30,4 +30,16 @@ class Invoice
     invoice[:updated_at]
   end
 
+  def transactions
+    parent.find_all_transactions(id)
+  end
+
+  def invoice_items
+    parent.find_all_invoice_items(id)
+  end
+
+  def items
+    parent.find_all_items(id)
+  end
+
 end

@@ -65,6 +65,18 @@ class InvoiceRepository
     invoices.select { |invoice| invoice.updated_at == updated }
   end
 
+  def find_all_transactions(invoice_id)
+    sales_engine.find_all_transactions_by_invoice_id(invoice_id)
+  end
+
+  def find_all_invoice_items(invoice_id)
+    sales_engine.find_all_invoice_items_by_invoice_id(invoice_id)
+  end
+
+  def find_all_items(invoice_id)
+    sales_engine.find_all_items_by_invoice_id(invoice_id)
+  end
+
   private
   def parse_invoices(csv_data, repo)
     csv_data.map { |invoice| Invoice.new(invoice, repo) }

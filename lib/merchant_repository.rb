@@ -49,6 +49,14 @@ class MerchantRepository
     merchants.select { |merchant| merchant.updated_at == updated }
   end
 
+  def find_all_items(merchant_id)
+    sales_engine.find_all_items_by_merchant_id(merchant_id)
+  end
+
+  def find_all_invoices(merchant_id)
+    sales_engine.find_all_invoices_by_merhcant_id(merchant_id)
+  end
+
   private
   def parse_merchants(csv_data, repo)
     csv_data.map { |merchant| Merchant.new(merchant, repo) }
