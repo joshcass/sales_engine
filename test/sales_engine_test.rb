@@ -10,5 +10,9 @@ require './lib/invoice_repository'
 
 class SalesEngineTest < Minitest::Test
 
+  def setup
+    dir = File.expand_path('test', __dir__)
+
+  end
 
 end
