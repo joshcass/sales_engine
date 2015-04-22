@@ -7,7 +7,7 @@ require './lib/invoice_repository'
 class InvoiceRepositoryTest < Minitest::Test
 
   def setup
-    @result = InvoiceRepository.new(SmarterCSV.process('./test/invoice_test_data.csv'), self)
+    @result = InvoiceRepository.new(SmarterCSV.process('./test_data/invoices.csv'), self)
   end
 
   def test_can_initialize_with_a_data_file
