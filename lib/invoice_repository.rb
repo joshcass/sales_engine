@@ -2,11 +2,11 @@ require 'smarter_csv'
 require_relative 'invoice'
 
 class InvoiceRepository
-  attr_reader :invoices, :parent
+  attr_reader :invoices, :sales_engine
 
-  def initialize(csv_data, parent)
+  def initialize(csv_data, sales_engine)
     @invoices = parse_invoices(csv_data, self)
-    @parent = parent
+    @sales_engine = sales_engine
   end
 
   def all

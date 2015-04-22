@@ -2,13 +2,13 @@ require 'smarter_csv'
 require_relative 'customer'
 
 class CustomerRepository
-  attr_reader :parent
+  attr_reader :sales_engine
 
-  def initialize(csv_data, parent)
+  def initialize(csv_data, sales_engine)
     @customers = csv_data.map do |customer|
       Customer.new(customer, self)
     end
-    @parent = parent
+    @sales_engine = sales_engine
   end
 
   def all

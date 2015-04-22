@@ -2,11 +2,11 @@ require 'smarter_csv'
 require_relative 'merchant'
 
 class MerchantRepository
-  attr_reader :merchants, :parent
+  attr_reader :merchants, :sales_engine
 
-  def initialize(csv_data, parent)
+  def initialize(csv_data, sales_engine)
     @merchants = parse_merchants(csv_data, self)
-    @parent = parent
+    @sales_engine = sales_engine
   end
 
   def all

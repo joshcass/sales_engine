@@ -2,13 +2,13 @@ require 'smarter_csv'
 require_relative 'invoice_item'
 
 class InvoiceItemRepository
-  attr_reader :parent
+  attr_reader :sales_engine
 
-  def initialize(csv_data, parent)
+  def initialize(csv_data, sales_engine)
     @invoice_items = csv_data.map do |item|
       InvoiceItem.new(item, self)
     end
-    @parent = parent
+    @sales_engine = sales_engine
   end
 
   def all
