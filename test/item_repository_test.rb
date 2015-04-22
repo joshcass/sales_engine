@@ -18,7 +18,7 @@ class ItemRepositoryTest < Minitest::Test
   end
 
   def test_all_method_returns_everything
-    assert_equal 5, @test_item_repo.all.count
+    assert_equal 13, @test_item_repo.all.count
     assert @test_item_repo.all.all? { |item| item.class == Item }
   end
 
@@ -89,7 +89,7 @@ class ItemRepositoryTest < Minitest::Test
     assert sample_result[0].unit_price == 150000
   end
 
-  def test_find_all_by_description_returns_array_of_all_objects_with_that_price
+  def test_find_all_by_description_returns_array_of_all_objects_with_that_description
     #I sure *hope* those are unique, though
     assert_equal [], @test_item_repo.find_all_by_description("Apparently shovels come in weapon-grade quality; this one could be used pretty well as an axe.")
     sample_result = @test_item_repo.find_all_by_description("Legendary tome that could contain all the world's knowledge.")

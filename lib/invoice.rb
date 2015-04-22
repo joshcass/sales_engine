@@ -42,4 +42,12 @@ class Invoice
     parent.find_all_items(id)
   end
 
+  def customer
+    parent.find_customer(customer_id)
+  end
+
+  def merchant
+    parent.find_merchant(merchant_id)
+  end
+
 end

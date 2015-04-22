@@ -32,12 +32,34 @@ class SalesEngineTest < Minitest::Test
     assert invoice.transactions.all? { |transaction| transaction.invoice_id == 12 }
   end
 
-  def test_invcice_invoice_items_method_returns_all_invoice_items_for_invoice_id
+  def test_invoice_invoice_items_method_returns_all_invoice_items_for_invoice_id
     invoice = @test_engine.invoice_repository.find_by_id(1)
     assert invoice.invoice_items.length == 8
     assert invoice.invoice_items.all? { |invoice_item| invoice_item.is_a?InvoiceItem }
     assert invoice.invoice_items.all? { |invoice_item| invoice_item.invoice_id == 1 }
   end
 
+  def test_invoice_items_method_returns_all_items_for_invoice_id
+    invoice = @test_engine.invoice_repository.find_by_id(1)
+    assert invoice.items.length == 8
+    assert invoice.items.all? { |item| item.is_a?Item }
+  end
 
+  def test_invoice_customer_method_returns_customer_for_that_invoice
+    invoice = @test_engine.invoice_repository.find_by_id(27)
+    assert invoice.customer.id == 7
+    assert invoice.customer.first_name == "Julius"
+  end
+
+  def test_invoice_merhcant_method_returns_merchant_for_that_invoice
+    invoice = @test_engine.invoice_repository.find_by_id(16)
+    assert invoice.merchant.id == 27
+    assert invoice.merchant.name == "Shields, Hirthe and Smith"
+  end
+
+  def test_transaction_invoice_method_returns_invoice_for_that_transaction
+    transaction = @test_engine.transaction_repository.find_by_id(14)
+    assert transaction.invoice.id == 13
+    assert transaction.invoice.customer_id == 3
+  end
 end

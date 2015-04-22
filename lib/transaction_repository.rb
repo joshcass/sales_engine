@@ -73,6 +73,10 @@ class TransactionRepository
     transactions.select { |transaction| transaction.updated_at == updated }
   end
 
+  def find_invoice(invoice_id)
+    sales_engine.find_invoice_by_invoice_id_from_transaction(invoice_id)
+  end
+
   private
   def parse_transactions(csv_data, repo)
     csv_data.map { |transaction| Transaction.new(transaction, repo) }
