@@ -34,6 +34,12 @@ class InvoiceRepository
     end
   end
 
+  def find_by_status(status)
+    invoices.detect do |invoice|
+      invoice.status == status
+    end
+  end
+
   def find_by_created_at(created)
     invoices.detect do |invoice|
       invoice.created_at == created
@@ -61,6 +67,12 @@ class InvoiceRepository
   def find_all_by_merchant_id(merchant_id)
     invoices.select do |invoice|
       invoice.merchant_id == merchant_id
+    end
+  end
+
+  def find_all_by_status(status)
+    invoices.select do |invoice|
+      invoice.status == status
     end
   end
 
