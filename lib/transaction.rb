@@ -1,8 +1,9 @@
 class Transaction
-  attr_reader :transaction
+  attr_reader :transaction, :parent
 
-  def initialize(transaction)
+  def initialize(transaction, parent)
     @transaction = transaction
+    @parent = parent
   end
 
   def id

@@ -4,7 +4,7 @@ require_relative 'customer'
 class CustomerRepository
   def initialize(csv_data)
     @customers = csv_data.map do |customer|
-      Customer.new(customer)
+      Customer.new(customer, self)
     end
   end
 

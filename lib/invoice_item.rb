@@ -1,8 +1,9 @@
 class InvoiceItem
-  attr_reader :item
+  attr_reader :item, :parent
 
-  def initialize(item)
+  def initialize(item, parent)
     @item = item
+    @parent = parent
   end
 
   def id

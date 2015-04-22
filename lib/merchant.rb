@@ -1,8 +1,9 @@
 class Merchant
-  attr_reader :merchant
+  attr_reader :merchant, :parent
 
-  def initialize(merchant)
+  def initialize(merchant, parent)
     @merchant = merchant
+    @parent = parent
   end
 
   def id

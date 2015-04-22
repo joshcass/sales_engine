@@ -4,7 +4,7 @@ require_relative 'item'
 class ItemRepository
   def initialize(csv_data)
     @items = csv_data.map do |item|
-      Item.new(item)
+      Item.new(item, self)
     end
   end
 

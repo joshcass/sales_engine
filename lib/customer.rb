@@ -1,8 +1,9 @@
 class Customer
-  attr_reader :customer
+  attr_reader :customer, :parent
 
-  def initialize(customer)
+  def initialize(customer, parent)
     @customer = customer
+    @parent = parent
   end
 
   def id

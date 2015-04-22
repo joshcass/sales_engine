@@ -4,7 +4,7 @@ require_relative 'invoice_item'
 class InvoiceItemRepository
   def initialize(csv_data)
     @invoice_items = csv_data.map do |item|
-      InvoiceItem.new(item)
+      InvoiceItem.new(item, self)
     end
   end
 
