@@ -68,4 +68,5 @@ class InvoiceRepository
   def parse_invoices(csv_data)
     csv_data.map { |invoice| Invoice.new(invoice) }
   end
+
 end

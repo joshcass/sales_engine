@@ -28,4 +28,5 @@ class Invoice
   def updated_at
     invoice[:updated_at]
   end
+
 end

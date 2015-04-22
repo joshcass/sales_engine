@@ -112,4 +112,5 @@ class InvoiceRepositoryTest < Minitest::Test
     assert sample_result.all? { |item| item.class == Invoice}
     assert sample_result.all? { |item| item.updated_at == "2012-03-16 13:54:11 UTC"}
   end
+
 end
