@@ -5,7 +5,7 @@ class InvoiceRepository
   attr_reader :invoices
 
   def initialize(csv_data)
-    @invoices = parse_invoices(csv_data)
+    @invoices = parse_invoices(csv_data, self)
   end
 
   def all
@@ -65,8 +65,8 @@ class InvoiceRepository
   end
 
   private
-  def parse_invoices(csv_data)
-    csv_data.map { |invoice| Invoice.new(invoice) }
+  def parse_invoices(csv_data, repo)
+    csv_data.map { |invoice| Invoice.new(invoice, repo) }
   end
 
 end
