@@ -25,4 +25,8 @@ class Customer
   def updated_at
     @customer[:updated_at]
   end
+
+  def invoices
+    @parent.find_invoices(id)
+  end
 end

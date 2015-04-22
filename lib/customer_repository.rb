@@ -58,4 +58,8 @@ class CustomerRepository
   def find_all_by_updated_at(search_time)
     @customers.select { |customer| search_time == customer.updated_at }
   end
+
+  def find_invoices(id)
+    @sales_engine.find_invoices_with_customer_id(id)
+  end
 end
