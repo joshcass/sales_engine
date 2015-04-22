@@ -1,12 +1,12 @@
 gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/merchants_repository'
+require './lib/merchant_repository'
 
 class MerchantRepositoryTest < Minitest::Test
 
   def setup
-    @result = MerchantRepository.new('./test/merchants_test_data.csv')
+    @result = MerchantRepository.new('./test/merchant_test_data.csv')
   end
 
   def test_can_initialize_with_a_data_file
