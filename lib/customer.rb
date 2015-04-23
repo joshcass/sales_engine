@@ -30,15 +30,11 @@ class Customer
     @parent.find_invoices(id)
   end
 
-    # def transactions
-      # get all invoices for customer
-      # get all transactions for invoice id
-      #return transactions to caller
-    # end
+  def transactions
+    invoices.map { |invoice| invoice.transactions}.flatten
+  end
 
-    # def favorite_merchant
-      # find all invoices for customer id
-      # find the merchant id that appears in the most invoices
-      # return merchant to caller
-    # end
+  def favorite_merchant
+    @parent.sales_engine.find_merchant_by_merchant_id(invoices.group_by { |invoice| invoice.merchant_id }.max_by {|id, collection| collection.length}[0])
+  end
 end

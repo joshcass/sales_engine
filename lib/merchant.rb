@@ -59,6 +59,4 @@ class Merchant
     # return customers to caller
   # end
 
-
-
 end
