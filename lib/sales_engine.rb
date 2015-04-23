@@ -13,12 +13,12 @@ class SalesEngine
   end
 
   def startup
-    @customer_repository = CustomerRepository.new(SmarterCSV.process("#{directory}/customers.csv"), self)
-    @invoice_item_repository = InvoiceItemRepository.new(SmarterCSV.process("#{directory}/invoice_items.csv"), self)
-    @item_repository = ItemRepository.new(SmarterCSV.process("#{directory}/items.csv"), self)
-    @merchant_repository = MerchantRepository.new(SmarterCSV.process("#{directory}/merchants.csv"), self)
-    @transaction_repository = TransactionRepository.new(SmarterCSV.process("#{directory}/transactions.csv"), self)
-    @invoice_repository = InvoiceRepository.new(SmarterCSV.process("#{directory}/invoices.csv"), self)
+    @customer_repository = CustomerRepository.new(parse_csv("customers.csv"), self)
+    @invoice_item_repository = InvoiceItemRepository.new(parse_csv("invoice_items.csv"), self)
+    @item_repository = ItemRepository.new(parse_csv("items.csv"), self)
+    @merchant_repository = MerchantRepository.new(parse_csv("merchants.csv"), self)
+    @transaction_repository = TransactionRepository.new(parse_csv("transactions.csv"), self)
+    @invoice_repository = InvoiceRepository.new(parse_csv("invoices.csv"), self)
   end
 
   def find_invoices_with_customer_id(id)
@@ -71,5 +71,10 @@ class SalesEngine
 
   def find_invoice_by_invoice_id(invoice_id)
     invoice_repository.find_by_id(invoice_id)
+  end
+
+  private
+  def parse_csv(filename)
+    SmarterCSV.process("#{directory}/#{filename}")
   end
 end
