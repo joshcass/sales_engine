@@ -33,4 +33,12 @@ class InvoiceItem
   def updated_at
     @item[:updated_at]
   end
+
+  def invoice
+    @parent.find_invoice(invoice_id)
+  end
+
+  def item
+    @parent.find_item(item_id)
+  end
 end
