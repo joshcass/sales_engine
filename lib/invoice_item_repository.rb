@@ -1,4 +1,5 @@
 require 'smarter_csv'
+require 'bigdecimal'
 require_relative 'invoice_item'
 
 class InvoiceItemRepository
@@ -81,5 +82,9 @@ class InvoiceItemRepository
 
   def find_item(item_id)
     @sales_engine.find_item_by_id(item_id)
+  end
+
+  def total_revenue_for_invoice_items(invoice_items)
+    invoice_items.reduce(0) { |sum, invoice_item| sum + (BigDecimal(invoice_item.unit_price) * BigDecimal(invoice_item.quantity)) }.round(2)
   end
 end

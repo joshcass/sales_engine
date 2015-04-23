@@ -1,6 +1,7 @@
 require 'minitest'
 require 'minitest/autorun'
 require 'smarter_csv'
+require 'bigdecimal'
 require_relative '../lib/invoice_item_repository.rb'
 
 #Repo classes need these methods:
@@ -18,7 +19,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
   end
 
   def test_all_method_returns_everything
-    assert_equal 15, @test_invoice_item_repo.all.count
+    assert_equal 27, @test_invoice_item_repo.all.count
     assert @test_invoice_item_repo.all.all? { |invoice_item| invoice_item.class == InvoiceItem }
   end
 
@@ -113,5 +114,10 @@ class InvoiceItemRepositoryTest < Minitest::Test
     assert sample_result.length == 15
     assert sample_result.all? { |invoice_item| invoice_item.class == InvoiceItem}
     assert sample_result.all? { |invoice_item| invoice_item.created_at == "2012-03-27 14:54:09 UTC"}
+  end
+
+  def test_find_total_revenue_for_invoice_items_gives_revenue
+    invoice_item = @test_invoice_item_repo.find_all_by_invoice_id(28)
+    assert_equal BigDecimal("1042301.0"), @test_invoice_item_repo.total_revenue_for_invoice_items(invoice_item)
   end
 end
