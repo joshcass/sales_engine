@@ -19,6 +19,7 @@ class TransactionRepositoryTest < Minitest::Test
 
   def test_random_returns_a_random_sample_from_the_repository
     assert @result.transactions.include?@result.random
+    refute @result.random == @result.random
   end
 
   def test_find_a_sample_result_by_id
@@ -103,7 +104,7 @@ class TransactionRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_result("super")
     sample_result = @result.find_all_by_result("failed")
     assert sample_result.class == Array
-    assert sample_result.length == 4
+    assert sample_result.length == 5
     assert sample_result.all? { |item| item.class == Transaction}
     assert sample_result.all? { |item| item.result == "failed"}
   end
@@ -124,5 +125,10 @@ class TransactionRepositoryTest < Minitest::Test
     assert sample_result.length == 8
     assert sample_result.all? { |item| item.class == Transaction}
     assert sample_result.all? { |item| item.updated_at == "2012-03-27 14:54:11 UTC"}
+  end
+
+  def test_transaction_success_can_tell_success_from_fail
+    assert @result.transaction_success?(28)
+    refute @result.transaction_success?(27)
   end
 end

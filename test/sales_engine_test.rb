@@ -94,8 +94,8 @@ class SalesEngineTest < Minitest::Test
     assert customer.invoices.all? { |invoice| invoice.customer_id == 1}
   end
 
-  def test_merchant_revenue_method_returns_total_revenue_for_that_merchant
-    merchant = @test_engine.merchant_repository.find_by_id(1)
-    assert merchant.revenue == BigDecimal("2176571.0")
-  end
+  # def test_merchant_revenue_method_returns_total_revenue_for_that_merchant
+  #   merchant = @test_engine.merchant_repository.find_by_id(1)
+  #   assert merchant.revenue == BigDecimal("2176571.0")
+  # end
 end

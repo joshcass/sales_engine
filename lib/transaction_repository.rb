@@ -77,6 +77,10 @@ class TransactionRepository
     sales_engine.find_invoice_by_invoice_id(invoice_id)
   end
 
+  def transaction_success?(invoice_id)
+    true if find_by_invoice_id(invoice_id).result == "success"
+  end
+
   private
   def parse_transactions(csv_data, repo)
     csv_data.map { |transaction| Transaction.new(transaction, repo) }

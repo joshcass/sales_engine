@@ -31,7 +31,7 @@ class Merchant
   end
 
   def revenue
-    parent.find_total_revenue(id)
+    parent.find_total_revenue(invoices)
   end
 
   # def items_sold

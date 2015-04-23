@@ -73,19 +73,18 @@ class SalesEngine
     invoice_repository.find_by_id(invoice_id)
   end
 
-  def transaction_success?(invoice_id)
-    true if find_by_invoice_id(invoice_id).result == "success"
-  end
-
   def find_all_successful_invoices(invoices)
     invoices.select {|invoice| invoice if transaction_success?(invoice.id)}
   end
 
-  def find_total_revenue_for_merchant(merchant_id)
-    successful_invoices = find_all_successful_invoices(find_all_invoices_by_merchant_id(merchant_id))
-    invoice_items = successful_invoices.map {|invoice| find_all_invoice_items_by_invoice_id(invoice.id) }
-    total = invoice_items.collect(0) {|sum, item| sum + (BigDecimal(item.untit_price) * BigDecimal(item.quantity)}
-    total.round(2)
+  def find_all_by_collection_of_invoices(invoices)
+    invoices.map { |invoice| find_all_by_invoice_id(invoice.id) }
+  end
+
+  def find_total_revenue_for_invoices(invoices)
+    successful_invoices = find_all_successful_invoices(invoices)
+    invoice_items = repository.find_all_by_collection_of_invoices(successful_invoices)
+    invoice_item_repository.total_revenue_for_invoice_items(invoice_items)
   end
 
   private
