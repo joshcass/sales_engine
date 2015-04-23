@@ -57,6 +57,38 @@ class MerchantRepository
     sales_engine.find_all_invoices_by_merchant_id(merchant_id)
   end
 
+  def most_revenue(X)
+    # merchant.total_revenue method in Merchant class calls out to sales_engine via merchant_repo passing merchant id
+    # SALES_ENGINE
+    # looks up all invoices for merchant => method already exists
+    # once we have invoices we look up the invoice items => method already exists
+    # multiply quantity by price to get total for each invoice
+    # add up all the totals for that merchant
+    # return total_revenue to caller
+
+    # most_revenue method sorts all merchants by merchant.total_revenue
+    # take top X merchants
+  end
+
+  def most_items(X)
+    # merchant.total_items_sold method in Merchant class calls out sales_engine via merchant_repo passing merchant id
+    # SALES_ENGINE
+    # looks up all invoices for merchant => method already exists
+    # once it has invoices it looks up invoice items => method already exists
+    # takes quantity of items for each invoice
+    # adds up total quantity for the merchant
+    # return total_items_sold to caller
+
+    # most items method sorts all merchants by merchant.total_items_sold
+    # take top X merchants
+  end
+
+  def revenue(date)
+    # does stuff
+
+
+
+  end
   private
   def parse_merchants(csv_data, repo)
     csv_data.map { |merchant| Merchant.new(merchant, repo) }
