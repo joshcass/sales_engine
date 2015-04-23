@@ -22,7 +22,7 @@ class SalesEngine
   end
 
   def find_invoices_with_customer_id(id)
-    @invoice_repository.find_all_with_customer_id(id)
+    @invoice_repository.find_all_by_customer_id(id)
   end
 
   def find_invoice_items_by_item_id(id)

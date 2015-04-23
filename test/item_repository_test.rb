@@ -18,7 +18,7 @@ class ItemRepositoryTest < Minitest::Test
   end
 
   def test_all_method_returns_everything
-    assert_equal 13, @test_item_repo.all.count
+    assert_equal 20, @test_item_repo.all.count
     assert @test_item_repo.all.all? { |item| item.class == Item }
   end
 
