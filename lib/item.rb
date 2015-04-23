@@ -33,4 +33,11 @@ class Item
   def updated_at
     @item[:updated_at]
   end
+
+  # def best_day
+    # find all invoice items by invoice id
+    # get all of the invoices group by date
+    # return the date with the most invoices
+  # end
+
 end

@@ -53,6 +53,17 @@ class SalesEngine
     invoice_repository.find_by_id(invoice_id)
   end
 
+  def find_total_revenue_for_merchant(merchant_id)
+
+
+    # looks up all invoices for merchant => method already exists
+    # check each invoice against transactions and eliminate failed transactions => need this method
+    # once we have invoices we look up the invoice items => method already exists
+    # multiply quantity by price to get total for each invoice
+    # add up all the totals for that merchant
+    # return total_revenue to caller
+  end
+
   private
   def parse_csv(filename)
     SmarterCSV.process("#{directory}/#{filename}")
