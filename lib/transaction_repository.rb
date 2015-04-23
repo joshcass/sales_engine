@@ -74,7 +74,7 @@ class TransactionRepository
   end
 
   def find_invoice(invoice_id)
-    sales_engine.find_invoice_by_invoice_id_from_transaction(invoice_id)
+    sales_engine.find_invoice_by_invoice_id(invoice_id)
   end
 
   private

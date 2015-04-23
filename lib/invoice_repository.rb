@@ -78,11 +78,11 @@ class InvoiceRepository
   end
 
   def find_customer(customer_id)
-    sales_engine.find_customer_by_customer_id_from_invoice(customer_id)
+    sales_engine.find_customer_by_customer_id(customer_id)
   end
 
   def find_merchant(merchant_id)
-    sales_engine.find_merchant_by_merchant_id_from_invoice(merchant_id)
+    sales_engine.find_merchant_by_merchant_id(merchant_id)
   end
 
   private
