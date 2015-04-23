@@ -29,4 +29,17 @@ class Customer
   def invoices
     @parent.find_invoices(id)
   end
+
+  def transactions
+    invoices.map { |invoice| invoice.transactions}.flatten
+  end
+
+  def favorite_merchant
+    @parent.sales_engine.find_merchant_by_merchant_id(invoices.group_by { |invoice| invoice.merchant_id }.max_by {|id, collection| collection.length}[0])
+  #   find all invoices by customer id
+  #   group_by them by merchant id
+  # @parent.@sales_engine.find_merchant_by_merchant_id(invoices.group_by { |invoice| merchant_id }.max_by {|id, collection| collection.length}[0])
+  #   get the key with the longest length
+  #   return the merchant by that id
+  end
 end

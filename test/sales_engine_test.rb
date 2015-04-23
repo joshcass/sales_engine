@@ -93,4 +93,20 @@ class SalesEngineTest < Minitest::Test
     assert customer.invoices.all? { |invoice| invoice.is_a?Invoice }
     assert customer.invoices.all? { |invoice| invoice.customer_id == 1}
   end
+
+  def test_item_best_day_returns_a_date
+    item = @test_engine.item_repository.find_by_id(528)
+    assert item.best_day.is_a?Date
+  end
+
+  def test_customer_transactions_method_returns_an_array_of_transactions
+    customer = @test_engine.customer_repository.find_by_id(3)
+    assert customer.transactions.is_a?Array
+    assert customer.transactions.all? { |entry| entry.is_a?Transaction }
+  end
+
+  def test_customer_favorite_merchant_returns_a_merchant
+    customer = @test_engine.customer_repository.find_by_id(7)
+    puts customer.favorite_merchant.class
+  end
 end
