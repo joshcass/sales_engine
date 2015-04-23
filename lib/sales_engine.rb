@@ -13,12 +13,12 @@ class SalesEngine
   end
 
   def startup
-    @customer_repository = CustomerRepository.new(parse_csv("customers.csv"), self)
+    @customer_repository     = CustomerRepository.new(parse_csv("customers.csv"), self)
     @invoice_item_repository = InvoiceItemRepository.new(parse_csv("invoice_items.csv"), self)
-    @item_repository = ItemRepository.new(parse_csv("items.csv"), self)
-    @merchant_repository = MerchantRepository.new(parse_csv("merchants.csv"), self)
-    @transaction_repository = TransactionRepository.new(parse_csv("transactions.csv"), self)
-    @invoice_repository = InvoiceRepository.new(parse_csv("invoices.csv"), self)
+    @item_repository         = ItemRepository.new(parse_csv("items.csv"), self)
+    @merchant_repository     = MerchantRepository.new(parse_csv("merchants.csv"), self)
+    @transaction_repository  = TransactionRepository.new(parse_csv("transactions.csv"), self)
+    @invoice_repository      = InvoiceRepository.new(parse_csv("invoices.csv"), self)
   end
 
   def find_all_items_by_merchant_id(merchant_id)
