@@ -73,15 +73,19 @@ class SalesEngine
     invoice_repository.find_by_id(invoice_id)
   end
 
+  def transaction_success?(invoice_id)
+    true if find_by_invoice_id(invoice_id).result == "success"
+  end
+
+  def find_all_successful_invoices(invoices)
+    invoices.select {|invoice| invoice if transaction_success?(invoice.id)}
+  end
+
   def find_total_revenue_for_merchant(merchant_id)
-
-
-    # looks up all invoices for merchant => method already exists
-    # check each invoice against transactions and eliminate failed transactions => need this method
-    # once we have invoices we look up the invoice items => method already exists
-    # multiply quantity by price to get total for each invoice
-    # add up all the totals for that merchant
-    # return total_revenue to caller
+    successful_invoices = find_all_successful_invoices(find_all_invoices_by_merchant_id(merchant_id))
+    invoice_items = successful_invoices.map {|invoice| find_all_invoice_items_by_invoice_id(invoice.id) }
+    total = invoice_items.collect(0) {|sum, item| sum + (BigDecimal(item.untit_price) * BigDecimal(item.quantity)}
+    total.round(2)
   end
 
   private
