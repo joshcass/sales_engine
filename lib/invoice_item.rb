@@ -1,44 +1,44 @@
 class InvoiceItem
-  attr_reader :item, :parent
+  attr_reader :invoice_item, :parent
 
-  def initialize(item, parent)
-    @item = item
+  def initialize(invoice_item, parent)
+    @invoice_item = invoice_item
     @parent = parent
   end
 
   def id
-    @item[:id]
+    invoice_item[:id]
   end
 
   def item_id
-    @item[:item_id]
+    invoice_item[:item_id]
   end
 
   def invoice_id
-    @item[:invoice_id]
+    invoice_item[:invoice_id]
   end
 
   def quantity
-    @item[:quantity]
+    invoice_item[:quantity]
   end
 
   def unit_price
-    @item[:unit_price]
+    invoice_item[:unit_price]
   end
 
   def created_at
-    @item[:created_at]
+    invoice_item[:created_at]
   end
 
   def updated_at
-    @item[:updated_at]
+    invoice_item[:updated_at]
   end
 
   def invoice
-    @parent.find_invoice(invoice_id)
+    parent.find_invoice(invoice_id)
   end
 
   def item
-    @parent.find_item(item_id)
+    parent.find_item(item_id)
   end
 end
