@@ -85,4 +85,12 @@ class ItemRepository
   def parse_items(csv_data, repo)
     csv_data.map { |invoice| Item.new(invoice, repo) }
   end
+
+  def most_revenue(top_n = 1)
+    @items.max_by(top_n) { |item| @sales_engine.invoice_item_repository.total_revenue_for_invoice_items(@sales_engine.invoice_item_repository.find_all_by_item_id(item.id)) }
+  end
+
+  def most_items(top_n = 1)
+    @items.max_by(top_n) { |item| @sales_engine.invoice_item_repository.total_quantity_for_invoice_items(@sales_engine.invoice_item_repository.find_all_by_item_id(item.id))}
+  end
 end

@@ -112,7 +112,16 @@ class SalesEngineTest < Minitest::Test
 
   def test_customer_favorite_merchant_returns_a_merchant
     customer = @test_engine.customer_repository.find_by_id(7)
-    puts customer.favorite_merchant.class
+  end
+
+  def test_item_repo_most_revenue_returns_arrays_of_items
+    assert @test_engine.item_repository.most_revenue.all? { |entry| entry.is_a?Item }
+    assert @test_engine.item_repository.most_revenue(3).all? { |entry| entry.is_a?Item }
+  end
+
+  def test_item_repo_most_quantity_returns_arrays_of_items
+    assert @test_engine.item_repository.most_items.all? { |entry| entry.is_a?Item }
+    assert @test_engine.item_repository.most_items(3).all? { |entry| entry.is_a?Item }
   end
 
   def test_find_all_successful_invoices_returns_only_successful_invoices
