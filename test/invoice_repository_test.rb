@@ -82,7 +82,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_merchant_id(150)
     sample_result = @result.find_all_by_merchant_id(83)
     assert sample_result.class == Array
-    assert sample_result.length == 4
+    assert_equal 4, sample_result.length
     assert sample_result.all? {|item| item.class == Invoice}
     assert sample_result.all? {|item| item.merchant_id == 83}
   end
@@ -91,7 +91,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_status("not shipped")
     sample_result = @result.find_all_by_status("shipped")
     assert sample_result.class == Array
-    assert sample_result.length == 31
+    assert_equal 31, sample_result.length
     assert sample_result.all? { |item| item.class == Invoice}
     assert sample_result.all? { |item| item.status == "shipped"}
   end
@@ -100,7 +100,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_created_at("2075-04-21 14:53:59 UTC")
     sample_result = @result.find_all_by_created_at("2012-03-12 03:54:10 UTC")
     assert sample_result.class == Array
-    assert sample_result.length == 4
+    assert_equal 4, sample_result.length
     assert sample_result.all? { |item| item.class == Invoice}
     assert sample_result.all? { |item| item.created_at == "2012-03-12 03:54:10 UTC"}
   end
@@ -109,7 +109,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_updated_at("2075-04-21 14:53:59 UTC")
     sample_result = @result.find_all_by_updated_at("2012-03-16 13:54:11 UTC")
     assert sample_result.class == Array
-    assert sample_result.length == 4
+    assert_equal 4, sample_result.length
     assert sample_result.all? { |item| item.class == Invoice}
     assert sample_result.all? { |item| item.updated_at == "2012-03-16 13:54:11 UTC"}
   end

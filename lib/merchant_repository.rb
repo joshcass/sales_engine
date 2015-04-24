@@ -61,6 +61,10 @@ class MerchantRepository
     sales_engine.find_total_revenue_for_invoices(invoices)
   end
 
+  def total_items_sold(invoices)
+    sales_engine.find_all_items_sold_by_merchant(invoices)
+  end
+
   # def most_revenue(X)
     # sorts all merchants by merchant.revenue
     # take top X merchants

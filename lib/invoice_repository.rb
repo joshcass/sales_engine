@@ -73,21 +73,24 @@ class InvoiceRepository
     sales_engine.find_all_invoice_items_by_invoice_id(invoice_id)
   end
 
+  def find_all_invoice_items_for_invoices(invoices)
+    invoices.map { |invoice| find_all_invoice_items(invoice.id) }.flatten
+  end
+
   def find_all_items(invoice_id)
     sales_engine.find_all_items_by_invoice_id(invoice_id)
   end
 
   def find_customer(customer_id)
-    sales_engine.find_customer_by_customer_id(customer_id)
+    sales_engine.find_customer_by_id(customer_id)
   end
 
   def find_merchant(merchant_id)
-    sales_engine.find_merchant_by_merchant_id(merchant_id)
+    sales_engine.find_merchant_by_id(merchant_id)
   end
 
   private
   def parse_invoices(csv_data, repo)
     csv_data.map { |invoice| Invoice.new(invoice, repo) }
   end
-
 end

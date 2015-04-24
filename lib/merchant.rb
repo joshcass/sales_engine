@@ -34,15 +34,17 @@ class Merchant
     parent.find_total_revenue(invoices)
   end
 
-  # def items_sold
+  def items_sold
+    parent.total_items_sold(invoices)
+
     # calls out to sales engine
-    # looks up all invoices for merchant => method already exists
+
     # check each invoice against transactions and eliminate failed transactions => reuse
     # once it has invoices it looks up invoice items => method already exists
     # takes quantity of items for each invoice
     # adds up total quantity for the merchant
     # return total_items_sold to caller
-  # end
+  end
 
   # def favorite_customer
     # looks up all invoices for merchant => method already exists

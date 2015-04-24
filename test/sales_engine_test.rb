@@ -115,4 +115,15 @@ class SalesEngineTest < Minitest::Test
     puts customer.favorite_merchant.class
   end
 
+  def test_find_all_successful_invoices_returns_only_successful_invoices
+    invoices = []
+    invoices << @test_engine.invoice_repository.find_by_id(27)
+    invoices << @test_engine.invoice_repository.find_by_id(28)
+    invoices << @test_engine.invoice_repository.find_by_id(29)
+    invoices << @test_engine.invoice_repository.find_by_id(30)
+    assert_equal 3, @test_engine.transaction_repository.find_all_successful_invoices(invoices).length
+    assert @test_engine.transaction_repository.find_all_successful_invoices(invoices).all? do |invoice|
+        invoice.is_a? Invoice
+      end
+  end
 end

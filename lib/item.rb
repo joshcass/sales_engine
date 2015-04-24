@@ -7,39 +7,39 @@ class Item
   end
 
   def id
-    @item[:id]
+    item[:id]
   end
 
   def name
-    @item[:name]
+    item[:name]
   end
 
   def description
-    @item[:description]
+    item[:description]
   end
 
   def unit_price
-    @item[:unit_price]
+    item[:unit_price]
   end
 
   def merchant_id
-    @item[:merchant_id]
+    item[:merchant_id]
   end
 
   def created_at
-    @item[:created_at]
+    item[:created_at]
   end
 
   def updated_at
-    @item[:updated_at]
+    item[:updated_at]
   end
 
   def invoice_items
-    @parent.find_invoice_items(id)
+    parent.find_invoice_items(id)
   end
 
   def merchant
-    @parent.find_merchant(merchant_id)
+    parent.find_merchant(merchant_id)
   end
 
   def best_day
