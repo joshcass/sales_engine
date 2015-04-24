@@ -44,7 +44,6 @@ class Item
 
   def best_day
     Date.strptime(invoice_items.group_by { |invoice_item| created_at }.max_by{|time, collection| collection.length}[0], '%F')
-    # invoice_items.group_by { |invoice_item| created_at }.max_by{|time, collection| collection.length}[0]
   end
 
 end

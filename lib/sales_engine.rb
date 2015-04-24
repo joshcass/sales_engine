@@ -51,6 +51,7 @@ class SalesEngine
     item_repository.find_all_by_merchant_id(merchant_id)
   end
 
+
   def find_all_invoices_by_merchant_id(merchant_id)
     invoice_repository.find_all_by_merchant_id(merchant_id)
   end
@@ -82,7 +83,21 @@ class SalesEngine
   def find_all_items_sold_by_merchant(invoices)
     successful_invoices = transaction_repository.find_all_successful_invoices(invoices)
     invoice_items = invoice_repository.find_all_invoice_items_for_invoices(successful_invoices)
+    invoice_item_repository.total_quantity_for_invoice_items(invoice_items)
+  end
 
+  def find_merchant_favorite_customer(invoices)
+    successful_invoices = transaction_repository.find_all_successful_invoices(invoices)
+    find_customer_by_id(successful_invoices.group_by do |invoice|
+        invoice.customer_id
+      end.max_by do |id, collection|
+        collection.length
+      end[0])
+  end
+
+  def find_customers_with_pending_invoices(invoices)
+    successful_invoices = transaction_repository.find_all_failed_invoices(invoices)
+    successful_invoices.each {|invoice| invoice.customer}
   end
 
   private

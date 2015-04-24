@@ -35,6 +35,10 @@ class Customer
   end
 
   def favorite_merchant
-    parent.sales_engine.find_merchant_by_id(invoices.group_by { |invoice| invoice.merchant_id }.max_by {|id, collection| collection.length}[0])
+    parent.sales_engine.find_merchant_by_id(invoices.group_by do |invoice|
+        invoice.merchant_id
+      end.max_by do |id, collection|
+        collection.length
+      end[0])
   end
 end

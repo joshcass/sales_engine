@@ -77,6 +77,10 @@ class InvoiceRepository
     invoices.map { |invoice| find_all_invoice_items(invoice.id) }.flatten
   end
 
+  def find_all_successsful_transactions(invoice_id)
+    sales_engine.find_all_successful_transaction_by_invoice(invoice_id)
+  end
+
   def find_all_items(invoice_id)
     sales_engine.find_all_items_by_invoice_id(invoice_id)
   end

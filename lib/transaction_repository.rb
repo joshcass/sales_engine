@@ -26,11 +26,15 @@ class TransactionRepository
   end
 
   def find_by_credit_card_number(credit_card_number)
-    transactions.detect { |transaction| transaction.credit_card_number == credit_card_number }
+    transactions.detect do |transaction|
+      transaction.credit_card_number == credit_card_number
+    end
   end
 
   def find_by_credit_card_expiration_date(credit_card_expiration_date)
-    transactions.detect { |transaction| transaction.credit_card_expiration_date == credit_card_expiration_date }
+    transactions.detect do |transaction|
+      transaction.credit_card_expiration_date == credit_card_expiration_date
+    end
   end
 
   def find_by_result(result)
@@ -54,11 +58,15 @@ class TransactionRepository
   end
 
   def find_all_by_credit_card_number(credit_card_number)
-    transactions.select { |transaction| transaction.credit_card_number == credit_card_number }
+    transactions.select do |transaction|
+      transaction.credit_card_number == credit_card_number
+    end
   end
 
   def find_all_by_credit_card_expiration_date(credit_card_expiration_date)
-    transactions.select { |transaction| transaction.credit_card_expiration_date == credit_card_expiration_date }
+    transactions.select do |transaction|
+      transaction.credit_card_expiration_date == credit_card_expiration_date
+    end
   end
 
   def find_all_by_result(result)
@@ -81,8 +89,16 @@ class TransactionRepository
     find_by_invoice_id(invoice_id).result == "success"
   end
 
+  def transaction_failed?(invoice_id)
+    find_by_invoice_id(invoice_id).result == "failed"
+  end
+
   def find_all_successful_invoices(invoices)
     invoices.select { |invoice| transaction_success?(invoice.id) }
+  end
+
+  def find_all_failed_invoices(invoices)
+    invoices.select { |invoice| transaction_failed?(invoice.id)}
   end
 
   private

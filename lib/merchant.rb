@@ -31,34 +31,18 @@ class Merchant
   end
 
   def revenue
-    parent.find_total_revenue(invoices)
+    parent.sales_engine.find_total_revenue_for_invoices(invoices)
   end
 
   def items_sold
     parent.total_items_sold(invoices)
-
-    # calls out to sales engine
-
-    # check each invoice against transactions and eliminate failed transactions => reuse
-    # once it has invoices it looks up invoice items => method already exists
-    # takes quantity of items for each invoice
-    # adds up total quantity for the merchant
-    # return total_items_sold to caller
   end
 
-  # def favorite_customer
-    # looks up all invoices for merchant => method already exists
-    # check each invoice against transactions and eliminate failed transactions => reuse
-    # find customer id that appears on most invoices
-    # look up customer by id
-    # return that back to caller
-  # end
+  def favorite_customer
+    parent.favorite_customer(invoices)
+  end
 
-  # def customers_with_pending_invoices
-    # looks up all invoices for merchant => method already exists
-    # check each invoice against transactions and eliminate successful transactions => need this method
-    # look up all customers from those invoices
-    # return customers to caller
-  # end
-
+  def customers_with_pending_invoices
+    parent.pending_invoice_customers(invoices)
+  end
 end

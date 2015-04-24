@@ -72,7 +72,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_customer_id(10)
     sample_result = @result.find_all_by_customer_id(4)
     assert sample_result.class == Array
-    assert sample_result.length == 8
+    assert_equal 7, sample_result.length
     assert sample_result.all? {|item| item.class == Invoice}
     assert sample_result.all? {|item| item.customer_id == 4}
   end

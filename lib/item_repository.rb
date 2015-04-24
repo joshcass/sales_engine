@@ -42,11 +42,15 @@ class ItemRepository
   end
 
   def find_by_description(search_description)
-    items.detect { |item| search_description.downcase == item.description.downcase}
+    items.detect do |item|
+      search_description.downcase == item.description.downcase
+    end
   end
 
   def find_all_by_description(search_description)
-    items.select { |item| search_description.downcase == item.description.downcase }
+    items.select do |item|
+      search_description.downcase == item.description.downcase
+    end
   end
 
   def find_by_merchant_id(search_m_id)
@@ -81,16 +85,16 @@ class ItemRepository
     sales_engine.find_merchant_by_id(merchant_id)
   end
 
-  private
-  def parse_items(csv_data, repo)
-    csv_data.map { |invoice| Item.new(invoice, repo) }
-  end
-
   def most_revenue(top_n = 1)
-    @items.max_by(top_n) { |item| @sales_engine.invoice_item_repository.total_revenue_for_invoice_items(@sales_engine.invoice_item_repository.find_all_by_item_id(item.id)) }
+    items.max_by(top_n) { |item| sales_engine.invoice_item_repository.total_revenue_for_invoice_items(sales_engine.invoice_item_repository.find_all_by_item_id(item.id)) }
   end
 
   def most_items(top_n = 1)
-    @items.max_by(top_n) { |item| @sales_engine.invoice_item_repository.total_quantity_for_invoice_items(@sales_engine.invoice_item_repository.find_all_by_item_id(item.id))}
+    items.max_by(top_n) { |item| sales_engine.invoice_item_repository.total_quantity_for_invoice_items(sales_engine.invoice_item_repository.find_all_by_item_id(item.id))}
+  end
+
+  private
+  def parse_items(csv_data, repo)
+    csv_data.map { |invoice| Item.new(invoice, repo) }
   end
 end

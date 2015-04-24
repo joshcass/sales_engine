@@ -135,4 +135,21 @@ class SalesEngineTest < Minitest::Test
         invoice.is_a? Invoice
       end
   end
+
+  def test_find_all_items_sold_by_merchant_returns_all_items_for_merchant
+    merchant = @test_engine.merchant_repository.find_by_id(1)
+    assert_equal 54, merchant.items_sold
+  end
+
+  def test_merchant_favorite_customer_finds_customer_with_most_successful_transactions
+    merchant = @test_engine.merchant_repository.find_by_id(83)
+    customer = @test_engine.customer_repository.find_by_id(7)
+    assert_equal customer, merchant.favorite_customer
+  end
+
+  def test_merchant_pending_invoices_returns_customers_with_failed_transactions
+    merchant = @test_engine.merchant_repository.find_by_id(100)
+    customer = @test_engine.customer_repository.find_by_id(9)
+    assert_equal customer, merchant.customers_with_pending_invoices
+  end
 end

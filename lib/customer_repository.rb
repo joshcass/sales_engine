@@ -26,19 +26,27 @@ class CustomerRepository
   end
 
   def find_by_first_name(search_name)
-    customers.detect { |customer| search_name.downcase == customer.first_name.downcase}
+    customers.detect do |customer|
+      search_name.downcase == customer.first_name.downcase
+    end
   end
 
   def find_all_by_first_name(search_name)
-    customers.select { |customer| search_name.downcase == customer.first_name.downcase }
+    customers.select do |customer|
+      search_name.downcase == customer.first_name.downcase
+    end
   end
 
   def find_by_last_name(search_name)
-    customers.detect { |customer| search_name.downcase == customer.last_name.downcase}
+    customers.detect do |customer|
+      search_name.downcase == customer.last_name.downcase
+    end
   end
 
   def find_all_by_last_name(search_name)
-    customers.select { |customer| search_name.downcase == customer.last_name.downcase }
+    customers.select do |customer|
+      search_name.downcase == customer.last_name.downcase
+    end
   end
 
   def find_by_created_at(search_time)
