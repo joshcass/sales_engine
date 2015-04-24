@@ -14,7 +14,7 @@ class TransactionRepositoryTest < Minitest::Test
   end
 
   def test_all_returns_all_instances
-    assert_equal 30, @result.transactions.count
+    assert_equal 32, @result.transactions.count
   end
 
   def test_random_returns_a_random_sample_from_the_repository
@@ -86,7 +86,7 @@ class TransactionRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_credit_card_number(4084466070522807)
     sample_result = @result.find_all_by_credit_card_number(4084466070588807)
     assert sample_result.class == Array
-    assert sample_result.length == 3
+    assert sample_result.length == 5
     assert sample_result.all? {|item| item.class == Transaction}
     assert sample_result.all? {|item| item.credit_card_number == 4084466070588807}
   end
@@ -104,7 +104,7 @@ class TransactionRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_result("super")
     sample_result = @result.find_all_by_result("failed")
     assert sample_result.class == Array
-    assert sample_result.length == 5
+    assert sample_result.length == 6
     assert sample_result.all? { |item| item.class == Transaction}
     assert sample_result.all? { |item| item.result == "failed"}
   end
@@ -122,7 +122,7 @@ class TransactionRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_updated_at("2075-04-21 14:53:59 UTC")
     sample_result = @result.find_all_by_updated_at("2012-03-27 14:54:11 UTC")
     assert sample_result.class == Array
-    assert sample_result.length == 8
+    assert sample_result.length == 10
     assert sample_result.all? { |item| item.class == Transaction}
     assert sample_result.all? { |item| item.updated_at == "2012-03-27 14:54:11 UTC"}
   end

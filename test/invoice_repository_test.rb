@@ -15,7 +15,7 @@ class InvoiceRepositoryTest < Minitest::Test
   end
 
   def test_all_returns_all_instances
-    assert_equal 29, @result.invoices.count
+    assert_equal 31, @result.invoices.count
   end
 
   def test_random_returns_a_random_sample_from_the_repository
@@ -79,7 +79,7 @@ class InvoiceRepositoryTest < Minitest::Test
 
   def test_find_all_by_merchant_id_returns_array_of_all_objects_with_that_merchant_id
     #Aren't those supposed to be near-unique, though?
-    assert_equal [], @result.find_all_by_merchant_id(100)
+    assert_equal [], @result.find_all_by_merchant_id(150)
     sample_result = @result.find_all_by_merchant_id(83)
     assert sample_result.class == Array
     assert sample_result.length == 4
@@ -91,7 +91,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_status("not shipped")
     sample_result = @result.find_all_by_status("shipped")
     assert sample_result.class == Array
-    assert sample_result.length == 29
+    assert sample_result.length == 31
     assert sample_result.all? { |item| item.class == Invoice}
     assert sample_result.all? { |item| item.status == "shipped"}
   end

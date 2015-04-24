@@ -19,7 +19,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
   end
 
   def test_all_method_returns_everything
-    assert_equal 27, @test_invoice_item_repo.all.count
+    assert_equal 29, @test_invoice_item_repo.all.count
     assert @test_invoice_item_repo.all.all? { |invoice_item| invoice_item.class == InvoiceItem }
   end
 

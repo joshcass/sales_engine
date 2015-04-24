@@ -74,16 +74,16 @@ class SalesEngine
   end
 
   def find_all_successful_invoices(invoices)
-    invoices.select {|invoice| invoice if transaction_success?(invoice.id)}
+    invoices.select { |invoice| transaction_repository.transaction_success?(invoice.id) }
   end
 
-  def find_all_by_collection_of_invoices(invoices)
-    invoices.map { |invoice| find_all_by_invoice_id(invoice.id) }
+  def find_all_invoice_items_by_collection_of_invoices(invoices)
+    invoices.map { |invoice| find_all_invoice_items_by_invoice_id(invoice.id) }.flatten
   end
 
   def find_total_revenue_for_invoices(invoices)
     successful_invoices = find_all_successful_invoices(invoices)
-    invoice_items = repository.find_all_by_collection_of_invoices(successful_invoices)
+    invoice_items = find_all_invoice_items_by_collection_of_invoices(successful_invoices)
     invoice_item_repository.total_revenue_for_invoice_items(invoice_items)
   end
 
