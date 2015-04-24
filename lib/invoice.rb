@@ -34,6 +34,10 @@ class Invoice
     parent.find_all_transactions(id)
   end
 
+  def successful_transactions
+    parent.find_all_successsful_transactions(id)
+  end
+
   def invoice_items
     parent.find_all_invoice_items(id)
   end
@@ -49,5 +53,4 @@ class Invoice
   def merchant
     parent.find_merchant(merchant_id)
   end
-
 end

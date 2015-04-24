@@ -3,15 +3,6 @@ require 'minitest/autorun'
 require 'smarter_csv'
 require_relative '../lib/customer_repository.rb'
 
-#Repo classes need these methods:
-#"all": return all customers
-#"random": return one random customer
-#"find_by_x(match)": find one customer that has attribute x
-#"find_all_by_x(match)": find all customers that have attribute x
-#for the Customer repo, the attributes are:
-#id, first_name, last_name, created_at, updated_at.
-#Text attributes (name, desc) should be case-insensitive.
-
 class CustomerRepositoryTest < Minitest::Test
   def setup
     @test_customer_repo = CustomerRepository.new(SmarterCSV.process('./test_data/customers.csv'), self)
@@ -22,12 +13,8 @@ class CustomerRepositoryTest < Minitest::Test
     assert @test_customer_repo.all.all? { |customer| customer.class == Customer }
   end
 
-  def test_random_method_returns_something_in_the_repository
+  def test_random_method_returns_random_customer
     assert @test_customer_repo.all.include?(@test_customer_repo.random)
-  end
-
-  def test_random_method_returns_different_things
-    #assert... something?
   end
 
   def test_find_by_id_returns_one_object_with_a_given_id
@@ -65,7 +52,7 @@ class CustomerRepositoryTest < Minitest::Test
     assert_equal [], @test_customer_repo.find_all_by_first_name("Soma")
     sample_result = @test_customer_repo.find_all_by_first_name("Jade")
     assert sample_result.class == Array
-    assert sample_result.length == 3
+    assert_equal 3, sample_result.length
     assert sample_result.all? { |customer| customer.class == Customer}
     assert sample_result.all? { |customer| customer.first_name == "Jade"}
   end
@@ -74,7 +61,7 @@ class CustomerRepositoryTest < Minitest::Test
     assert_equal [], @test_customer_repo.find_all_by_last_name("Lowell")
     sample_result = @test_customer_repo.find_all_by_last_name("Sapphire")
     assert sample_result.class == Array
-    assert sample_result.length == 2
+    assert_equal 2, sample_result.length
     assert sample_result.all? { |customer| customer.class == Customer}
     assert sample_result.all? { |customer| customer.last_name == "Sapphire"}
   end
@@ -83,7 +70,7 @@ class CustomerRepositoryTest < Minitest::Test
     assert_equal [], @test_customer_repo.find_all_by_created_at("2075-04-21 14:53:59 UTC")
     sample_result = @test_customer_repo.find_all_by_created_at("2012-03-27 14:54:10 UTC")
     assert sample_result.class == Array
-    assert sample_result.length == 6
+    assert_equal 6, sample_result.length
     assert sample_result.all? { |customer| customer.class == Customer}
     assert sample_result.all? { |customer| customer.created_at == "2012-03-27 14:54:10 UTC"}
   end
@@ -92,7 +79,7 @@ class CustomerRepositoryTest < Minitest::Test
     assert_equal [], @test_customer_repo.find_all_by_updated_at("2075-04-21 14:53:59 UTC")
     sample_result = @test_customer_repo.find_all_by_updated_at("2012-03-27 14:54:14 UTC")
     assert sample_result.class == Array
-    assert sample_result.length == 3
+    assert_equal 3, sample_result.length
     assert sample_result.all? { |customer| customer.class == Customer}
     assert sample_result.all? { |customer| customer.created_at == "2012-03-27 14:54:14 UTC"}
   end

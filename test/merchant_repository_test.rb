@@ -14,7 +14,7 @@ class MerchantRepositoryTest < Minitest::Test
   end
 
   def test_all_returns_all_instances
-    assert_equal 31, @result.merchants.count
+    assert_equal 32, @result.merchants.count
   end
 
   def test_random_returns_a_random_sample_from_the_repository
@@ -48,7 +48,7 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_id(50)
     sample_result = @result.find_all_by_id(28)
     assert sample_result.class == Array
-    assert sample_result.length == 1
+    assert_equal 1, sample_result.length
     assert sample_result[0].class == Merchant
     assert sample_result[0].id == 28
   end
@@ -57,7 +57,7 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_name("bob's used cars")
     sample_result = @result.find_all_by_name("Schulist, Wilkinson and Leannon")
     assert sample_result.class == Array
-    assert sample_result.length == 1
+    assert_equal 1, sample_result.length
     assert sample_result.all? {|merchant| merchant.class == Merchant}
     assert sample_result.all? {|merchant| merchant.name == "Schulist, Wilkinson and Leannon"}
   end
@@ -66,7 +66,7 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_created_at("2075-04-21 14:53:59 UTC")
     sample_result = @result.find_all_by_created_at("2012-03-27 14:54:00 UTC")
     assert sample_result.class == Array
-    assert sample_result.length == 12
+    assert_equal 12, sample_result.length
     assert sample_result.all? {|merchant| merchant.class == Merchant}
     assert sample_result.all? {|merchant| merchant.created_at == "2012-03-27 14:54:00 UTC"}
   end
@@ -75,7 +75,7 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_updated_at("2075-04-21 14:53:59 UTC")
     sample_result = @result.find_all_by_updated_at("2012-03-27 14:54:01 UTC")
     assert sample_result.class == Array
-    assert sample_result.length == 10
+    assert_equal 11, sample_result.length
     assert sample_result.all? {|merchant| merchant.class == Merchant}
     assert sample_result.all? {|merchant| merchant.updated_at == "2012-03-27 14:54:01 UTC"}
   end
