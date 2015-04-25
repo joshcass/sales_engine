@@ -105,6 +105,6 @@ class InvoiceItemRepositoryTest < Minitest::Test
 
   def test_find_total_revenue_for_invoice_items_gives_revenue
     invoice_item = @test_invoice_item_repo.find_all_by_invoice_id(28)
-    assert_equal BigDecimal("1042301.0"), @test_invoice_item_repo.total_revenue_for_invoice_items(invoice_item)
+    assert_equal BigDecimal("10.42").round(2), @test_invoice_item_repo.total_revenue_for_invoice_items(invoice_item)
   end
 end

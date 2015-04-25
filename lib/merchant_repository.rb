@@ -57,35 +57,31 @@ class MerchantRepository
     sales_engine.find_all_invoices_by_merchant_id(merchant_id)
   end
 
-  def find_total_revenue(invoices)
-    sales_engine.find_total_revenue_for_invoices(invoices)
+  def find_all_successful_invoice_items(successful_invoices)
+    successful_invoices.map do |invoice|
+      sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
+    end.flatten
   end
 
-  def total_items_sold(invoices)
-    sales_engine.find_all_items_sold_by_merchant(invoices)
+  def find_total_revenue(invoice_items)
+    sales_engine.find_total_revenue_for_invoice_items(invoice_items)
   end
 
-  def favorite_customer(invoices)
-    sales_engine.find_merchant_favorite_customer(invoices)
+  def total_items_sold(invoice_items)
+    sales_engine.find_total_quantity_for_invoice_items(invoice_items)
   end
 
-  def pending_invoice_customers(invoices)
-    sales_engine.find_customers_with_pending_invoices(invoices)
+  def most_revenue(top_n)
+    merchants.sort_by { |merchant| merchant.revenue }.take(top_n)
   end
 
-  # def most_revenue(X)
-    # sorts all merchants by merchant.revenue
-    # take top X merchants
-  # end
-
-  # def most_items(X)
-    # sorts all merchants by merchant.items_sold
-    # take top X merchants
-  # end
+  def most_items(top_n)
+    merchants.sort_by { |merchant| merchant.items_sold}.take(top_n)
+  end
 
   # def revenue(date)
-    # calls merchant.revenue(date) on all merchants
-    # totals up revenue
+  # calls merchant.revenue(date) on all merchants
+  # totals up revenue
   # end
 
   private
@@ -93,3 +89,5 @@ class MerchantRepository
     csv_data.map { |merchant| Merchant.new(merchant, repo) }
   end
 end
+
+

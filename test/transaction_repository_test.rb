@@ -127,9 +127,9 @@ class TransactionRepositoryTest < Minitest::Test
   end
 
   def test_transaction_success_can_tell_success_from_fail
-    assert @result.transaction_success?(28)
-    assert @result.transaction_success?(24)
-    refute @result.transaction_success?(27)
-    refute @result.transaction_success?(12)
+    assert @result.transactions_successful?(28)
+    assert @result.transactions_successful?(24)
+    refute @result.transactions_successful?(27)
+    refute @result.transactions_successful?(12)
   end
 end
