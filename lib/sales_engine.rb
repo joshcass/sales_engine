@@ -85,6 +85,22 @@ class SalesEngine
     invoice_item_repository.total_quantity_for_invoice_items(invoice_items)
   end
 
+  def add_new_customer(customer)
+    customer_repository.new_customer(customer)
+  end
+
+  def add_new_merchant(merchant)
+    merchant_repository.new_merchant(merchant)
+  end
+
+  def add_new_items(items)
+    item_repository.new_items(items)
+  end
+
+  def add_new_invoice_items(invoice_id, items)
+    invoice_item_repository.new_invoice_items(invoice_id, items)
+  end
+
   private
   def parse_csv(filename)
     SmarterCSV.process("#{directory}/#{filename}")

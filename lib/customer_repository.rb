@@ -69,6 +69,10 @@ class CustomerRepository
     sales_engine.find_invoices_with_customer_id(id)
   end
 
+  def new_customer(customer)
+    customers << customer if customers.none? { |a_customer| a_customer == customer}
+  end
+
   private
   def parse_customers(csv_data, repo)
     csv_data.map { |invoice| Customer.new(invoice, repo) }
