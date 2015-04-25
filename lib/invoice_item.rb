@@ -41,4 +41,5 @@ class InvoiceItem
   def item
     parent.find_item(item_id)
   end
+
 end

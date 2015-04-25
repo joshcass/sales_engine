@@ -85,20 +85,8 @@ class TransactionRepository
     sales_engine.find_invoice_by_id(invoice_id)
   end
 
-  def transaction_success?(invoice_id)
-    find_by_invoice_id(invoice_id).result == "success"
-  end
-
-  def transaction_failed?(invoice_id)
-    find_by_invoice_id(invoice_id).result == "failed"
-  end
-
-  def find_all_successful_invoices(invoices)
-    invoices.select { |invoice| transaction_success?(invoice.id) }
-  end
-
-  def find_all_failed_invoices(invoices)
-    invoices.select { |invoice| transaction_failed?(invoice.id)}
+  def transactions_successful?(invoice_id)
+    find_all_by_invoice_id(invoice_id).all? { |transaction| transaction.result == "success"}
   end
 
   private

@@ -73,12 +73,16 @@ class InvoiceRepository
     sales_engine.find_all_invoice_items_by_invoice_id(invoice_id)
   end
 
-  def find_all_invoice_items_for_invoices(invoices)
-    invoices.map { |invoice| find_all_invoice_items(invoice.id) }.flatten
+  def find_all_successful_invoice_items
+
   end
 
-  def find_all_successsful_transactions(invoice_id)
-    sales_engine.find_all_successful_transaction_by_invoice(invoice_id)
+  # def find_all_invoice_items_for_invoices(invoices)
+  #   invoices.map { |invoice| find_all_invoice_items(invoice.id) }.flatten
+  # end
+
+  def all_transactions_successful?(invoice_id)
+    sales_engine.all_transactions_successful?(invoice_id)
   end
 
   def find_all_items(invoice_id)

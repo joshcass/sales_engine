@@ -96,7 +96,7 @@ class SalesEngineTest < Minitest::Test
 
   def test_merchant_revenue_method_returns_total_revenue_for_that_merchant
     merchant = @test_engine.merchant_repository.find_by_id(100)
-    assert_equal BigDecimal("13836.0"), merchant.revenue
+    assert_equal BigDecimal("1.3836").round(2), merchant.revenue
   end
 
   def test_item_best_day_returns_a_date
@@ -124,18 +124,6 @@ class SalesEngineTest < Minitest::Test
     assert @test_engine.item_repository.most_items(3).all? { |entry| entry.is_a?Item }
   end
 
-  def test_find_all_successful_invoices_returns_only_successful_invoices
-    invoices = []
-    invoices << @test_engine.invoice_repository.find_by_id(27)
-    invoices << @test_engine.invoice_repository.find_by_id(28)
-    invoices << @test_engine.invoice_repository.find_by_id(29)
-    invoices << @test_engine.invoice_repository.find_by_id(30)
-    assert_equal 3, @test_engine.transaction_repository.find_all_successful_invoices(invoices).length
-    assert @test_engine.transaction_repository.find_all_successful_invoices(invoices).all? do |invoice|
-        invoice.is_a? Invoice
-      end
-  end
-
   def test_find_all_items_sold_by_merchant_returns_all_items_for_merchant
     merchant = @test_engine.merchant_repository.find_by_id(1)
     assert_equal 54, merchant.items_sold
@@ -149,7 +137,10 @@ class SalesEngineTest < Minitest::Test
 
   def test_merchant_pending_invoices_returns_customers_with_failed_transactions
     merchant = @test_engine.merchant_repository.find_by_id(100)
-    customer = @test_engine.customer_repository.find_by_id(9)
-    assert_equal customer, merchant.customers_with_pending_invoices
+    assert_equal 1, merchant.customers_with_pending_invoices.length
+    assert_equal ["Star"], merchant.customers_with_pending_invoices.map { |customer| customer.first_name }
+    assert_equal ["Sapphire"], merchant.customers_with_pending_invoices.map { |customer| customer.last_name }
+    assert_equal [9], merchant.customers_with_pending_invoices.map { |customer| customer.id }
+    assert merchant.customers_with_pending_invoices.all? { |customer| customer.is_a?Customer}
   end
 end

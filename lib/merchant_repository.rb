@@ -57,21 +57,25 @@ class MerchantRepository
     sales_engine.find_all_invoices_by_merchant_id(merchant_id)
   end
 
-  def find_total_revenue(invoices)
-    sales_engine.find_total_revenue_for_invoices(invoices)
+  def find_all_successful_invoice_items(successful_invoices)
+    successful_invoices.map do |invoice|
+      sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
+    end.flatten
   end
 
-  def total_items_sold(invoices)
-    sales_engine.find_all_items_sold_by_merchant(invoices)
+  def find_total_revenue(invoice_items)
+    sales_engine.find_total_revenue_for_invoice_items(invoice_items)
   end
 
-  def favorite_customer(invoices)
-    sales_engine.find_merchant_favorite_customer(invoices)
+  def total_items_sold(invoice_items)
+    sales_engine.find_total_quantity_for_invoice_items(invoice_items)
   end
 
-  def pending_invoice_customers(invoices)
-    sales_engine.find_customers_with_pending_invoices(invoices)
+  private
+  def parse_merchants(csv_data, repo)
+    csv_data.map { |merchant| Merchant.new(merchant, repo) }
   end
+end
 
   # def most_revenue(X)
     # sorts all merchants by merchant.revenue
@@ -88,8 +92,4 @@ class MerchantRepository
     # totals up revenue
   # end
 
-  private
-  def parse_merchants(csv_data, repo)
-    csv_data.map { |merchant| Merchant.new(merchant, repo) }
-  end
-end
+
