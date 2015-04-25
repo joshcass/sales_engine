@@ -143,4 +143,26 @@ class SalesEngineTest < Minitest::Test
     assert_equal [9], merchant.customers_with_pending_invoices.map { |customer| customer.id }
     assert merchant.customers_with_pending_invoices.all? { |customer| customer.is_a?Customer}
   end
+
+  def test_merchant_repository_most_revenue_returns_merchants_with_top_revenue
+    top_merchants = @test_engine.merchant_repository.most_revenue(3)
+    assert_equal 83, top_merchants.first.id
+    assert_equal 2, top_merchants[1].id
+    assert_equal 3, top_merchants.last.id
+    assert_equal "Snacks n knacks", top_merchants.first.name
+    assert_equal "Klein, Rempel and Jones", top_merchants[1].name
+    assert_equal "Willms and Sons", top_merchants.last.name
+    assert top_merchants.all? {|merchant| merchant.is_a?Merchant}
+  end
+
+  def test_merchant_repository_most_items_returns_merchants_who_sold_most_items
+    top_merchants = @test_engine.merchant_repository.most_items(3)
+    assert_equal 83, top_merchants.first.id
+    assert_equal 2, top_merchants[1].id
+    assert_equal 3, top_merchants.last.id
+    assert_equal "Snacks n knacks", top_merchants.first.name
+    assert_equal "Klein, Rempel and Jones", top_merchants[1].name
+    assert_equal "Willms and Sons", top_merchants.last.name
+    assert top_merchants.all? {|merchant| merchant.is_a?Merchant}
+  end
 end
