@@ -71,25 +71,23 @@ class MerchantRepository
     sales_engine.find_total_quantity_for_invoice_items(invoice_items)
   end
 
+  def most_revenue(top_n)
+    merchants.sort_by { |merchant| merchant.revenue }.take(top_n)
+  end
+
+  def most_items(top_n)
+    merchants.sort_by { |merchant| merchant.items_sold}.take(top_n)
+  end
+
+  # def revenue(date)
+  # calls merchant.revenue(date) on all merchants
+  # totals up revenue
+  # end
+
   private
   def parse_merchants(csv_data, repo)
     csv_data.map { |merchant| Merchant.new(merchant, repo) }
   end
 end
-
-  # def most_revenue(X)
-    # sorts all merchants by merchant.revenue
-    # take top X merchants
-  # end
-
-  # def most_items(X)
-    # sorts all merchants by merchant.items_sold
-    # take top X merchants
-  # end
-
-  # def revenue(date)
-    # calls merchant.revenue(date) on all merchants
-    # totals up revenue
-  # end
 
 

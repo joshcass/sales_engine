@@ -55,10 +55,14 @@ class Merchant
         invoice.customer
       end.max_by do |id, collection|
         collection.length
-      end[0]
+      end.first
   end
 
   def customers_with_pending_invoices
     failed_invoices.map { |invoice| invoice.customer}
+  end
+
+  def revenue_by_date(date)
+    successful_invoice_items.select {|invoice| invoice.created_at}
   end
 end
