@@ -73,10 +73,6 @@ class InvoiceRepository
     sales_engine.find_all_invoice_items_by_invoice_id(invoice_id)
   end
 
-  def find_all_successful_invoice_items
-
-  end
-
   def all_transactions_successful?(invoice_id)
     sales_engine.all_transactions_successful?(invoice_id)
   end
@@ -99,8 +95,8 @@ class InvoiceRepository
                              customer_id: data_hash[:customer].id,
                              merchant_id: data_hash[:merchant].id,
                              status: data_hash[:status],
-                             created_at: Time.now.utc,
-                             updated_at: Time.now.utc}, self)
+                             created_at: "#{Time.now.utc}",
+                             updated_at: "#{Time.now.utc}"}, self)
     find_by_id(new_id)
   end
 
