@@ -92,6 +92,25 @@ class InvoiceItemRepository
     invoice_items.reduce(0) { |sum, invoice_item| sum + invoice_item.quantity }
   end
 
+  def group_items_by_quantity(items)
+    items.group_by { |item| item }
+  end
+
+  def add_invoice_item(invoice_id, item, quantity)
+    new_id = invoice_items.max_by { |invoice_item| invoice_item.id }.id + 1
+    invoice_items << InvoiceItem.new({id: new_id,
+                                      item_id: item.id,
+                                      invoice_id: invoice_id,
+                                      quantity: quantity,
+                                      unit_price: item.unit_price,
+                                      created_at: Time.now.utc,
+                                      updated_at: Time.now.utc}, self)
+  end
+
+  def new_invoice_items(invoice_id, items)
+    group_items_by_quantity(items).each { |item, quantity| add_invoice_item(invoice_id, item, quantity.length) }
+  end
+
   private
   def parse_invoice_items(csv_data, repo)
     csv_data.map { |invoice| InvoiceItem.new(invoice, repo) }

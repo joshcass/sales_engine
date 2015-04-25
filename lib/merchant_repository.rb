@@ -84,6 +84,11 @@ class MerchantRepository
   # totals up revenue
   # end
 
+
+  def new_merchant(merchant)
+    merchants << merchant if merchants.none? { |a_merchant| a_merchant == merchant}
+  end
+
   private
   def parse_merchants(csv_data, repo)
     csv_data.map { |merchant| Merchant.new(merchant, repo) }

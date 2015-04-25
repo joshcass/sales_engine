@@ -136,7 +136,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_merchant_pending_invoices_returns_customers_with_failed_transactions
-    skip
     merchant = @test_engine.merchant_repository.find_by_id(100)
     assert_equal 1, merchant.customers_with_pending_invoices.length
     assert_equal ["Star"], merchant.customers_with_pending_invoices.map { |customer| customer.first_name }
@@ -165,5 +164,49 @@ class SalesEngineTest < Minitest::Test
     assert_equal "Klein, Rempel and Jones", top_merchants[1].name
     assert_equal "Willms and Sons", top_merchants.last.name
     assert top_merchants.all? {|merchant| merchant.is_a?Merchant}
+  end
+
+  def test_invoice_create_creates_new_invoice
+    customer = @test_engine.customer_repository.find_by_id(16)
+    merchant = @test_engine.merchant_repository.find_by_id(100)
+    item1 = @test_engine.item_repository.find_by_id(4)
+    item2 = @test_engine.item_repository.find_by_id(535)
+    item3 = @test_engine.item_repository.find_by_id(1918)
+    invoice = @test_engine.invoice_repository.create(customer: customer, merchant: merchant, status: "shipped",
+                                                     items: [item1, item2, item3, item2, item1, item1])
+    assert_equal 32, invoice.id
+    assert_equal 16, invoice.customer_id
+    assert_equal 100, invoice.merchant_id
+    assert_equal "shipped", invoice.status
+    assert invoice.created_at.is_a?String
+    assert invoice.updated_at.is_a?String
+    assert_equal 32, @test_engine.invoice_repository.all.count
+    assert_equal invoice, @test_engine.invoice_repository.find_by_id(invoice.id)
+  end
+
+  def test_creating_new_invoice_adds_invoice_items
+    customer = @test_engine.customer_repository.find_by_id(16)
+    merchant = @test_engine.merchant_repository.find_by_id(100)
+    item1 = @test_engine.item_repository.find_by_id(4)
+    item2 = @test_engine.item_repository.find_by_id(535)
+    item3 = @test_engine.item_repository.find_by_id(1918)
+    @test_engine.invoice_repository.create(customer: customer, merchant: merchant, status: "shipped",
+                                           items: [item1, item2, item3, item2, item1, item1])
+    invoiceitem1 = @test_engine.invoice_item_repository.find_by_id(143)
+    invoiceitem2 = @test_engine.invoice_item_repository.find_by_id(144)
+    invoiceitem3 = @test_engine.invoice_item_repository.find_by_id(145)
+    assert_equal 32, @test_engine.invoice_item_repository.all.count
+    assert_equal 4, invoiceitem1.item_id
+    assert_equal 32, invoiceitem1.invoice_id
+    assert_equal 3, invoiceitem1.quantity
+    assert_equal 150000000, invoiceitem1.unit_price
+    assert_equal 535, invoiceitem2.item_id
+    assert_equal 32, invoiceitem2.invoice_id
+    assert_equal 2, invoiceitem2.quantity
+    assert_equal 2196, invoiceitem2.unit_price
+    assert_equal 1918, invoiceitem3.item_id
+    assert_equal 32, invoiceitem3.invoice_id
+    assert_equal 1, invoiceitem3.quantity
+    assert_equal 72018, invoiceitem3.unit_price
   end
 end

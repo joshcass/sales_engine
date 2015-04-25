@@ -65,4 +65,5 @@ class Merchant
   def revenue_by_date(date)
     successful_invoice_items.select {|invoice| invoice.created_at}
   end
+
 end

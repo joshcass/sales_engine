@@ -39,6 +39,6 @@ class Customer
         invoice.merchant_id
       end.max_by do |id, collection|
         collection.length
-      end[0])
+      end.first)
   end
 end

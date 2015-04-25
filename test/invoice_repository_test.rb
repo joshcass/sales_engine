@@ -15,7 +15,7 @@ class InvoiceRepositoryTest < Minitest::Test
   end
 
   def test_all_returns_all_instances
-    assert_equal 31, @result.invoices.count
+    assert_equal 31, @result.all.count
   end
 
   def test_random_returns_a_random_sample_from_the_repository

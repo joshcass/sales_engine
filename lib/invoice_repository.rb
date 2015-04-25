@@ -73,14 +73,6 @@ class InvoiceRepository
     sales_engine.find_all_invoice_items_by_invoice_id(invoice_id)
   end
 
-  def find_all_successful_invoice_items
-
-  end
-
-  # def find_all_invoice_items_for_invoices(invoices)
-  #   invoices.map { |invoice| find_all_invoice_items(invoice.id) }.flatten
-  # end
-
   def all_transactions_successful?(invoice_id)
     sales_engine.all_transactions_successful?(invoice_id)
   end
@@ -95,6 +87,26 @@ class InvoiceRepository
 
   def find_merchant(merchant_id)
     sales_engine.find_merchant_by_id(merchant_id)
+  end
+
+  def new_invoice(data_hash)
+    new_id = invoices.max_by { |invoice| invoice.id }.id + 1
+    invoices << Invoice.new({id: new_id,
+                             customer_id: data_hash[:customer].id,
+                             merchant_id: data_hash[:merchant].id,
+                             status: data_hash[:status],
+                             created_at: "#{Time.now.utc}",
+                             updated_at: "#{Time.now.utc}"}, self)
+    find_by_id(new_id)
+  end
+
+  def create(data_hash)
+    sales_engine.add_new_customer(data_hash[:customer])
+    sales_engine.add_new_merchant(data_hash[:merchant])
+    sales_engine.add_new_items(data_hash[:items])
+    invoice = new_invoice(data_hash)
+    sales_engine.add_new_invoice_items(invoice.id, data_hash[:items])
+    invoice
   end
 
   private
