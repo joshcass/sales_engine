@@ -30,19 +30,35 @@ class Merchant
     parent.find_all_invoices(id)
   end
 
+  def successful_invoices
+    invoices.select{ |invoice| invoice.all_successful? }
+  end
+
+  def failed_invoices
+    invoices.reject{ |invoice| invoice.all_successful?}
+  end
+
+  def successful_invoice_items
+    parent.find_all_successful_invoice_items(successful_invoices)
+  end
+
   def revenue
-    parent.sales_engine.find_total_revenue_for_invoices(invoices)
+    parent.find_total_revenue(successful_invoice_items)
   end
 
   def items_sold
-    parent.total_items_sold(invoices)
+    parent.total_items_sold(successful_invoice_items)
   end
 
   def favorite_customer
-    parent.favorite_customer(invoices)
+    successful_invoices.group_by do |invoice|
+        invoice.customer
+      end.max_by do |id, collection|
+        collection.length
+      end[0]
   end
 
   def customers_with_pending_invoices
-    parent.pending_invoice_customers(invoices)
+    failed_invoices.map { |invoice| invoice.customer}
   end
 end

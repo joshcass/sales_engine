@@ -84,7 +84,7 @@ class InvoiceItemRepository
 
   def total_revenue_for_invoice_items(invoice_items)
     invoice_items.reduce(0) do |sum, invoice_item|
-      sum + (BigDecimal(invoice_item.unit_price) * BigDecimal(invoice_item.quantity))
+      sum + (invoice_item.quantity * BigDecimal(".#{invoice_item.unit_price}"))
     end.round(2)
   end
 
