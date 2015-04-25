@@ -136,7 +136,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_merchant_pending_invoices_returns_customers_with_failed_transactions
-    skip
     merchant = @test_engine.merchant_repository.find_by_id(100)
     assert_equal 1, merchant.customers_with_pending_invoices.length
     assert_equal ["Star"], merchant.customers_with_pending_invoices.map { |customer| customer.first_name }
