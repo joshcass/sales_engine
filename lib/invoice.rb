@@ -53,4 +53,8 @@ class Invoice
   def merchant
     parent.find_merchant(merchant_id)
   end
+
+  def charge(data_hash)
+    parent.add_transaction(id, data_hash)
+  end
 end

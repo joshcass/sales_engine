@@ -1,6 +1,7 @@
 require 'smarter_csv'
-require 'bigdecimal'
 require_relative 'invoice_item'
+require_relative 'business_intelligence'
+include BusinessIntelligence
 
 class InvoiceItemRepository
   attr_reader :sales_engine, :invoice_items
@@ -80,35 +81,6 @@ class InvoiceItemRepository
 
   def find_item(item_id)
     sales_engine.find_item_by_id(item_id)
-  end
-
-  def total_revenue_for_invoice_items(invoice_items)
-    invoice_items.reduce(0) do |sum, invoice_item|
-      sum + (invoice_item.quantity * BigDecimal(".#{invoice_item.unit_price}"))
-    end.round(2)
-  end
-
-  def total_quantity_for_invoice_items(invoice_items)
-    invoice_items.reduce(0) { |sum, invoice_item| sum + invoice_item.quantity }
-  end
-
-  def group_items_by_quantity(items)
-    items.group_by { |item| item }
-  end
-
-  def add_invoice_item(invoice_id, item, quantity)
-    new_id = invoice_items.max_by { |invoice_item| invoice_item.id }.id + 1
-    invoice_items << InvoiceItem.new({id: new_id,
-                                      item_id: item.id,
-                                      invoice_id: invoice_id,
-                                      quantity: quantity,
-                                      unit_price: item.unit_price,
-                                      created_at: Time.now.utc,
-                                      updated_at: Time.now.utc}, self)
-  end
-
-  def new_invoice_items(invoice_id, items)
-    group_items_by_quantity(items).each { |item, quantity| add_invoice_item(invoice_id, item, quantity.length) }
   end
 
   private

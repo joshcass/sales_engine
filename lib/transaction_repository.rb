@@ -1,5 +1,7 @@
 require 'smarter_csv'
 require_relative 'transaction'
+require_relative 'business_intelligence'
+include BusinessIntelligence
 
 class TransactionRepository
   attr_reader :transactions, :sales_engine

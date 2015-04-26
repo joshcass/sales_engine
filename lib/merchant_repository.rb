@@ -1,5 +1,7 @@
 require 'smarter_csv'
 require_relative 'merchant'
+require_relative 'business_intelligence'
+include BusinessIntelligence
 
 class MerchantRepository
   attr_reader :merchants, :sales_engine
@@ -61,32 +63,6 @@ class MerchantRepository
     successful_invoices.map do |invoice|
       sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
     end.flatten
-  end
-
-  def find_total_revenue(invoice_items)
-    sales_engine.find_total_revenue_for_invoice_items(invoice_items)
-  end
-
-  def total_items_sold(invoice_items)
-    sales_engine.find_total_quantity_for_invoice_items(invoice_items)
-  end
-
-  def most_revenue(top_n)
-    merchants.sort_by { |merchant| merchant.revenue }.take(top_n)
-  end
-
-  def most_items(top_n)
-    merchants.sort_by { |merchant| merchant.items_sold}.take(top_n)
-  end
-
-  # def revenue(date)
-  # calls merchant.revenue(date) on all merchants
-  # totals up revenue
-  # end
-
-
-  def new_merchant(merchant)
-    merchants << merchant if merchants.none? { |a_merchant| a_merchant == merchant}
   end
 
   private
