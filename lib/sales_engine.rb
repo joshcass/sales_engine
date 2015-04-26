@@ -4,6 +4,8 @@ require_relative 'item_repository'
 require_relative 'merchant_repository'
 require_relative 'transaction_repository'
 require_relative 'invoice_repository'
+require_relative 'business_intelligence'
+include BusinessIntelligence
 
 class SalesEngine
   attr_reader :directory,
@@ -75,30 +77,6 @@ class SalesEngine
 
   def all_transactions_successful?(invoice_id)
     transaction_repository.transactions_successful?(invoice_id)
-  end
-
-  def find_total_revenue_for_invoice_items(invoice_items)
-    invoice_item_repository.total_revenue_for_invoice_items(invoice_items)
-  end
-
-  def find_total_quantity_for_invoice_items(invoice_items)
-    invoice_item_repository.total_quantity_for_invoice_items(invoice_items)
-  end
-
-  def add_new_customer(customer)
-    customer_repository.new_customer(customer)
-  end
-
-  def add_new_merchant(merchant)
-    merchant_repository.new_merchant(merchant)
-  end
-
-  def add_new_items(items)
-    item_repository.new_items(items)
-  end
-
-  def add_new_invoice_items(invoice_id, items)
-    invoice_item_repository.new_invoice_items(invoice_id, items)
   end
 
   private
