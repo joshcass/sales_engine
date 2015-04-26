@@ -75,8 +75,8 @@ class InvoiceRepository
     sales_engine.find_all_invoice_items_by_invoice_id(invoice_id)
   end
 
-  def all_transactions_successful?(invoice_id)
-    sales_engine.all_transactions_successful?(invoice_id)
+  def all_transactions_failed?(invoice_id)
+    sales_engine.all_transactions_failed?(invoice_id)
   end
 
   def find_all_items(invoice_id)

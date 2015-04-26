@@ -103,7 +103,7 @@ class TransactionRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_result("super")
     sample_result = @result.find_all_by_result("failed")
     assert sample_result.class == Array
-    assert_equal 6, sample_result.length
+    assert_equal 7, sample_result.length
     assert sample_result.all? { |item| item.class == Transaction}
     assert sample_result.all? { |item| item.result == "failed"}
   end
@@ -127,9 +127,9 @@ class TransactionRepositoryTest < Minitest::Test
   end
 
   def test_transaction_success_can_tell_success_from_fail
-    assert @result.transactions_successful?(28)
-    assert @result.transactions_successful?(24)
-    refute @result.transactions_successful?(27)
-    refute @result.transactions_successful?(12)
+    refute @result.transactions_failed?(28)
+    refute @result.transactions_failed?(24)
+    assert @result.transactions_failed?(27)
+    assert @result.transactions_failed?(12)
   end
 end

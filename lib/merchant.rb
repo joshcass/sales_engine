@@ -31,11 +31,11 @@ class Merchant
   end
 
   def successful_invoices
-    invoices.select{ |invoice| invoice.all_successful? }
+    invoices.reject{ |invoice| invoice.all_failed? }
   end
 
-  def failed_invoices
-    invoices.reject{ |invoice| invoice.all_successful?}
+  def pending_invoices
+    invoices.select{ |invoice| invoice.all_failed? }
   end
 
   def successful_invoice_items
@@ -59,7 +59,7 @@ class Merchant
   end
 
   def customers_with_pending_invoices
-    failed_invoices.map { |invoice| invoice.customer}
+    pending_invoices.map { |invoice| invoice.customer}
   end
 
   def revenue_by_date(date)

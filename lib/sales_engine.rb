@@ -75,8 +75,8 @@ class SalesEngine
     end
   end
 
-  def all_transactions_successful?(invoice_id)
-    transaction_repository.transactions_successful?(invoice_id)
+  def all_transactions_failed?(invoice_id)
+    transaction_repository.transactions_failed?(invoice_id)
   end
 
   private

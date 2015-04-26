@@ -34,8 +34,8 @@ class Invoice
     parent.find_all_transactions(id)
   end
 
-  def all_successful?
-    parent.all_transactions_successful?(id)
+  def all_failed?
+    parent.all_transactions_failed?(id)
   end
 
   def invoice_items
