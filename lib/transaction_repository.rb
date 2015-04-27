@@ -4,6 +4,10 @@ require_relative 'transaction'
 class TransactionRepository
   attr_reader :transactions, :sales_engine
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
   def initialize(csv_data, sales_engine)
     @transactions = parse_transactions(csv_data, self)
     @sales_engine = sales_engine
@@ -100,6 +104,7 @@ class TransactionRepository
         result: cc_info[:result],
         created_at: "#{Time.now.utc}",
         updated_at: "#{Time.now.utc}"}, self)
+    find_by_id(new_id)
   end
 
   private

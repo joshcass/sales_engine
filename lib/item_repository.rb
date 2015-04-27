@@ -4,6 +4,10 @@ require_relative 'item'
 class ItemRepository
   attr_reader :sales_engine, :items
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
   def initialize(csv_data, sales_engine)
     @items = parse_items(csv_data, self)
     @sales_engine = sales_engine
@@ -77,6 +81,12 @@ class ItemRepository
     items.select { |item| search_time == item.updated_at }
   end
 
+  def find_all_invoices(id)
+    sales_engine.find_invoice_items_by_item_id(id).map do |invoice_item|
+      sales_engine.find_invoice_by_id(invoice_item.invoice_id)
+    end
+  end
+
   def find_invoice_items(id)
     sales_engine.find_invoice_items_by_item_id(id)
   end
@@ -90,11 +100,11 @@ class ItemRepository
   end
 
   def most_revenue(top_n = 1)
-    items.max_by(top_n) { |item| sales_engine.find_total_revenue(sales_engine.invoice_item_repository.find_all_by_item_id(item.id)) }
+    items.max_by(top_n) { |item| item.revenue }
   end
 
   def most_items(top_n = 1)
-    items.max_by(top_n) { |item| sales_engine.find_total_quantity(sales_engine.invoice_item_repository.find_all_by_item_id(item.id))}
+    items.max_by(top_n) { |item| item.items_sold }
   end
 
   private

@@ -4,6 +4,10 @@ require_relative 'merchant'
 class MerchantRepository
   attr_reader :merchants, :sales_engine
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
   def initialize(csv_data, sales_engine)
     @merchants = parse_merchants(csv_data, self)
     @sales_engine = sales_engine
@@ -55,20 +59,6 @@ class MerchantRepository
 
   def find_all_items(merchant_id)
     sales_engine.find_all_items_by_merchant_id(merchant_id)
-  end
-
-  def find_all_invoice_items(invoices)
-    invoices.map do |invoice|
-      sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
-    end.flatten
-  end
-
-  def total_revenue(invoice_items)
-    sales_engine.find_total_revenue(invoice_items)
-  end
-
-  def total_items_sold(invoice_items)
-    sales_engine.find_total_quantity(invoice_items)
   end
 
   def most_revenue(top_n = 1)

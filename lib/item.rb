@@ -45,7 +45,22 @@ class Item
     parent.find_merchant(merchant_id)
   end
 
+  def revenue
+    parent.sales_engine.find_total_revenue(successful_invoice_items_for_item)
+  end
+
+  def successful_invoice_items_for_item
+    successful_invoice_items & invoice_items
+  end
+
+  def items_sold
+    parent.sales_engine.find_total_quantity(successful_invoice_items_for_item)
+  end
+
   def best_day
-    Date.strptime(invoice_items.group_by { |invoice_item| created_at }.max_by{|time, collection| collection.length}[0], '%F')
+    Date.strptime(invoice_items.
+        group_by { |invoice_item| created_at }
+                    .max_by{|time, collection| collection
+                                                 .length}[0], '%F')
   end
 end
