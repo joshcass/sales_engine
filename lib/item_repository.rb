@@ -4,6 +4,10 @@ require_relative 'item'
 class ItemRepository
   attr_reader :sales_engine, :items
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
   def initialize(csv_data, sales_engine)
     @items = parse_items(csv_data, self)
     @sales_engine = sales_engine

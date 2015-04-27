@@ -4,6 +4,10 @@ require_relative 'customer'
 class CustomerRepository
   attr_reader :sales_engine, :customers
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
   def initialize(csv_data, sales_engine)
     @customers = parse_customers(csv_data, self)
     @sales_engine = sales_engine

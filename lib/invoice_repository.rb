@@ -4,6 +4,10 @@ require_relative 'invoice'
 class InvoiceRepository
   attr_reader :invoices, :sales_engine
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
   def initialize(csv_data, sales_engine)
     @invoices = parse_invoices(csv_data, self)
     @sales_engine = sales_engine
