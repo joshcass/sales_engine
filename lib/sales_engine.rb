@@ -1,3 +1,4 @@
+require 'smarter_csv'
 require_relative 'customer_repository'
 require_relative 'invoice_item_repository'
 require_relative 'item_repository'
