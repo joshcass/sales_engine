@@ -1,7 +1,5 @@
 require 'smarter_csv'
 require_relative 'merchant'
-require_relative 'business_intelligence'
-include BusinessIntelligence
 
 class MerchantRepository
   attr_reader :merchants, :sales_engine
@@ -51,18 +49,44 @@ class MerchantRepository
     merchants.select { |merchant| merchant.updated_at == updated }
   end
 
-  def find_all_items(merchant_id)
-    sales_engine.find_all_items_by_merchant_id(merchant_id)
-  end
-
   def find_all_invoices(merchant_id)
     sales_engine.find_all_invoices_by_merchant_id(merchant_id)
   end
 
-  def find_all_successful_invoice_items(successful_invoices)
-    successful_invoices.map do |invoice|
+  def find_all_items(merchant_id)
+    sales_engine.find_all_items_by_merchant_id(merchant_id)
+  end
+
+  def find_all_invoice_items(invoices)
+    invoices.map do |invoice|
       sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
     end.flatten
+  end
+
+  def total_revenue(invoice_items)
+    sales_engine.find_total_revenue(invoice_items)
+  end
+
+  def total_items_sold(invoice_items)
+    sales_engine.find_total_quantity(invoice_items)
+  end
+
+  def most_revenue(top_n = 1)
+    merchants.max_by(top_n) { |merchant| merchant.revenue }
+  end
+
+  def most_items(top_n = 1)
+    merchants.max_by(top_n) { |merchant| merchant.items_sold}
+  end
+
+  def revenue(date)
+    merchants.reduce(0) {|sum, merchant| sum + merchant.revenue(date)}
+  end
+
+  def new_merchant(merchant)
+    merchants << merchant if merchants.none? do |a_merchant|
+      a_merchant == merchant
+    end
   end
 
   private
@@ -70,5 +94,3 @@ class MerchantRepository
     csv_data.map { |merchant| Merchant.new(merchant, repo) }
   end
 end
-
-

@@ -110,10 +110,6 @@ class SalesEngineTest < Minitest::Test
     assert customer.transactions.all? { |entry| entry.is_a?Transaction }
   end
 
-  def test_customer_favorite_merchant_returns_a_merchant
-    customer = @test_engine.customer_repository.find_by_id(7)
-  end
-
   def test_item_repo_most_revenue_returns_arrays_of_items
     assert @test_engine.item_repository.most_revenue.all? { |entry| entry.is_a?Item }
     assert @test_engine.item_repository.most_revenue(3).all? { |entry| entry.is_a?Item }
@@ -146,23 +142,23 @@ class SalesEngineTest < Minitest::Test
 
   def test_merchant_repository_most_revenue_returns_merchants_with_top_revenue
     top_merchants = @test_engine.merchant_repository.most_revenue(3)
-    assert_equal 83, top_merchants.first.id
-    assert_equal 2, top_merchants[1].id
-    assert_equal 3, top_merchants.last.id
-    assert_equal "Snacks n knacks", top_merchants.first.name
-    assert_equal "Klein, Rempel and Jones", top_merchants[1].name
-    assert_equal "Willms and Sons", top_merchants.last.name
+    assert_equal 1, top_merchants.first.id
+    assert_equal 26, top_merchants[1].id
+    assert_equal 100, top_merchants.last.id
+    assert_equal "Schroeder-Jerde", top_merchants.first.name
+    assert_equal "Balistreri, Schaefer and Kshlerin", top_merchants[1].name
+    assert_equal "Billy Bob and Friends", top_merchants.last.name
     assert top_merchants.all? {|merchant| merchant.is_a?Merchant}
   end
 
   def test_merchant_repository_most_items_returns_merchants_who_sold_most_items
     top_merchants = @test_engine.merchant_repository.most_items(3)
-    assert_equal 83, top_merchants.first.id
-    assert_equal 2, top_merchants[1].id
-    assert_equal 3, top_merchants.last.id
-    assert_equal "Snacks n knacks", top_merchants.first.name
-    assert_equal "Klein, Rempel and Jones", top_merchants[1].name
-    assert_equal "Willms and Sons", top_merchants.last.name
+    assert_equal 1, top_merchants.first.id
+    assert_equal 26, top_merchants[1].id
+    assert_equal 100, top_merchants.last.id
+    assert_equal "Schroeder-Jerde", top_merchants.first.name
+    assert_equal "Balistreri, Schaefer and Kshlerin", top_merchants[1].name
+    assert_equal "Billy Bob and Friends", top_merchants.last.name
     assert top_merchants.all? {|merchant| merchant.is_a?Merchant}
   end
 

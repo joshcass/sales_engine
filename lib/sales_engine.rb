@@ -21,15 +21,15 @@ class SalesEngine
   end
 
   def startup
-    @customer_repository     = CustomerRepository.new(parse_csv('customers.csv'), self)
-    @invoice_item_repository = InvoiceItemRepository.new(parse_csv('invoice_items.csv'), self)
-    @item_repository         = ItemRepository.new(parse_csv('items.csv'), self)
-    @merchant_repository     = MerchantRepository.new(parse_csv('merchants.csv'), self)
-    @transaction_repository  = TransactionRepository.new(parse_csv('transactions.csv'), self)
-    @invoice_repository      = InvoiceRepository.new(parse_csv('invoices.csv'), self)
+    @customer_repository     = CustomerRepository.new(parser('customers.csv'), self)
+    @invoice_item_repository = InvoiceItemRepository.new(parser('invoice_items.csv'), self)
+    @item_repository         = ItemRepository.new(parser('items.csv'), self)
+    @merchant_repository     = MerchantRepository.new(parser('merchants.csv'), self)
+    @transaction_repository  = TransactionRepository.new(parser('transactions.csv'), self)
+    @invoice_repository      = InvoiceRepository.new(parser('invoices.csv'), self)
   end
 
-  def find_invoices_with_customer_id(item_id)
+  def find_invoices_by_customer_id(item_id)
     invoice_repository.find_all_by_customer_id(item_id)
   end
 
@@ -79,8 +79,36 @@ class SalesEngine
     transaction_repository.transactions_failed?(invoice_id)
   end
 
+  def find_total_revenue(invoice_items)
+    invoice_item_repository.calculate_total_revenue(invoice_items)
+  end
+
+  def find_total_quantity(invoice_items)
+    invoice_item_repository.calculate_total_quantity(invoice_items)
+  end
+
+  def add_new_customer(customer)
+    customer_repository.new_customer(customer)
+  end
+
+  def add_new_merchant(merchant)
+    merchant_repository.new_merchant(merchant)
+  end
+
+  def add_new_items(items)
+    item_repository.new_items(items)
+  end
+
+  def add_new_invoice_items(invoice_id, items)
+    invoice_item_repository.new_invoice_items(invoice_id, items)
+  end
+
+  def add_new_transaction(invoice_id, cc_info)
+    transaction_repository.new_transaction(invoice_id, cc_info)
+  end
+
   private
-  def parse_csv(filename)
+  def parser(filename)
     SmarterCSV.process("#{directory}/#{filename}")
   end
 end

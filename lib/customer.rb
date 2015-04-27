@@ -1,3 +1,6 @@
+require_relative 'business_intelligence'
+include BusinessIntelligence
+
 class Customer
   attr_reader :customer, :parent
 
@@ -26,19 +29,11 @@ class Customer
     customer[:updated_at]
   end
 
-  def invoices
-    parent.find_invoices(id)
-  end
-
-  def transactions
-    invoices.map { |invoice| invoice.transactions}.flatten
-  end
-
   def favorite_merchant
-    parent.sales_engine.find_merchant_by_id(invoices.group_by do |invoice|
-        invoice.merchant_id
-      end.max_by do |id, collection|
-        collection.length
-      end.first)
+    invoices.group_by do |invoice|
+        invoice.merchant
+      end.max_by do |merchant, quantity|
+        quantity.length
+      end.first
   end
 end

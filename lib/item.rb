@@ -1,3 +1,6 @@
+require_relative 'business_intelligence'
+include BusinessIntelligence
+
 class Item
   attr_reader :item, :parent
 
@@ -45,5 +48,4 @@ class Item
   def best_day
     Date.strptime(invoice_items.group_by { |invoice_item| created_at }.max_by{|time, collection| collection.length}[0], '%F')
   end
-
 end

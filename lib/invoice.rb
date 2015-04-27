@@ -34,10 +34,6 @@ class Invoice
     parent.find_all_transactions(id)
   end
 
-  def all_failed?
-    parent.all_transactions_failed?(id)
-  end
-
   def invoice_items
     parent.find_all_invoice_items(id)
   end
@@ -54,7 +50,11 @@ class Invoice
     parent.find_merchant(merchant_id)
   end
 
-  def charge(data_hash)
-    parent.add_transaction(id, data_hash)
+  def all_failed?
+    parent.all_transactions_failed?(id)
+  end
+
+  def charge(credit_card_info)
+    parent.add_transaction(id, credit_card_info)
   end
 end

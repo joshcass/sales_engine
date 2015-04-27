@@ -1,3 +1,6 @@
+require_relative 'business_intelligence'
+include BusinessIntelligence
+
 class Merchant
   attr_reader :merchant, :parent
 
@@ -26,26 +29,6 @@ class Merchant
     parent.find_all_items(id)
   end
 
-  def invoices
-    parent.find_all_invoices(id)
-  end
-
-  def successful_invoices
-    invoices.reject{ |invoice| invoice.all_failed? }
-  end
-
-  def pending_invoices
-    invoices.select{ |invoice| invoice.all_failed? }
-  end
-
-  def successful_invoice_items
-    parent.find_all_successful_invoice_items(successful_invoices)
-  end
-
-  def revenue
-    parent.find_total_revenue(successful_invoice_items)
-  end
-
   def items_sold
     parent.total_items_sold(successful_invoice_items)
   end
@@ -53,17 +36,12 @@ class Merchant
   def favorite_customer
     successful_invoices.group_by do |invoice|
         invoice.customer
-      end.max_by do |id, collection|
-        collection.length
+      end.max_by do |customer, quantity|
+        quantity.length
       end.first
   end
 
   def customers_with_pending_invoices
     pending_invoices.map { |invoice| invoice.customer}
   end
-
-  def revenue_by_date(date)
-    successful_invoice_items.select {|invoice| invoice.created_at}
-  end
-
 end
