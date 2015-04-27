@@ -5,7 +5,7 @@ class ItemRepository
   attr_reader :sales_engine, :items
 
   def inspect
-    "#<#{self.class} #{@merchants.size} rows>"
+    "#<#{self.class} #{@items.size} rows>"
   end
 
   def initialize(csv_data, sales_engine)
