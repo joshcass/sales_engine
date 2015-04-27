@@ -1,7 +1,5 @@
 require 'smarter_csv'
 require_relative 'transaction'
-require_relative 'business_intelligence'
-include BusinessIntelligence
 
 class TransactionRepository
   attr_reader :transactions, :sales_engine
@@ -88,7 +86,20 @@ class TransactionRepository
   end
 
   def transactions_failed?(invoice_id)
-    find_all_by_invoice_id(invoice_id).all? { |transaction| transaction.result == "failed"}
+    find_all_by_invoice_id(invoice_id).all? do |transaction|
+      transaction.result == "failed"
+    end
+  end
+
+  def new_transaction(invoice_id, cc_info)
+    new_id = transactions.max_by { |transaction| transaction.id }.id + 1
+    transactions << Transaction.new({id: new_id,
+        invoice_id: invoice_id,
+        credit_card_number: cc_info[:credit_card_number],
+        credit_card_expiration_date: cc_info[:credit_card_expiration_date],
+        result: cc_info[:result],
+        created_at: "#{Time.now.utc}",
+        updated_at: "#{Time.now.utc}"}, self)
   end
 
   private

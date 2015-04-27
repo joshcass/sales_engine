@@ -1,7 +1,5 @@
 require 'smarter_csv'
 require_relative 'invoice'
-require_relative 'business_intelligence'
-include BusinessIntelligence
 
 class InvoiceRepository
   attr_reader :invoices, :sales_engine
@@ -89,6 +87,30 @@ class InvoiceRepository
 
   def find_merchant(merchant_id)
     sales_engine.find_merchant_by_id(merchant_id)
+  end
+
+  def new_invoice(invoice_info)
+    new_id = invoices.max_by { |invoice| invoice.id }.id + 1
+    invoices << Invoice.new({id: new_id,
+        customer_id: invoice_info[:customer].id,
+        merchant_id: invoice_info[:merchant].id,
+        status: invoice_info[:status],
+        created_at: "#{Time.now.utc}",
+        updated_at: "#{Time.now.utc}"}, self)
+    find_by_id(new_id)
+  end
+
+  def create(invoice_info)
+    sales_engine.add_new_customer(invoice_info[:customer])
+    sales_engine.add_new_merchant(invoice_info[:merchant])
+    sales_engine.add_new_items(invoice_info[:items])
+    invoice = new_invoice(invoice_info)
+    sales_engine.add_new_invoice_items(invoice.id, invoice_info[:items])
+    invoice
+  end
+
+  def add_transaction(invoice_id, cc_info)
+    sales_engine.add_new_transaction(invoice_id, cc_info)
   end
 
   private

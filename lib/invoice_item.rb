@@ -1,3 +1,6 @@
+require_relative 'business_intelligence'
+include BusinessIntelligence
+
 class InvoiceItem
   attr_reader :invoice_item, :parent
 
@@ -34,12 +37,7 @@ class InvoiceItem
     invoice_item[:updated_at]
   end
 
-  def invoice
-    parent.find_invoice(invoice_id)
-  end
-
   def item
     parent.find_item(item_id)
   end
-
 end

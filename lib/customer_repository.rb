@@ -1,7 +1,5 @@
 require 'smarter_csv'
 require_relative 'customer'
-require_relative 'business_intelligence'
-include BusinessIntelligence
 
 class CustomerRepository
   attr_reader :sales_engine, :customers
@@ -67,8 +65,14 @@ class CustomerRepository
     customers.select { |customer| search_time == customer.updated_at }
   end
 
-  def find_invoices(id)
-    sales_engine.find_invoices_with_customer_id(id)
+  def find_all_invoices(id)
+    sales_engine.find_invoices_by_customer_id(id)
+  end
+
+  def new_customer(customer)
+    customers << customer if customers.none? do |a_customer|
+      a_customer == customer
+    end
   end
 
   private

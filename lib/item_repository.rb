@@ -1,7 +1,5 @@
 require 'smarter_csv'
 require_relative 'item'
-require_relative 'business_intelligence'
-include BusinessIntelligence
 
 class ItemRepository
   attr_reader :sales_engine, :items
@@ -87,12 +85,16 @@ class ItemRepository
     sales_engine.find_merchant_by_id(merchant_id)
   end
 
+  def new_items(items_to_add)
+    items << items_to_add.uniq.reject { |item| items.include?(item) }
+  end
+
   def most_revenue(top_n = 1)
-    items.max_by(top_n) { |item| sales_engine.find_total_revenue_for_invoice_items(sales_engine.invoice_item_repository.find_all_by_item_id(item.id)) }
+    items.max_by(top_n) { |item| sales_engine.find_total_revenue(sales_engine.invoice_item_repository.find_all_by_item_id(item.id)) }
   end
 
   def most_items(top_n = 1)
-    items.max_by(top_n) { |item| sales_engine.find_total_quantity_for_invoice_items(sales_engine.invoice_item_repository.find_all_by_item_id(item.id))}
+    items.max_by(top_n) { |item| sales_engine.find_total_quantity(sales_engine.invoice_item_repository.find_all_by_item_id(item.id))}
   end
 
   private
