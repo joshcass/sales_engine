@@ -38,7 +38,7 @@ class ItemRepository
   end
 
   def find_by_unit_price(search_price)
-    items.detect { |item| search_price == item.unit_price}
+    items.detect { |item| item.unit_price == search_price}
   end
 
   def find_all_by_unit_price(search_price)

@@ -5,7 +5,7 @@ class CustomerRepository
   attr_reader :sales_engine, :customers
 
   def inspect
-    "#<#{self.class} #{@merchants.size} rows>"
+    "#<#{self.class} #{@customers.size} rows>"
   end
 
   def initialize(csv_data, sales_engine)
