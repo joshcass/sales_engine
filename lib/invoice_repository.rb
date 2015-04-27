@@ -85,6 +85,10 @@ class InvoiceRepository
     sales_engine.find_merchant_by_merchant_id(merchant_id)
   end
 
+  # def create(customer: customer, merchant: merchant, status: status, items: items)
+
+  # end
+
   private
   def parse_invoices(csv_data, repo)
     csv_data.map { |invoice| Invoice.new(invoice, repo) }

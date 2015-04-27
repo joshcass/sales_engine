@@ -31,10 +31,11 @@ class Customer
   end
 
   def transactions
-    invoices.map { |invoice| invoice.transactions}.flatten
+    invoices.flat_map { |invoice| invoice.transactions}
   end
 
   def favorite_merchant
-    @parent.sales_engine.find_merchant_by_merchant_id(invoices.group_by { |invoice| invoice.merchant_id }.max_by {|id, collection| collection.length}[0])
+    @parent.sales_engine.
+    find_merchant_by_merchant_id(invoices.group_by { |invoice| invoice.merchant_id }.max_by {|id, collection| collection.length}[0])
   end
 end
