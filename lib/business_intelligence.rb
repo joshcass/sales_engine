@@ -27,15 +27,11 @@ module BusinessIntelligence
   end
 
   def invoice_items
-    invoices.map { |invoice| invoice.invoice_items }
+    invoices.map { |invoice| invoice.invoice_items }.flatten
   end
 
   def customer
     invoice.customer
-  end
-
-  def revenue(date = nil)
-    parent.total_revenue(successful_invoice_items(date))
   end
 
   def successful_invoices(date = nil)
@@ -47,6 +43,8 @@ module BusinessIntelligence
   end
 
   def successful_invoice_items(date = nil)
-    parent.find_all_invoice_items(successful_invoices(date))
+    successful_invoices(date).map do |invoice|
+      parent.sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
+    end.flatten
   end
 end

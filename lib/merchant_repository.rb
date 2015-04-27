@@ -57,20 +57,6 @@ class MerchantRepository
     sales_engine.find_all_items_by_merchant_id(merchant_id)
   end
 
-  def find_all_invoice_items(invoices)
-    invoices.map do |invoice|
-      sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
-    end.flatten
-  end
-
-  def total_revenue(invoice_items)
-    sales_engine.find_total_revenue(invoice_items)
-  end
-
-  def total_items_sold(invoice_items)
-    sales_engine.find_total_quantity(invoice_items)
-  end
-
   def most_revenue(top_n = 1)
     merchants.max_by(top_n) { |merchant| merchant.revenue }
   end

@@ -100,6 +100,7 @@ class TransactionRepository
         result: cc_info[:result],
         created_at: "#{Time.now.utc}",
         updated_at: "#{Time.now.utc}"}, self)
+    find_by_id(new_id)
   end
 
   private

@@ -77,7 +77,7 @@ class SalesEngineTest < Minitest::Test
 
   def test_item_invoice_items_method_returns_invoice_items_for_that_item
     item = @test_engine.item_repository.find_by_id(541)
-    assert item.invoice_items.length == 1
+    assert_equal 1, item.invoice_items.length
     assert item.invoice_items.all? { |invoice_item| invoice_item.is_a?InvoiceItem }
   end
 

@@ -30,7 +30,11 @@ class Merchant
   end
 
   def items_sold
-    parent.total_items_sold(successful_invoice_items)
+    parent.sales_engine.find_total_quantity(successful_invoice_items)
+  end
+
+  def revenue(date = nil)
+    parent.sales_engine.find_total_revenue(successful_invoice_items(date))
   end
 
   def favorite_customer
