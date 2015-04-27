@@ -4,6 +4,10 @@ require_relative 'transaction'
 class TransactionRepository
   attr_reader :transactions, :sales_engine
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
   def initialize(csv_data, sales_engine)
     @transactions = parse_transactions(csv_data, self)
     @sales_engine = sales_engine
@@ -26,11 +30,15 @@ class TransactionRepository
   end
 
   def find_by_credit_card_number(credit_card_number)
-    transactions.detect { |transaction| transaction.credit_card_number == credit_card_number }
+    transactions.detect do |transaction|
+      transaction.credit_card_number == credit_card_number
+    end
   end
 
   def find_by_credit_card_expiration_date(credit_card_expiration_date)
-    transactions.detect { |transaction| transaction.credit_card_expiration_date == credit_card_expiration_date }
+    transactions.detect do |transaction|
+      transaction.credit_card_expiration_date == credit_card_expiration_date
+    end
   end
 
   def find_by_result(result)
@@ -54,11 +62,15 @@ class TransactionRepository
   end
 
   def find_all_by_credit_card_number(credit_card_number)
-    transactions.select { |transaction| transaction.credit_card_number == credit_card_number }
+    transactions.select do |transaction|
+      transaction.credit_card_number == credit_card_number
+    end
   end
 
   def find_all_by_credit_card_expiration_date(credit_card_expiration_date)
-    transactions.select { |transaction| transaction.credit_card_expiration_date == credit_card_expiration_date }
+    transactions.select do |transaction|
+      transaction.credit_card_expiration_date == credit_card_expiration_date
+    end
   end
 
   def find_all_by_result(result)
@@ -74,11 +86,25 @@ class TransactionRepository
   end
 
   def find_invoice(invoice_id)
-    sales_engine.find_invoice_by_invoice_id(invoice_id)
+    sales_engine.find_invoice_by_id(invoice_id)
   end
 
-  def transaction_success?(invoice_id)
-    true if find_by_invoice_id(invoice_id).result == "success"
+  def transactions_failed?(invoice_id)
+    find_all_by_invoice_id(invoice_id).all? do |transaction|
+      transaction.result == "failed"
+    end
+  end
+
+  def new_transaction(invoice_id, cc_info)
+    new_id = transactions.max_by { |transaction| transaction.id }.id + 1
+    transactions << Transaction.new({id: new_id,
+        invoice_id: invoice_id,
+        credit_card_number: cc_info[:credit_card_number],
+        credit_card_expiration_date: cc_info[:credit_card_expiration_date],
+        result: cc_info[:result],
+        created_at: "#{Time.now.utc}",
+        updated_at: "#{Time.now.utc}"}, self)
+    find_by_id(new_id)
   end
 
   private

@@ -15,7 +15,7 @@ class InvoiceRepositoryTest < Minitest::Test
   end
 
   def test_all_returns_all_instances
-    assert_equal 29, @result.invoices.count
+    assert_equal 31, @result.all.count
   end
 
   def test_random_returns_a_random_sample_from_the_repository
@@ -72,17 +72,17 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_customer_id(10)
     sample_result = @result.find_all_by_customer_id(4)
     assert sample_result.class == Array
-    assert sample_result.length == 8
+    assert_equal 7, sample_result.length
     assert sample_result.all? {|item| item.class == Invoice}
     assert sample_result.all? {|item| item.customer_id == 4}
   end
 
   def test_find_all_by_merchant_id_returns_array_of_all_objects_with_that_merchant_id
     #Aren't those supposed to be near-unique, though?
-    assert_equal [], @result.find_all_by_merchant_id(100)
+    assert_equal [], @result.find_all_by_merchant_id(150)
     sample_result = @result.find_all_by_merchant_id(83)
     assert sample_result.class == Array
-    assert sample_result.length == 4
+    assert_equal 4, sample_result.length
     assert sample_result.all? {|item| item.class == Invoice}
     assert sample_result.all? {|item| item.merchant_id == 83}
   end
@@ -91,7 +91,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_status("not shipped")
     sample_result = @result.find_all_by_status("shipped")
     assert sample_result.class == Array
-    assert sample_result.length == 29
+    assert_equal 31, sample_result.length
     assert sample_result.all? { |item| item.class == Invoice}
     assert sample_result.all? { |item| item.status == "shipped"}
   end
@@ -100,7 +100,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_created_at("2075-04-21 14:53:59 UTC")
     sample_result = @result.find_all_by_created_at("2012-03-12 03:54:10 UTC")
     assert sample_result.class == Array
-    assert sample_result.length == 4
+    assert_equal 4, sample_result.length
     assert sample_result.all? { |item| item.class == Invoice}
     assert sample_result.all? { |item| item.created_at == "2012-03-12 03:54:10 UTC"}
   end
@@ -109,7 +109,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [], @result.find_all_by_updated_at("2075-04-21 14:53:59 UTC")
     sample_result = @result.find_all_by_updated_at("2012-03-16 13:54:11 UTC")
     assert sample_result.class == Array
-    assert sample_result.length == 4
+    assert_equal 4, sample_result.length
     assert sample_result.all? { |item| item.class == Invoice}
     assert sample_result.all? { |item| item.updated_at == "2012-03-16 13:54:11 UTC"}
   end

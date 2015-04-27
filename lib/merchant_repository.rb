@@ -4,6 +4,10 @@ require_relative 'merchant'
 class MerchantRepository
   attr_reader :merchants, :sales_engine
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
   def initialize(csv_data, sales_engine)
     @merchants = parse_merchants(csv_data, self)
     @sales_engine = sales_engine
@@ -49,32 +53,31 @@ class MerchantRepository
     merchants.select { |merchant| merchant.updated_at == updated }
   end
 
-  def find_all_items(merchant_id)
-    sales_engine.find_all_items_by_merchant_id(merchant_id)
-  end
-
   def find_all_invoices(merchant_id)
     sales_engine.find_all_invoices_by_merchant_id(merchant_id)
   end
 
-  def find_total_revenue(invoices)
-    sales_engine.find_total_revenue_for_invoices(invoices)
+  def find_all_items(merchant_id)
+    sales_engine.find_all_items_by_merchant_id(merchant_id)
   end
 
-  # def most_revenue(X)
-    # sorts all merchants by merchant.revenue
-    # take top X merchants
-  # end
+  def most_revenue(top_n = 1)
+    merchants.max_by(top_n) { |merchant| merchant.revenue }
+  end
 
-  # def most_items(X)
-    # sorts all merchants by merchant.items_sold
-    # take top X merchants
-  # end
+  def most_items(top_n = 1)
+    merchants.max_by(top_n) { |merchant| merchant.items_sold}
+  end
 
-  # def revenue(date)
-    # calls merchant.revenue(date) on all merchants
-    # totals up revenue
-  # end
+  def revenue(date)
+    merchants.reduce(0) {|sum, merchant| sum + merchant.revenue(date)}
+  end
+
+  def new_merchant(merchant)
+    merchants << merchant if merchants.none? do |a_merchant|
+      a_merchant == merchant
+    end
+  end
 
   private
   def parse_merchants(csv_data, repo)

@@ -1,3 +1,6 @@
+require_relative 'business_intelligence'
+include BusinessIntelligence
+
 class Merchant
   attr_reader :merchant, :parent
 
@@ -26,37 +29,23 @@ class Merchant
     parent.find_all_items(id)
   end
 
-  def invoices
-    parent.find_all_invoices(id)
+  def items_sold
+    parent.sales_engine.find_total_quantity(successful_invoice_items)
   end
 
-  def revenue
-    parent.find_total_revenue(invoices)
+  def revenue(date = nil)
+    parent.sales_engine.find_total_revenue(successful_invoice_items(date))
   end
 
-  # def items_sold
-    # calls out to sales engine
-    # looks up all invoices for merchant => method already exists
-    # check each invoice against transactions and eliminate failed transactions => reuse
-    # once it has invoices it looks up invoice items => method already exists
-    # takes quantity of items for each invoice
-    # adds up total quantity for the merchant
-    # return total_items_sold to caller
-  # end
+  def favorite_customer
+    successful_invoices.group_by do |invoice|
+        invoice.customer
+      end.max_by do |customer, quantity|
+        quantity.length
+      end.first
+  end
 
-  # def favorite_customer
-    # looks up all invoices for merchant => method already exists
-    # check each invoice against transactions and eliminate failed transactions => reuse
-    # find customer id that appears on most invoices
-    # look up customer by id
-    # return that back to caller
-  # end
-
-  # def customers_with_pending_invoices
-    # looks up all invoices for merchant => method already exists
-    # check each invoice against transactions and eliminate successful transactions => need this method
-    # look up all customers from those invoices
-    # return customers to caller
-  # end
-
+  def customers_with_pending_invoices
+    pending_invoices.map { |invoice| invoice.customer}
+  end
 end

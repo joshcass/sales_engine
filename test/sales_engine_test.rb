@@ -77,7 +77,7 @@ class SalesEngineTest < Minitest::Test
 
   def test_item_invoice_items_method_returns_invoice_items_for_that_item
     item = @test_engine.item_repository.find_by_id(541)
-    assert item.invoice_items.length == 1
+    assert_equal 1, item.invoice_items.length
     assert item.invoice_items.all? { |invoice_item| invoice_item.is_a?InvoiceItem }
   end
 
@@ -94,10 +94,10 @@ class SalesEngineTest < Minitest::Test
     assert customer.invoices.all? { |invoice| invoice.customer_id == 1}
   end
 
-  # def test_merchant_revenue_method_returns_total_revenue_for_that_merchant
-  #   merchant = @test_engine.merchant_repository.find_by_id(1)
-  #   assert merchant.revenue == BigDecimal("2176571.0")
-  # end
+  def test_merchant_revenue_method_returns_total_revenue_for_that_merchant
+    merchant = @test_engine.merchant_repository.find_by_id(100)
+    assert_equal BigDecimal("1.3836").round(2), merchant.revenue
+  end
 
   def test_item_best_day_returns_a_date
     item = @test_engine.item_repository.find_by_id(528)
@@ -110,10 +110,6 @@ class SalesEngineTest < Minitest::Test
     assert customer.transactions.all? { |entry| entry.is_a?Transaction }
   end
 
-  def test_customer_favorite_merchant_returns_a_merchant
-    customer = @test_engine.customer_repository.find_by_id(7)
-  end
-
   def test_item_repo_most_revenue_returns_arrays_of_items
     assert @test_engine.item_repository.most_revenue.all? { |entry| entry.is_a?Item }
     assert @test_engine.item_repository.most_revenue(3).all? { |entry| entry.is_a?Item }
@@ -124,4 +120,89 @@ class SalesEngineTest < Minitest::Test
     assert @test_engine.item_repository.most_items(3).all? { |entry| entry.is_a?Item }
   end
 
+  def test_find_all_items_sold_by_merchant_returns_all_items_for_merchant
+    merchant = @test_engine.merchant_repository.find_by_id(1)
+    assert_equal 54, merchant.items_sold
+  end
+
+  def test_merchant_favorite_customer_finds_customer_with_most_successful_transactions
+    merchant = @test_engine.merchant_repository.find_by_id(83)
+    customer = @test_engine.customer_repository.find_by_id(7)
+    assert_equal customer, merchant.favorite_customer
+  end
+
+  def test_merchant_pending_invoices_returns_customers_with_failed_transactions
+    merchant = @test_engine.merchant_repository.find_by_id(100)
+    assert_equal 1, merchant.customers_with_pending_invoices.length
+    assert_equal ["Star"], merchant.customers_with_pending_invoices.map { |customer| customer.first_name }
+    assert_equal ["Sapphire"], merchant.customers_with_pending_invoices.map { |customer| customer.last_name }
+    assert_equal [9], merchant.customers_with_pending_invoices.map { |customer| customer.id }
+    assert merchant.customers_with_pending_invoices.all? { |customer| customer.is_a?Customer}
+  end
+
+  def test_merchant_repository_most_revenue_returns_merchants_with_top_revenue
+    top_merchants = @test_engine.merchant_repository.most_revenue(3)
+    assert_equal 1, top_merchants.first.id
+    assert_equal 26, top_merchants[1].id
+    assert_equal 100, top_merchants.last.id
+    assert_equal "Schroeder-Jerde", top_merchants.first.name
+    assert_equal "Balistreri, Schaefer and Kshlerin", top_merchants[1].name
+    assert_equal "Billy Bob and Friends", top_merchants.last.name
+    assert top_merchants.all? {|merchant| merchant.is_a?Merchant}
+  end
+
+  def test_merchant_repository_most_items_returns_merchants_who_sold_most_items
+    top_merchants = @test_engine.merchant_repository.most_items(3)
+    assert_equal 1, top_merchants.first.id
+    assert_equal 26, top_merchants[1].id
+    assert_equal 100, top_merchants.last.id
+    assert_equal "Schroeder-Jerde", top_merchants.first.name
+    assert_equal "Balistreri, Schaefer and Kshlerin", top_merchants[1].name
+    assert_equal "Billy Bob and Friends", top_merchants.last.name
+    assert top_merchants.all? {|merchant| merchant.is_a?Merchant}
+  end
+
+  def test_invoice_create_creates_new_invoice
+    customer = @test_engine.customer_repository.find_by_id(16)
+    merchant = @test_engine.merchant_repository.find_by_id(100)
+    item1 = @test_engine.item_repository.find_by_id(4)
+    item2 = @test_engine.item_repository.find_by_id(535)
+    item3 = @test_engine.item_repository.find_by_id(1918)
+    invoice = @test_engine.invoice_repository.create(customer: customer, merchant: merchant, status: "shipped",
+                                                     items: [item1, item2, item3, item2, item1, item1])
+    assert_equal 32, invoice.id
+    assert_equal 16, invoice.customer_id
+    assert_equal 100, invoice.merchant_id
+    assert_equal "shipped", invoice.status
+    assert invoice.created_at.is_a?String
+    assert invoice.updated_at.is_a?String
+    assert_equal 32, @test_engine.invoice_repository.all.count
+    assert_equal invoice, @test_engine.invoice_repository.find_by_id(invoice.id)
+  end
+
+  def test_creating_new_invoice_adds_invoice_items
+    customer = @test_engine.customer_repository.find_by_id(16)
+    merchant = @test_engine.merchant_repository.find_by_id(100)
+    item1 = @test_engine.item_repository.find_by_id(4)
+    item2 = @test_engine.item_repository.find_by_id(535)
+    item3 = @test_engine.item_repository.find_by_id(1918)
+    @test_engine.invoice_repository.create(customer: customer, merchant: merchant, status: "shipped",
+                                           items: [item1, item2, item3, item2, item1, item1])
+    invoiceitem1 = @test_engine.invoice_item_repository.find_by_id(143)
+    invoiceitem2 = @test_engine.invoice_item_repository.find_by_id(144)
+    invoiceitem3 = @test_engine.invoice_item_repository.find_by_id(145)
+    assert_equal 32, @test_engine.invoice_item_repository.all.count
+    assert_equal 4, invoiceitem1.item_id
+    assert_equal 32, invoiceitem1.invoice_id
+    assert_equal 3, invoiceitem1.quantity
+    assert_equal 150000000, invoiceitem1.unit_price
+    assert_equal 535, invoiceitem2.item_id
+    assert_equal 32, invoiceitem2.invoice_id
+    assert_equal 2, invoiceitem2.quantity
+    assert_equal 2196, invoiceitem2.unit_price
+    assert_equal 1918, invoiceitem3.item_id
+    assert_equal 32, invoiceitem3.invoice_id
+    assert_equal 1, invoiceitem3.quantity
+    assert_equal 72018, invoiceitem3.unit_price
+  end
 end

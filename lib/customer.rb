@@ -1,3 +1,6 @@
+require_relative 'business_intelligence'
+include BusinessIntelligence
+
 class Customer
   attr_reader :customer, :parent
 
@@ -7,19 +10,19 @@ class Customer
   end
 
   def id
-    @customer[:id]
+    customer[:id]
   end
 
   def first_name
-    @customer[:first_name]
+    customer[:first_name]
   end
 
   def last_name
-    @customer[:last_name]
+    customer[:last_name]
   end
 
   def created_at
-    @customer[:created_at]
+    customer[:created_at]
   end
 
   def updated_at
@@ -35,7 +38,10 @@ class Customer
   end
 
   def favorite_merchant
-    @parent.sales_engine.
-    find_merchant_by_merchant_id(invoices.group_by { |invoice| invoice.merchant_id }.max_by {|id, collection| collection.length}[0])
+    invoices.group_by do |invoice|
+        invoice.merchant
+      end.max_by do |merchant, quantity|
+        quantity.length
+      end.first
   end
 end
