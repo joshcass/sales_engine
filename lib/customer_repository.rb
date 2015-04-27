@@ -2,11 +2,13 @@ require 'smarter_csv'
 require_relative 'customer'
 
 class CustomerRepository
-  attr_reader :sales_engine, :customers
+  attr_reader :sales_engine, :customers, :id_group, :first_name_group
 
   def initialize(csv_data, sales_engine)
     @customers = parse_customers(csv_data, self)
     @sales_engine = sales_engine
+    @id_group = @customers.group_by{ |customer| customer.id }
+    @first_name_group = @customer.group_by{ |customer| customer.first_name}
   end
 
   def all
@@ -18,23 +20,15 @@ class CustomerRepository
   end
 
   def find_by_id(search_id)
-    customers.detect { |customer| search_id == customer.id }
-  end
-
-  def find_all_by_id(search_id)
-    customers.select { |customer| search_id == customer.id }
+    id_group[search_id].first
   end
 
   def find_by_first_name(search_name)
-    customers.detect do |customer|
-      search_name.downcase == customer.first_name.downcase
-    end
+    first_name_group[search_name].first
   end
 
   def find_all_by_first_name(search_name)
-    customers.select do |customer|
-      search_name.downcase == customer.first_name.downcase
-    end
+    first_name_group[search_name]
   end
 
   def find_by_last_name(search_name)
