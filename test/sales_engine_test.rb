@@ -25,11 +25,53 @@ class SalesEngineTest < Minitest::Test
     assert merchant.invoices.all? { |invoice| invoice.merchant_id == 1 }
   end
 
+  class MockSalesEngine < SalesEngine
+    def initialize(directory="n/a")
+      super directory
+    end
+
+    def startup(repos={})
+      default_repos = {
+        invoices:      [],
+        customers:     [],
+        invoice_items: [],
+        transactions:  [],
+        items:         [],
+        merchants:     [],
+      }
+      default_repos.merge(repos).each do |collection_name, hashes|
+        repo      = repo_by_name(collection_name).new(hashes, self)
+        ivar_name = "@#{collection_name.to_s.chomp "s"}_repository"
+        instance_variable_set ivar_name, repo
+      end
+    end
+
+    private
+
+    def repo_by_name(name)
+      { invoices:      InvoiceRepository,
+        customers:     CustomerRepository,
+        invoice_items: InvoiceItemRepository,
+        transactions:  TransactionRepository,
+        items:         ItemRepository,
+        merchants:     MerchantRepository,
+      }.fetch name
+    end
+  end
+
+  def engine_for(repo_data)
+    sales_engine = MockSalesEngine.new
+    sales_engine.startup(repo_data)
+    sales_engine
+  end
+
   def test_invoice_transactions_method_returns_all_transactions_for_invoice_id
-    invoice = @test_engine.invoice_repository.find_by_id(12)
-    assert invoice.transactions.length == 3
-    assert invoice.transactions.all? { |transaction| transaction.is_a?Transaction }
-    assert invoice.transactions.all? { |transaction| transaction.invoice_id == 12 }
+    engine = engine_for invoices:     [{id: 1}, {id: 2}],
+                        transactions: [{invoice_id: 1}, {invoice_id: 2}, {invoice_id: 1}, {invoice_id: 1}]
+
+    invoice1, invoice2 = engine.invoice_repository.all
+    assert_equal invoice1.transactions.length, 3
+    assert_equal invoice2.transactions.length, 1
   end
 
   def test_invoice_invoice_items_method_returns_all_invoice_items_for_invoice_id

@@ -7,8 +7,8 @@ class ItemRepository
     "#<#{self.class} #{@items.size} rows>"
   end
 
-  def initialize(csv_data, sales_engine)
-    @items = parse_items(csv_data, self)
+  def initialize(item_hashes, sales_engine)
+    @items = parse_items(item_hashes, self)
     @sales_engine = sales_engine
   end
 
@@ -105,7 +105,8 @@ class ItemRepository
   end
 
   private
-  def parse_items(csv_data, repo)
-    csv_data.map { |invoice| Item.new(invoice, repo) }
+
+  def parse_items(item_hashes, repo)
+    item_hashes.map { |item_hash| Item.new(item_hash, repo) }
   end
 end

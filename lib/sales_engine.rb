@@ -21,17 +21,17 @@ class SalesEngine
 
   def startup
     @invoice_repository      = InvoiceRepository
-                                 .new(parser('invoices.csv'), self)
+                                 .new(parse('invoices.csv'), self)
     @customer_repository     = CustomerRepository
-                                 .new(parser('customers.csv'), self)
+                                 .new(parse('customers.csv'), self)
     @invoice_item_repository = InvoiceItemRepository
-                                 .new(parser('invoice_items.csv'), self)
+                                 .new(parse('invoice_items.csv'), self)
     @transaction_repository  = TransactionRepository
-                                 .new(parser('transactions.csv'), self)
+                                 .new(parse('transactions.csv'), self)
     @item_repository         = ItemRepository
-                                 .new(parser('items.csv'), self)
+                                 .new(parse('items.csv'), self)
     @merchant_repository     = MerchantRepository
-                                 .new(parser('merchants.csv'), self)
+                                 .new(parse('merchants.csv'), self)
 
   end
 
@@ -102,7 +102,7 @@ class SalesEngine
   end
 
   private
-  def parser(filename)
+  def parse(filename)
     SmarterCSV.process("#{directory}/#{filename}")
   end
 end

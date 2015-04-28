@@ -7,8 +7,8 @@ class InvoiceRepository
     "#<#{self.class} #{@invoices.size} rows>"
   end
 
-  def initialize(csv_data, sales_engine)
-    @invoices = parse_invoices(csv_data, self)
+  def initialize(invoice_hashes, sales_engine)
+    @invoices = parse_invoices(invoice_hashes, self)
     @sales_engine = sales_engine
   end
 
@@ -138,9 +138,12 @@ class InvoiceRepository
     (sales_engine.average_item_quantity(successful_invoice_items(date)) /
       successful(date).size).round(2)
   end
-  
+
   private
-  def parse_invoices(csv_data, repo)
-    csv_data.map { |invoice| Invoice.new(invoice, repo) }
+
+  def parse_invoices(invoice_hashes, repo)
+    invoice_hashes.map do |attributes_hash|
+      Invoice.new attributes_hash, repo
+    end
   end
 end
