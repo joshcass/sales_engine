@@ -1,6 +1,3 @@
-require_relative 'business_intelligence'
-include BusinessIntelligence
-
 class Customer
   attr_reader :customer, :parent
 
@@ -27,6 +24,18 @@ class Customer
 
   def updated_at
     customer[:updated_at]
+  end
+
+  def invoices
+    parent.find_invoices(id)
+  end
+
+  def transactions
+    invoices.map{ |invoice| invoice.transactions}.flatten
+  end
+
+  def merchants
+    invoices.map {|invoice| invoice.merchant}.flatten
   end
 
   def favorite_merchant

@@ -1,4 +1,3 @@
-require 'smarter_csv'
 require_relative 'invoice_item'
 require 'bigdecimal'
 
@@ -6,7 +5,7 @@ class InvoiceItemRepository
   attr_reader :sales_engine, :invoice_items
 
   def inspect
-    "#<#{self.class} #{@merchants.size} rows>"
+    "#<#{self.class} #{@invoice_items.size} rows>"
   end
 
   def initialize(csv_data, sales_engine)
@@ -88,8 +87,8 @@ class InvoiceItemRepository
 
   def calculate_total_revenue(invoice_items)
     invoice_items.reduce(0) do |sum, invoice_item|
-      sum + (invoice_item.quantity * BigDecimal(".#{invoice_item.unit_price}"))
-    end.round(2)
+      sum + (invoice_item.quantity * invoice_item.unit_price)
+    end
   end
 
   def calculate_total_quantity(invoice_items)
@@ -106,7 +105,7 @@ class InvoiceItemRepository
         item_id: item.id,
         invoice_id: invoice_id,
         quantity: quantity,
-        unit_price: item.unit_price,
+        unit_price: item.unit_price * 100,
         created_at: Time.now.utc,
         updated_at: Time.now.utc}, self)
   end

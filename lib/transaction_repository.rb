@@ -1,11 +1,10 @@
-require 'smarter_csv'
 require_relative 'transaction'
 
 class TransactionRepository
   attr_reader :transactions, :sales_engine
 
   def inspect
-    "#<#{self.class} #{@merchants.size} rows>"
+    "#<#{self.class} #{@transactions.size} rows>"
   end
 
   def initialize(csv_data, sales_engine)

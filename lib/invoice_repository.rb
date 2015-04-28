@@ -1,11 +1,10 @@
-require 'smarter_csv'
 require_relative 'invoice'
 
 class InvoiceRepository
   attr_reader :invoices, :sales_engine
 
   def inspect
-    "#<#{self.class} #{@merchants.size} rows>"
+    "#<#{self.class} #{@invoices.size} rows>"
   end
 
   def initialize(csv_data, sales_engine)
@@ -105,9 +104,6 @@ class InvoiceRepository
   end
 
   def create(invoice_info)
-    sales_engine.add_new_customer(invoice_info[:customer])
-    sales_engine.add_new_merchant(invoice_info[:merchant])
-    sales_engine.add_new_items(invoice_info[:items])
     invoice = new_invoice(invoice_info)
     sales_engine.add_new_invoice_items(invoice.id, invoice_info[:items])
     invoice
