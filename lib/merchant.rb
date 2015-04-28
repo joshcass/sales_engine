@@ -28,16 +28,16 @@ class Merchant
 
   def invoices(date = nil)
     if date
-      @invoices = parent.find_invoices(id).select do |invoice|
+      parent.find_invoices(id).select do |invoice|
         Date.strptime("#{invoice.created_at}", '%F') == date
       end
     else
-      @invoices = parent.find_invoices(id)
+      parent.find_invoices(id)
     end
   end
 
   def successful_invoices(date = nil)
-    @successful_invoices = invoices(date).reject do |invoice|
+    invoices(date).reject do |invoice|
       invoice.all_failed?
     end
   end
@@ -47,8 +47,7 @@ class Merchant
   end
 
   def successful_invoice_items(date = nil)
-    @successful_invoice_items = parent
-                                  .find_invoice_items(successful_invoices(date))
+    parent.find_invoice_items(successful_invoices(date))
   end
 
   def revenue(date = nil)
@@ -70,4 +69,6 @@ class Merchant
   def customers_with_pending_invoices
     pending_invoices.map { |invoice| invoice.customer}
   end
+
+
 end

@@ -81,16 +81,16 @@ class SalesEngine
     end
   end
 
-  def all_transactions_failed?(invoice_id)
-    transaction_repository.transactions_failed?(invoice_id)
-  end
-
   def find_total_revenue(invoice_items)
     invoice_item_repository.calculate_total_revenue(invoice_items)
   end
 
   def find_total_quantity(invoice_items)
     invoice_item_repository.calculate_total_quantity(invoice_items)
+  end
+
+  def average_item_quantity(invoice_items)
+    invoice_item_repository.calculate_average_item_quantity(invoice_items)
   end
 
   def add_new_invoice_items(invoice_id, items)

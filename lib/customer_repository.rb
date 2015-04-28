@@ -72,6 +72,28 @@ class CustomerRepository
     sales_engine.find_invoices_by_customer_id(id)
   end
 
+  def find_invoice_items(invoices)
+    invoices.map do |invoice|
+      sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
+    end.flatten
+  end
+
+  def total_items_purchased(invoice_items)
+    sales_engine.find_total_quantity(invoice_items)
+  end
+
+  def total_spent(invoice_items)
+    sales_engine.find_total_revenue(invoice_items)
+  end
+
+  def most_items
+    customers.max_by { |customer| customer.items_purchased}
+  end
+
+  def most_revenue
+    customers.max_by { |customer| customer.spent}
+  end
+
   private
   def parse_customers(csv_data, repo)
     csv_data.map { |invoice| Customer.new(invoice, repo) }

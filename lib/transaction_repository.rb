@@ -88,12 +88,6 @@ class TransactionRepository
     sales_engine.find_invoice_by_id(invoice_id)
   end
 
-  def transactions_failed?(invoice_id)
-    find_all_by_invoice_id(invoice_id).all? do |transaction|
-      transaction.result == "failed"
-    end
-  end
-
   def new_transaction(invoice_id, cc_info)
     new_id = transactions.max_by { |transaction| transaction.id }.id + 1
     transactions << Transaction.new({id: new_id,
