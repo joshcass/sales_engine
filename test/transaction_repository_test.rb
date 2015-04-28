@@ -125,11 +125,4 @@ class TransactionRepositoryTest < Minitest::Test
     assert sample_result.all? { |item| item.class == Transaction}
     assert sample_result.all? { |item| item.updated_at == "2012-03-27 14:54:11 UTC"}
   end
-
-  def test_transaction_success_can_tell_success_from_fail
-    refute @result.transactions_failed?(28)
-    refute @result.transactions_failed?(24)
-    assert @result.transactions_failed?(27)
-    assert @result.transactions_failed?(12)
-  end
 end
