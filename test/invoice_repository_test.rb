@@ -95,13 +95,9 @@ class InvoiceRepositoryTest < Minitest::Test
   end
 
   def test_find_all_by_created_at_returns_array_of_all_objects_created_then
-    skip
     assert_equal [], @result.find_all_by_created_at(Date.strptime("2075-04-21 14:53:59 UTC", '%F'))
     sample_result = @result.find_all_by_created_at(Date.strptime("2012-03-12 03:54:10 UTC", '%F'))
-    assert sample_result.class == Array
     assert_equal 6, sample_result.length
-    assert_equal Invoice,  sample_result.first.class
-    assert_equal "2012-03-12 04:54:11 UTC", sample_result.last.created_at
   end
 
   def test_find_all_by_updated_at_returns_array_of_all_objects_updated_then

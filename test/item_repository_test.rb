@@ -17,9 +17,16 @@ class ItemRepositoryTest < Minitest::Test
     assert @test_item_repo.all.include?(@test_item_repo.random)
   end
 
+  def repo_for(*hashes)
+    ItemRepository.new(hashes, self)
+  end
+
   def test_find_by_id_returns_one_object_with_a_given_id
-    assert_equal "Centennial Glory", @test_item_repo.find_by_id(1).name
-    assert_equal "Book of Alexandria", @test_item_repo.find_by_id(4).name
+    repo = repo_for({id: 1, name: 'Centennial Glory'},
+                    {id: 4, name: 'Book of Alexandria'})
+    assert_equal "Centennial Glory",   repo.find_by_id(1).name
+    assert_equal "Book of Alexandria", repo.find_by_id(4).name
+    assert_equal nil,                  repo.find_by_id(2)
   end
 
   def test_find_by_name_returns_one_object_with_a_given_name
