@@ -96,7 +96,7 @@ class SalesEngineTest < Minitest::Test
 
   def test_merchant_revenue_method_returns_total_revenue_for_that_merchant
     merchant = @test_engine.merchant_repository.find_by_id(100)
-    assert_equal BigDecimal("1.3836").round(2), merchant.revenue
+    assert_equal BigDecimal("138.36").round(2), merchant.revenue
   end
 
   def test_item_best_day_returns_a_date
@@ -122,7 +122,7 @@ class SalesEngineTest < Minitest::Test
 
   def test_find_all_items_sold_by_merchant_returns_all_items_for_merchant
     merchant = @test_engine.merchant_repository.find_by_id(1)
-    assert_equal 54, merchant.items_sold
+    assert_equal 54, merchant.number_sold
   end
 
   def test_merchant_favorite_customer_finds_customer_with_most_successful_transactions
@@ -195,14 +195,14 @@ class SalesEngineTest < Minitest::Test
     assert_equal 4, invoiceitem1.item_id
     assert_equal 32, invoiceitem1.invoice_id
     assert_equal 3, invoiceitem1.quantity
-    assert_equal 150000000, invoiceitem1.unit_price
+    assert_equal BigDecimal("1500000.0"), invoiceitem1.unit_price
     assert_equal 535, invoiceitem2.item_id
     assert_equal 32, invoiceitem2.invoice_id
     assert_equal 2, invoiceitem2.quantity
-    assert_equal 2196, invoiceitem2.unit_price
+    assert_equal BigDecimal("21.96"), invoiceitem2.unit_price
     assert_equal 1918, invoiceitem3.item_id
     assert_equal 32, invoiceitem3.invoice_id
     assert_equal 1, invoiceitem3.quantity
-    assert_equal 72018, invoiceitem3.unit_price
+    assert_equal BigDecimal("720.18"), invoiceitem3.unit_price
   end
 end

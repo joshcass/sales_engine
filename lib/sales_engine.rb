@@ -5,8 +5,6 @@ require_relative 'item_repository'
 require_relative 'merchant_repository'
 require_relative 'transaction_repository'
 require_relative 'invoice_repository'
-require_relative 'business_intelligence'
-include BusinessIntelligence
 
 class SalesEngine
   attr_reader :directory,
@@ -22,22 +20,23 @@ class SalesEngine
   end
 
   def startup
+    @invoice_repository      = InvoiceRepository
+                                 .new(parser('invoices.csv'), self)
     @customer_repository     = CustomerRepository
                                  .new(parser('customers.csv'), self)
     @invoice_item_repository = InvoiceItemRepository
                                  .new(parser('invoice_items.csv'), self)
+    @transaction_repository  = TransactionRepository
+                                 .new(parser('transactions.csv'), self)
     @item_repository         = ItemRepository
                                  .new(parser('items.csv'), self)
     @merchant_repository     = MerchantRepository
                                  .new(parser('merchants.csv'), self)
-    @transaction_repository  = TransactionRepository
-                                 .new(parser('transactions.csv'), self)
-    @invoice_repository      = InvoiceRepository
-                                 .new(parser('invoices.csv'), self)
+
   end
 
-  def find_invoices_by_customer_id(item_id)
-    invoice_repository.find_all_by_customer_id(item_id)
+  def find_invoices_by_customer_id(customer_id)
+    invoice_repository.find_all_by_customer_id(customer_id)
   end
 
   def find_invoice_items_by_item_id(item_id)
@@ -92,18 +91,6 @@ class SalesEngine
 
   def find_total_quantity(invoice_items)
     invoice_item_repository.calculate_total_quantity(invoice_items)
-  end
-
-  def add_new_customer(customer)
-    customer_repository.new_customer(customer)
-  end
-
-  def add_new_merchant(merchant)
-    merchant_repository.new_merchant(merchant)
-  end
-
-  def add_new_items(items)
-    item_repository.new_items(items)
   end
 
   def add_new_invoice_items(invoice_id, items)

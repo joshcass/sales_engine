@@ -1,4 +1,3 @@
-require 'smarter_csv'
 require_relative 'customer'
 
 class CustomerRepository
@@ -69,14 +68,8 @@ class CustomerRepository
     customers.select { |customer| search_time == customer.updated_at }
   end
 
-  def find_all_invoices(id)
+  def find_invoices(id)
     sales_engine.find_invoices_by_customer_id(id)
-  end
-
-  def new_customer(customer)
-    customers << customer if customers.none? do |a_customer|
-      a_customer == customer
-    end
   end
 
   private

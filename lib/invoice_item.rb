@@ -1,6 +1,3 @@
-require_relative 'business_intelligence'
-include BusinessIntelligence
-
 class InvoiceItem
   attr_reader :invoice_item, :parent
 
@@ -26,7 +23,7 @@ class InvoiceItem
   end
 
   def unit_price
-    invoice_item[:unit_price]
+    BigDecimal(invoice_item[:unit_price]) / 100
   end
 
   def created_at
@@ -35,6 +32,14 @@ class InvoiceItem
 
   def updated_at
     invoice_item[:updated_at]
+  end
+
+  def invoice
+    parent.find_invoice(invoice_id)
+  end
+
+  def failed?
+    invoice.all_failed?
   end
 
   def item
