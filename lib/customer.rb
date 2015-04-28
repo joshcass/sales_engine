@@ -38,6 +38,37 @@ class Customer
     invoices.map {|invoice| invoice.merchant}.flatten
   end
 
+  def successful_invoices
+    invoices.reject { |invoice| invoice.all_failed? }
+  end
+
+  def pending_invoices
+    invoices.select { |invoice| invoice.all_failed? }
+  end
+
+  def successful_invoice_items
+    parent.find_invoice_items(successful_invoices)
+  end
+
+  def items_purchased
+    parent.total_items_purchased(successful_invoice_items)
+  end
+
+  def spent
+    parent.total_spent(successful_invoice_items)
+  end
+
+  def last_transaction
+    transactions.max_by do |transaction|
+      Date.strptime("#{transaction.created_at}", '%F')
+    end
+  end
+
+  def days_since_activity
+    Time.new.to_date.mjd -
+      Date.strptime("#{last_transaction.created_at}", '%F').mjd
+  end
+
   def favorite_merchant
     invoices.group_by do |invoice|
         invoice.merchant
