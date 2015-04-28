@@ -6,16 +6,16 @@ module BusinessIntelligence
 
   def invoices(date = nil)
     if date
-      parent.find_all_invoices(id).select do |invoice|
+      parent.find_invoices(id).select do |invoice|
         invoice.created_at[0..9] == date
       end
     else
-      parent.find_all_invoices(id)
+      parent.find_invoices(id)
     end
   end
 
   def transactions
-    invoices.map { |invoice| invoice.transactions}.flatten
+    parent.sales_engine.find_all_transactions_by_invoice_id(invoice_id)
   end
 
   def merchants
@@ -23,7 +23,7 @@ module BusinessIntelligence
   end
 
   def merchant
-    invoice.merchant
+    parent.sales_engine.find_merchant_by_id(merchant_id)
   end
 
   def invoice_items

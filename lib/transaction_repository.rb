@@ -1,4 +1,3 @@
-require 'smarter_csv'
 require_relative 'transaction'
 
 class TransactionRepository

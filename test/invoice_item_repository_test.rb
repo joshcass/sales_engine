@@ -40,7 +40,6 @@ class InvoiceItemRepositoryTest < Minitest::Test
   end
 
   def test_find_all_by_id_returns_array_of_all_objects_with_that_id
-    #Aren't those supposed to be unique, though?
     assert_equal [], @test_invoice_item_repo.find_all_by_id(135581778)
     sample_result = @test_invoice_item_repo.find_all_by_id(3)
     assert sample_result.class == Array
@@ -77,12 +76,12 @@ class InvoiceItemRepositoryTest < Minitest::Test
   end
 
   def test_find_all_by_unit_price_returns_array_of_all_objects_with_that_price
-    assert_equal [], @test_invoice_item_repo.find_all_by_unit_price(9999999)
-    sample_result = @test_invoice_item_repo.find_all_by_unit_price(78660)
+    assert_equal [], @test_invoice_item_repo.find_all_by_unit_price(BigDecimal("99999.99"))
+    sample_result = @test_invoice_item_repo.find_all_by_unit_price(BigDecimal("786.6"))
     assert sample_result.class == Array
     assert_equal 1, sample_result.length
     assert sample_result.all? { |invoice_item| invoice_item.class == InvoiceItem}
-    assert sample_result.all? { |invoice_item| invoice_item.unit_price == 78660}
+    assert sample_result.all? { |invoice_item| invoice_item.unit_price == BigDecimal("786.6")}
   end
 
   def test_find_all_by_created_at_returns_array_of_all_objects_created_then
@@ -105,6 +104,6 @@ class InvoiceItemRepositoryTest < Minitest::Test
 
   def test_find_total_revenue_for_invoice_items_gives_revenue
     invoice_item = @test_invoice_item_repo.find_all_by_invoice_id(28)
-    assert_equal BigDecimal("10.42").round(2), @test_invoice_item_repo.calculate_total_revenue(invoice_item)
+    assert_equal BigDecimal("10423.01"), @test_invoice_item_repo.calculate_total_revenue(invoice_item)
   end
 end

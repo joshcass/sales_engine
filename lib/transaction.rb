@@ -15,7 +15,7 @@ class Transaction
   end
 
   def credit_card_number
-    transaction[:credit_card_number]
+    transaction[:credit_card_number].to_s
   end
 
   def credit_card_expiration_date
@@ -33,4 +33,9 @@ class Transaction
   def updated_at
     transaction[:updated_at]
   end
+
+  def invoice
+    parent.find_invoice(invoice_id)
+  end
+
 end
