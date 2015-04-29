@@ -82,8 +82,21 @@ class MerchantRepository
     merchants.max_by(top_n) { |merchant| merchant.number_sold }
   end
 
-  def revenue(date)
-    merchants.reduce(0) {|sum, merchant| sum + merchant.revenue(date)}
+  def revenue(range_of_dates)
+    merchants.reduce(0) {|sum, merchant| sum + merchant.revenue(range_of_dates)}
+  end
+
+  def dates_by_revenue(top_n = dates_active.length)
+    dates_active.uniq.
+    sort_by { |date| revenue(date) }.reverse[0...top_n]
+  end
+
+  def dates_active
+    merchants.map do |merchant|
+      find_invoices(merchant.id).map do |invoice|
+        Date.strptime("#{invoice.created_at}", '%F')
+      end.uniq
+    end.flatten
   end
 
   private

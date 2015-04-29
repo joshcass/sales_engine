@@ -51,8 +51,14 @@ class Merchant
                                   .find_invoice_items(successful_invoices(date))
   end
 
-  def revenue(date = nil)
-    parent.total_revenue(successful_invoice_items(date))
+  def revenue(range_of_dates = nil)
+    if range_of_dates
+      [*range_of_dates].flatten.reduce(0) do |memo, date|
+        memo += parent.total_revenue(successful_invoice_items(date))
+      end
+    else
+      parent.total_revenue(successful_invoice_items(nil))
+    end
   end
 
   def number_sold
