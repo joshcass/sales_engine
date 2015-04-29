@@ -51,7 +51,9 @@ class Invoice
   end
 
   def all_failed?
-    parent.all_transactions_failed?(id)
+    transactions.all? do |transaction|
+      transaction.result == 'failed'
+    end
   end
 
   def charge(credit_card_info)

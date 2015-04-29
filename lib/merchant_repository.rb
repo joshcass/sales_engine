@@ -1,8 +1,11 @@
-require 'smarter_csv'
 require_relative 'merchant'
 
 class MerchantRepository
   attr_reader :merchants, :sales_engine
+
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
 
   def initialize(csv_data, sales_engine)
     @merchants = parse_merchants(csv_data, self)
@@ -49,12 +52,26 @@ class MerchantRepository
     merchants.select { |merchant| merchant.updated_at == updated }
   end
 
-  def find_all_invoices(merchant_id)
+  def find_invoices(merchant_id)
     sales_engine.find_all_invoices_by_merchant_id(merchant_id)
   end
 
-  def find_all_items(merchant_id)
+  def find_items(merchant_id)
     sales_engine.find_all_items_by_merchant_id(merchant_id)
+  end
+
+  def find_invoice_items(invoices)
+    invoices.map do |invoice|
+      sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
+    end.flatten
+  end
+
+  def total_revenue(invoice_items)
+    sales_engine.find_total_revenue(invoice_items)
+  end
+
+  def total_items_sold(invoice_items)
+    sales_engine.find_total_quantity(invoice_items)
   end
 
   def most_revenue(top_n = 1)
@@ -62,17 +79,24 @@ class MerchantRepository
   end
 
   def most_items(top_n = 1)
-    merchants.max_by(top_n) { |merchant| merchant.items_sold}
+    merchants.max_by(top_n) { |merchant| merchant.number_sold }
   end
 
-  def revenue(date)
-    merchants.reduce(0) {|sum, merchant| sum + merchant.revenue(date)}
+  def revenue(range_of_dates)
+    merchants.reduce(0) {|sum, merchant| sum + merchant.revenue(range_of_dates)}
   end
 
-  def new_merchant(merchant)
-    merchants << merchant if merchants.none? do |a_merchant|
-      a_merchant == merchant
-    end
+  def dates_by_revenue(top_n = dates_active.length)
+    dates_active.uniq.
+    sort_by { |date| revenue(date) }.reverse[0...top_n]
+  end
+
+  def dates_active
+    merchants.map do |merchant|
+      find_invoices(merchant.id).map do |invoice|
+        Date.strptime("#{invoice.created_at}", '%F')
+      end.uniq
+    end.flatten
   end
 
   private

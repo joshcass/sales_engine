@@ -23,24 +23,24 @@ class TransactionRepositoryTest < Minitest::Test
 
   def test_find_a_sample_result_by_id
     sample_result = @result.find_by_id(10)
-    assert_equal 4923661117104166, sample_result.credit_card_number
+    assert_equal "4923661117104166", sample_result.credit_card_number
     assert_equal 11, sample_result.invoice_id
   end
 
   def test_find_a_sample_result_by_invoice_id
     sample_result = @result.find_by_invoice_id(15)
     assert_equal 16, sample_result.id
-    assert_equal 4738848761455352, sample_result.credit_card_number
+    assert_equal "4738848761455352", sample_result.credit_card_number
   end
 
   def test_find_an_sample_result_by_credit_card_number
-    sample_result = @result.find_by_credit_card_number(4822758023695469)
+    sample_result = @result.find_by_credit_card_number("4822758023695469")
     assert_equal 23, sample_result.id
     assert_equal 22, sample_result.invoice_id
   end
 
   def test_find_a_sample_result_by_credit_card_expiration_date
-    sample_result = @result.find_by_credit_card_expiration_date("11-17")
+    sample_result = @result.find_by_credit_card_expiration_date("11/17")
     assert_equal 5, sample_result.id
     assert_equal 6, sample_result.invoice_id
   end
@@ -82,21 +82,21 @@ class TransactionRepositoryTest < Minitest::Test
   end
 
   def test_find_all_by_credit_card_number_returns_array_of_all_objects_with_that_credit_card_number
-    assert_equal [], @result.find_all_by_credit_card_number(4084466070522807)
-    sample_result = @result.find_all_by_credit_card_number(4084466070588807)
+    assert_equal [], @result.find_all_by_credit_card_number("4084466070522807")
+    sample_result = @result.find_all_by_credit_card_number("4084466070588807")
     assert sample_result.class == Array
     assert_equal 5, sample_result.length
     assert sample_result.all? {|item| item.class == Transaction}
-    assert sample_result.all? {|item| item.credit_card_number == 4084466070588807}
+    assert sample_result.all? {|item| item.credit_card_number == "4084466070588807"}
   end
 
   def test_find_all_by_credit_card_expiration_date_returns_array_of_all_objects_with_that_expiration_date
-    assert_equal [], @result.find_all_by_credit_card_expiration_date("01-25")
-    sample_result = @result.find_all_by_credit_card_expiration_date("01-16")
+    assert_equal [], @result.find_all_by_credit_card_expiration_date("01/25")
+    sample_result = @result.find_all_by_credit_card_expiration_date("01/16")
     assert sample_result.class == Array
     assert_equal 3, sample_result.length
     assert sample_result.all? {|item| item.class == Transaction}
-    assert sample_result.all? {|item| item.credit_card_expiration_date == "01-16"}
+    assert sample_result.all? {|item| item.credit_card_expiration_date == "01/16"}
   end
 
   def test_find_all_by_result_returns_array_of_all_objects_with_that_result
@@ -124,12 +124,5 @@ class TransactionRepositoryTest < Minitest::Test
     assert_equal 10, sample_result.length
     assert sample_result.all? { |item| item.class == Transaction}
     assert sample_result.all? { |item| item.updated_at == "2012-03-27 14:54:11 UTC"}
-  end
-
-  def test_transaction_success_can_tell_success_from_fail
-    refute @result.transactions_failed?(28)
-    refute @result.transactions_failed?(24)
-    assert @result.transactions_failed?(27)
-    assert @result.transactions_failed?(12)
   end
 end

@@ -1,8 +1,11 @@
-require 'smarter_csv'
 require_relative 'transaction'
 
 class TransactionRepository
   attr_reader :transactions, :sales_engine
+
+  def inspect
+    "#<#{self.class} #{@transactions.size} rows>"
+  end
 
   def initialize(csv_data, sales_engine)
     @transactions = parse_transactions(csv_data, self)
@@ -83,12 +86,6 @@ class TransactionRepository
 
   def find_invoice(invoice_id)
     sales_engine.find_invoice_by_id(invoice_id)
-  end
-
-  def transactions_failed?(invoice_id)
-    find_all_by_invoice_id(invoice_id).all? do |transaction|
-      transaction.result == "failed"
-    end
   end
 
   def new_transaction(invoice_id, cc_info)

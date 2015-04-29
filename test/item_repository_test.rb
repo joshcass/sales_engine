@@ -9,7 +9,7 @@ class ItemRepositoryTest < Minitest::Test
   end
 
   def test_all_method_returns_everything
-    assert_equal 20, @test_item_repo.all.count
+    assert_equal 22, @test_item_repo.all.count
     assert @test_item_repo.all.all? { |item| item.class == Item }
   end
 
@@ -17,9 +17,16 @@ class ItemRepositoryTest < Minitest::Test
     assert @test_item_repo.all.include?(@test_item_repo.random)
   end
 
+  def repo_for(*hashes)
+    ItemRepository.new(hashes, self)
+  end
+
   def test_find_by_id_returns_one_object_with_a_given_id
-    assert_equal "Centennial Glory", @test_item_repo.find_by_id(1).name
-    assert_equal "Book of Alexandria", @test_item_repo.find_by_id(4).name
+    repo = repo_for({id: 1, name: 'Centennial Glory'},
+                    {id: 4, name: 'Book of Alexandria'})
+    assert_equal "Centennial Glory",   repo.find_by_id(1).name
+    assert_equal "Book of Alexandria", repo.find_by_id(4).name
+    assert_equal nil,                  repo.find_by_id(2)
   end
 
   def test_find_by_name_returns_one_object_with_a_given_name
@@ -32,7 +39,7 @@ class ItemRepositoryTest < Minitest::Test
   end
 
   def test_find_by_unit_price_returns_one_object_with_that_price
-    assert_equal 3, @test_item_repo.find_by_unit_price(149999).id
+    assert_equal 3, @test_item_repo.find_by_unit_price(BigDecimal("1499.99")).id
   end
 
   def test_find_by_merchant_id_returns_one_object_with_that_id
@@ -58,22 +65,21 @@ class ItemRepositoryTest < Minitest::Test
   end
 
   def test_find_all_by_name_returns_array_of_all_objects_with_that_name
-    #Aren't those supposed to be near-unique, though?
     assert_equal [], @test_item_repo.find_all_by_name("Pearl Pillar")
     sample_result = @test_item_repo.find_all_by_name("Swordbreaker")
     assert sample_result.class == Array
-    assert_equal 1, sample_result.length
+    assert_equal 2, sample_result.size
     assert sample_result[0].class == Item
-    assert sample_result[0].name == "Swordbreaker"
+    assert sample_result.all? {|item| "Swordbreaker" == item.name}
   end
 
   def test_find_all_by_unit_price_returns_array_of_all_objects_with_that_price
     assert_equal [], @test_item_repo.find_all_by_unit_price(0)
-    sample_result = @test_item_repo.find_all_by_unit_price(150000)
+    sample_result = @test_item_repo.find_all_by_unit_price(BigDecimal("1500.0"))
     assert sample_result.class == Array
     assert_equal 1, sample_result.length
     assert sample_result[0].class == Item
-    assert sample_result[0].unit_price == 150000
+    assert sample_result[0].unit_price == BigDecimal("1500.0")
   end
 
   def test_find_all_by_description_returns_array_of_all_objects_with_that_description
@@ -99,7 +105,7 @@ class ItemRepositoryTest < Minitest::Test
     assert_equal [], @test_item_repo.find_all_by_created_at("2075-04-21 14:53:59 UTC")
     sample_result = @test_item_repo.find_all_by_created_at("2015-04-21 14:53:59 UTC")
     assert sample_result.class == Array
-    assert_equal 1, sample_result.length
+    assert_equal 2, sample_result.length
     assert sample_result.all? { |item| item.class == Item}
     assert sample_result.all? { |item| item.created_at == "2015-04-21 14:53:59 UTC"}
   end
@@ -108,7 +114,7 @@ class ItemRepositoryTest < Minitest::Test
     assert_equal [], @test_item_repo.find_all_by_updated_at("2075-04-21 14:53:59 UTC")
     sample_result = @test_item_repo.find_all_by_updated_at("2015-04-21 14:53:59 UTC")
     assert sample_result.class == Array
-    assert_equal 1, sample_result.length
+    assert_equal 2, sample_result.length
     assert sample_result.all? { |item| item.class == Item}
     assert sample_result.all? { |item| item.created_at == "2015-04-21 14:53:59 UTC"}
   end

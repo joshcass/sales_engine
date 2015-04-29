@@ -1,11 +1,14 @@
-require 'smarter_csv'
 require_relative 'item'
 
 class ItemRepository
   attr_reader :sales_engine, :items
 
-  def initialize(csv_data, sales_engine)
-    @items = parse_items(csv_data, self)
+  def inspect
+    "#<#{self.class} #{@items.size} rows>"
+  end
+
+  def initialize(item_hashes, sales_engine)
+    @items = parse_items(item_hashes, self)
     @sales_engine = sales_engine
   end
 
@@ -26,15 +29,15 @@ class ItemRepository
   end
 
   def find_by_name(search_name)
-    items.detect { |item| search_name.downcase == item.name.downcase}
+    items.detect { |item| search_name.downcase == item.name.downcase }
   end
 
-  def find_all_by_name(search_name)
-    items.select { |item| search_name.downcase == item.name.downcase }
+  def find_all_by_name(name)
+    items.select {|item| item.name == name}
   end
 
   def find_by_unit_price(search_price)
-    items.detect { |item| search_price == item.unit_price}
+    items.detect { |item| item.unit_price == search_price}
   end
 
   def find_all_by_unit_price(search_price)
@@ -77,12 +80,6 @@ class ItemRepository
     items.select { |item| search_time == item.updated_at }
   end
 
-  def find_all_invoices(id)
-    sales_engine.find_invoice_items_by_item_id(id).map do |invoice_item|
-      sales_engine.find_invoice_by_id(invoice_item.invoice_id)
-    end
-  end
-
   def find_invoice_items(id)
     sales_engine.find_invoice_items_by_item_id(id)
   end
@@ -91,8 +88,12 @@ class ItemRepository
     sales_engine.find_merchant_by_id(merchant_id)
   end
 
-  def new_items(items_to_add)
-    items << items_to_add.uniq.reject { |item| items.include?(item) }
+  def item_revenue(invoice_items)
+    sales_engine.find_total_revenue(invoice_items)
+  end
+
+  def item_units_sold(invoice_items)
+    sales_engine.find_total_quantity(invoice_items)
   end
 
   def most_revenue(top_n = 1)
@@ -100,11 +101,12 @@ class ItemRepository
   end
 
   def most_items(top_n = 1)
-    items.max_by(top_n) { |item| item.items_sold }
+    items.max_by(top_n) { |item| item.number_sold }
   end
 
   private
-  def parse_items(csv_data, repo)
-    csv_data.map { |invoice| Item.new(invoice, repo) }
+
+  def parse_items(item_hashes, repo)
+    item_hashes.map { |item_hash| Item.new(item_hash, repo) }
   end
 end

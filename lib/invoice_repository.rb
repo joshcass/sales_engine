@@ -1,11 +1,14 @@
-require 'smarter_csv'
 require_relative 'invoice'
 
 class InvoiceRepository
   attr_reader :invoices, :sales_engine
 
-  def initialize(csv_data, sales_engine)
-    @invoices = parse_invoices(csv_data, self)
+  def inspect
+    "#<#{self.class} #{@invoices.size} rows>"
+  end
+
+  def initialize(invoice_hashes, sales_engine)
+    @invoices = parse_invoices(invoice_hashes, self)
     @sales_engine = sales_engine
   end
 
@@ -34,7 +37,7 @@ class InvoiceRepository
   end
 
   def find_by_created_at(created)
-    invoices.detect { |invoice| invoice.created_at == created }
+    invoices.detect { |invoice| invoice.created_at == created}
   end
 
   def find_by_updated_at(updated)
@@ -58,7 +61,9 @@ class InvoiceRepository
   end
 
   def find_all_by_created_at(created)
-    invoices.select { |invoice| invoice.created_at == created }
+    invoices.select do |invoice|
+      Date.strptime("#{invoice.created_at}", '%F') == created
+    end
   end
 
   def find_all_by_updated_at(updated)
@@ -71,10 +76,6 @@ class InvoiceRepository
 
   def find_all_invoice_items(invoice_id)
     sales_engine.find_all_invoice_items_by_invoice_id(invoice_id)
-  end
-
-  def all_transactions_failed?(invoice_id)
-    sales_engine.all_transactions_failed?(invoice_id)
   end
 
   def find_all_items(invoice_id)
@@ -101,9 +102,6 @@ class InvoiceRepository
   end
 
   def create(invoice_info)
-    sales_engine.add_new_customer(invoice_info[:customer])
-    sales_engine.add_new_merchant(invoice_info[:merchant])
-    sales_engine.add_new_items(invoice_info[:items])
     invoice = new_invoice(invoice_info)
     sales_engine.add_new_invoice_items(invoice.id, invoice_info[:items])
     invoice
@@ -113,8 +111,39 @@ class InvoiceRepository
     sales_engine.add_new_transaction(invoice_id, cc_info)
   end
 
+  def pending
+    invoices.select { |invoice| invoice.all_failed? }
+  end
+
+  def successful(date = nil)
+    if date
+      find_all_by_created_at(date).reject { |invoice| invoice.all_failed? }
+    else
+      invoices.reject { |invoice| invoice.all_failed?}
+    end
+  end
+
+  def successful_invoice_items(date = nil)
+    successful(date).map do |invoice|
+      find_all_invoice_items(invoice.id)
+    end.flatten
+  end
+
+  def average_revenue(date = nil)
+    (sales_engine.find_total_revenue(successful_invoice_items(date)) /
+      successful(date).size).round(2)
+  end
+
+  def average_items(date = nil)
+    (sales_engine.average_item_quantity(successful_invoice_items(date)) /
+      successful(date).size).round(2)
+  end
+
   private
-  def parse_invoices(csv_data, repo)
-    csv_data.map { |invoice| Invoice.new(invoice, repo) }
+
+  def parse_invoices(invoice_hashes, repo)
+    invoice_hashes.map do |attributes_hash|
+      Invoice.new attributes_hash, repo
+    end
   end
 end

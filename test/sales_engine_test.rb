@@ -25,11 +25,53 @@ class SalesEngineTest < Minitest::Test
     assert merchant.invoices.all? { |invoice| invoice.merchant_id == 1 }
   end
 
+  class MockSalesEngine < SalesEngine
+    def initialize(directory="n/a")
+      super directory
+    end
+
+    def startup(repos={})
+      default_repos = {
+        invoices:      [],
+        customers:     [],
+        invoice_items: [],
+        transactions:  [],
+        items:         [],
+        merchants:     [],
+      }
+      default_repos.merge(repos).each do |collection_name, hashes|
+        repo      = repo_by_name(collection_name).new(hashes, self)
+        ivar_name = "@#{collection_name.to_s.chomp "s"}_repository"
+        instance_variable_set ivar_name, repo
+      end
+    end
+
+    private
+
+    def repo_by_name(name)
+      { invoices:      InvoiceRepository,
+        customers:     CustomerRepository,
+        invoice_items: InvoiceItemRepository,
+        transactions:  TransactionRepository,
+        items:         ItemRepository,
+        merchants:     MerchantRepository,
+      }.fetch name
+    end
+  end
+
+  def engine_for(repo_data)
+    sales_engine = MockSalesEngine.new
+    sales_engine.startup(repo_data)
+    sales_engine
+  end
+
   def test_invoice_transactions_method_returns_all_transactions_for_invoice_id
-    invoice = @test_engine.invoice_repository.find_by_id(12)
-    assert invoice.transactions.length == 3
-    assert invoice.transactions.all? { |transaction| transaction.is_a?Transaction }
-    assert invoice.transactions.all? { |transaction| transaction.invoice_id == 12 }
+    engine = engine_for invoices:     [{id: 1}, {id: 2}],
+                        transactions: [{invoice_id: 1}, {invoice_id: 2}, {invoice_id: 1}, {invoice_id: 1}]
+
+    invoice1, invoice2 = engine.invoice_repository.all
+    assert_equal invoice1.transactions.length, 3
+    assert_equal invoice2.transactions.length, 1
   end
 
   def test_invoice_invoice_items_method_returns_all_invoice_items_for_invoice_id
@@ -96,7 +138,7 @@ class SalesEngineTest < Minitest::Test
 
   def test_merchant_revenue_method_returns_total_revenue_for_that_merchant
     merchant = @test_engine.merchant_repository.find_by_id(100)
-    assert_equal BigDecimal("1.3836").round(2), merchant.revenue
+    assert_equal BigDecimal("138.36").round(2), merchant.revenue
   end
 
   def test_item_best_day_returns_a_date
@@ -122,7 +164,7 @@ class SalesEngineTest < Minitest::Test
 
   def test_find_all_items_sold_by_merchant_returns_all_items_for_merchant
     merchant = @test_engine.merchant_repository.find_by_id(1)
-    assert_equal 54, merchant.items_sold
+    assert_equal 54, merchant.number_sold
   end
 
   def test_merchant_favorite_customer_finds_customer_with_most_successful_transactions
@@ -195,14 +237,14 @@ class SalesEngineTest < Minitest::Test
     assert_equal 4, invoiceitem1.item_id
     assert_equal 32, invoiceitem1.invoice_id
     assert_equal 3, invoiceitem1.quantity
-    assert_equal 150000000, invoiceitem1.unit_price
+    assert_equal BigDecimal("1500000.0"), invoiceitem1.unit_price
     assert_equal 535, invoiceitem2.item_id
     assert_equal 32, invoiceitem2.invoice_id
     assert_equal 2, invoiceitem2.quantity
-    assert_equal 2196, invoiceitem2.unit_price
+    assert_equal BigDecimal("21.96"), invoiceitem2.unit_price
     assert_equal 1918, invoiceitem3.item_id
     assert_equal 32, invoiceitem3.invoice_id
     assert_equal 1, invoiceitem3.quantity
-    assert_equal 72018, invoiceitem3.unit_price
+    assert_equal BigDecimal("720.18"), invoiceitem3.unit_price
   end
 end

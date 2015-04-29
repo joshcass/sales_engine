@@ -1,6 +1,3 @@
-require_relative 'business_intelligence'
-include BusinessIntelligence
-
 class Item
   attr_reader :item, :parent
 
@@ -22,7 +19,7 @@ class Item
   end
 
   def unit_price
-    item[:unit_price]
+    BigDecimal(item[:unit_price]) / 100
   end
 
   def merchant_id
@@ -45,22 +42,29 @@ class Item
     parent.find_merchant(merchant_id)
   end
 
+  def successful_invoice_items
+    invoice_items.reject do |invoice_item|
+      invoice_item.failed?
+    end
+  end
+
   def revenue
-    parent.sales_engine.find_total_revenue(successful_invoice_items_for_item)
+    parent.item_revenue(successful_invoice_items)
   end
 
-  def successful_invoice_items_for_item
-    successful_invoice_items & invoice_items
+  def number_sold
+    parent.item_units_sold(successful_invoice_items)
   end
 
-  def items_sold
-    parent.sales_engine.find_total_quantity(successful_invoice_items_for_item)
+  def grouped_by_date
+    successful_invoice_items.group_by do |invoice_item|
+      invoice_item.invoice.created_at
+    end
   end
 
   def best_day
-    Date.strptime(invoice_items.
-        group_by { |invoice_item| created_at }
-                    .max_by{|time, collection| collection
-                                                 .length}[0], '%F')
+    Date.strptime(grouped_by_date.max_by do |date, quantity|
+        quantity.length
+      end.first, '%F')
   end
 end

@@ -58,7 +58,6 @@ class InvoiceRepositoryTest < Minitest::Test
   end
 
   def test_find_all_by_id_returns_array_of_all_objects_with_that_id
-    #Aren't those supposed to be unique, though?
     assert_equal [], @result.find_all_by_id(135581778)
     sample_result = @result.find_all_by_id(10)
     assert sample_result.class == Array
@@ -68,7 +67,6 @@ class InvoiceRepositoryTest < Minitest::Test
   end
 
   def test_find_all_by_customer_id_returns_array_of_all_objects_with_that_customer_id
-    #Aren't those supposed to be near-unique, though?
     assert_equal [], @result.find_all_by_customer_id(10)
     sample_result = @result.find_all_by_customer_id(4)
     assert sample_result.class == Array
@@ -97,12 +95,9 @@ class InvoiceRepositoryTest < Minitest::Test
   end
 
   def test_find_all_by_created_at_returns_array_of_all_objects_created_then
-    assert_equal [], @result.find_all_by_created_at("2075-04-21 14:53:59 UTC")
-    sample_result = @result.find_all_by_created_at("2012-03-12 03:54:10 UTC")
-    assert sample_result.class == Array
-    assert_equal 4, sample_result.length
-    assert sample_result.all? { |item| item.class == Invoice}
-    assert sample_result.all? { |item| item.created_at == "2012-03-12 03:54:10 UTC"}
+    assert_equal [], @result.find_all_by_created_at(Date.strptime("2075-04-21 14:53:59 UTC", '%F'))
+    sample_result = @result.find_all_by_created_at(Date.strptime("2012-03-12 03:54:10 UTC", '%F'))
+    assert_equal 6, sample_result.length
   end
 
   def test_find_all_by_updated_at_returns_array_of_all_objects_updated_then
@@ -113,5 +108,4 @@ class InvoiceRepositoryTest < Minitest::Test
     assert sample_result.all? { |item| item.class == Invoice}
     assert sample_result.all? { |item| item.updated_at == "2012-03-16 13:54:11 UTC"}
   end
-
 end
