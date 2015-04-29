@@ -1,7 +1,7 @@
 require_relative 'merchant'
 
 class MerchantRepository
-  attr_reader :merchants, :sales_engine
+  attr_reader :merchants, :sales_engine, :id
 
   def inspect
     "#<#{self.class} #{@merchants.size} rows>"
@@ -12,6 +12,10 @@ class MerchantRepository
     @sales_engine = sales_engine
   end
 
+  def build_groups
+    @id = merchants.group_by{ |merchant| merchant.id }
+  end
+
   def all
     merchants
   end
@@ -20,8 +24,8 @@ class MerchantRepository
     merchants.sample
   end
 
-  def find_by_id(id)
-    merchants.detect {|merchant| merchant.id == id}
+  def find_by_id(search_id)
+    id[search_id].first
   end
 
   def find_by_name(name)
@@ -34,10 +38,6 @@ class MerchantRepository
 
   def find_by_updated_at(updated)
     merchants.detect { |merchant| merchant.updated_at == updated }
-  end
-
-  def find_all_by_id(id)
-    merchants.select { |merchant| merchant.id == id }
   end
 
   def find_all_by_name(name)

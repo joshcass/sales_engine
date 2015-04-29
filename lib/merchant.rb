@@ -38,12 +38,12 @@ class Merchant
 
   def successful_invoices(date = nil)
     invoices(date).reject do |invoice|
-      invoice.all_failed?
+      invoice.failed?
     end
   end
 
   def pending_invoices
-    invoices.select { |invoice| invoice.all_failed? }
+    invoices.select { |invoice| invoice.failed? }
   end
 
   def successful_invoice_items(date = nil)

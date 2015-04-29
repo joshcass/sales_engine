@@ -1,7 +1,12 @@
 require_relative 'transaction'
 
 class TransactionRepository
-  attr_reader :transactions, :sales_engine
+  attr_reader :transactions,
+              :sales_engine,
+              :id,
+              :invoice_id,
+              :result,
+              :created_at
 
   def inspect
     "#<#{self.class} #{@transactions.size} rows>"
@@ -12,6 +17,13 @@ class TransactionRepository
     @sales_engine = sales_engine
   end
 
+  def build_groups
+    @id = transactions.group_by{|transaction| transaction.id}
+    @invoice_id = transactions.group_by{|transaction| transaction.invoice_id}
+    @result = transactions.group_by{|transaction| transaction.result}
+    @created_at = transactions.group_by{|transaction| transaction.created_at}
+  end
+
   def all
     transactions
   end
@@ -20,12 +32,12 @@ class TransactionRepository
     transactions.sample
   end
 
-  def find_by_id(id)
-    transactions.detect { |transaction| transaction.id == id }
+  def find_by_id(search_id)
+    id[search_id].first
   end
 
-  def find_by_invoice_id(invoice_id)
-    transactions.detect { |transaction| transaction.invoice_id == invoice_id }
+  def find_by_invoice_id(search_id)
+    invoice_id[search_id].first
   end
 
   def find_by_credit_card_number(credit_card_number)
@@ -40,24 +52,20 @@ class TransactionRepository
     end
   end
 
-  def find_by_result(result)
-    transactions.detect { |transaction| transaction.result == result }
+  def find_by_result(search_result)
+    result[search_result].first
   end
 
   def find_by_created_at(created)
-    transactions.detect { |transaction| transaction.created_at == created }
+    created_at[created].first
   end
 
   def find_by_updated_at(updated)
     transactions.detect { |transaction| transaction.updated_at == updated }
   end
 
-  def find_all_by_id(id)
-    transactions.select { |transaction| transaction.id == id }
-  end
-
-  def find_all_by_invoice_id(invoice_id)
-    transactions.select { |transaction| transaction.invoice_id == invoice_id }
+  def find_all_by_invoice_id(search_id)
+    invoice_id[search_id]
   end
 
   def find_all_by_credit_card_number(credit_card_number)
@@ -72,12 +80,12 @@ class TransactionRepository
     end
   end
 
-  def find_all_by_result(result)
-    transactions.select { |transaction| transaction.result == result }
+  def find_all_by_result(search_result)
+    result[search_result]
   end
 
   def find_all_by_created_at(created)
-    transactions.select { |transaction| transaction.created_at == created }
+    created_at[created]
   end
 
   def find_all_by_updated_at(updated)
@@ -89,7 +97,7 @@ class TransactionRepository
   end
 
   def new_transaction(invoice_id, cc_info)
-    new_id = transactions.max_by { |transaction| transaction.id }.id + 1
+    new_id = id.max_by { |k, v| k }.first + 1
     transactions << Transaction.new({id: new_id,
         invoice_id: invoice_id,
         credit_card_number: cc_info[:credit_card_number],
@@ -97,6 +105,7 @@ class TransactionRepository
         result: cc_info[:result],
         created_at: Time.now.to_date,
         updated_at: Time.now.to_date}, self)
+    build_groups
     find_by_id(new_id)
   end
 

@@ -32,7 +32,24 @@ class SalesEngine
                                  .new(parse('items.csv'), self)
     @merchant_repository     = MerchantRepository
                                  .new(parse('merchants.csv'), self)
+    group_builders
+    invoice_status_group_builder
 
+  end
+
+  def group_builders
+    transaction_repository.build_groups
+    invoice_item_repository.build_groups
+    customer_repository.build_groups
+    item_repository.build_groups
+    merchant_repository.build_groups
+    invoice_repository.build_groups
+  end
+
+  def invoice_status_group_builder
+    invoice_repository.build_status_group
+    # require 'pry'
+    # binding pry
   end
 
   def find_invoices_by_customer_id(customer_id)

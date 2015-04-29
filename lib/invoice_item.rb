@@ -39,7 +39,7 @@ class InvoiceItem
   end
 
   def failed?
-    invoice.all_failed?
+    invoice.failed?
   end
 
   def item

@@ -35,7 +35,12 @@ class Item
   end
 
   def invoice_items
-    parent.find_invoice_items(id)
+    i_items = parent.find_invoice_items(id)
+    if i_items
+      i_items
+    else
+      []
+    end
   end
 
   def merchant
@@ -49,7 +54,7 @@ class Item
   end
 
   def revenue
-    parent.item_revenue(successful_invoice_items)
+      parent.item_revenue(successful_invoice_items)
   end
 
   def number_sold

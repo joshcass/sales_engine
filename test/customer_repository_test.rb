@@ -38,16 +38,6 @@ class CustomerRepositoryTest < Minitest::Test
     assert_equal 1, @test_customer_repo.find_by_updated_at("2012-03-27 14:54:09 UTC").id
   end
 
-  def test_find_all_by_id_returns_array_of_all_objects_with_that_id
-    #Aren't those supposed to be unique, though?
-    assert_equal [], @test_customer_repo.find_all_by_id(135581778)
-    sample_result = @test_customer_repo.find_all_by_id(3)
-    assert sample_result.class == Array
-    assert sample_result.length == 1
-    assert sample_result[0].class == Customer
-    assert sample_result[0].id == 3
-  end
-
   def test_find_all_by_first_name_returns_array_of_all_objects_with_that_name
     assert_equal [], @test_customer_repo.find_all_by_first_name("Soma")
     sample_result = @test_customer_repo.find_all_by_first_name("Jade")
