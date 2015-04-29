@@ -33,7 +33,6 @@ class Customer
     else
       []
     end
-
   end
 
   def transactions

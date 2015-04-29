@@ -25,9 +25,6 @@ class InvoiceRepository
     @merchant_id = invoices.group_by{|invoice| invoice.merchant_id}
     @created_at = invoices.group_by{|invoice| invoice.created_at}
     @updated_at = invoices.group_by{|invoice| invoice.updated_at}
-  end
-
-  def build_status_group
     @status = invoices.group_by{|invoice| invoice.all_failed?}
   end
 
