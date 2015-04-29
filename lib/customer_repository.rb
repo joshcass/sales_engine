@@ -67,9 +67,9 @@ class CustomerRepository
   end
 
   def find_invoice_items(invoices)
-    invoices.map do |invoice|
+    invoices.flat_map do |invoice|
       sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
-    end.flatten
+    end
   end
 
   def total_items_purchased(invoice_items)

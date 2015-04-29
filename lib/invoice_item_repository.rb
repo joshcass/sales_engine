@@ -112,8 +112,8 @@ class InvoiceItemRepository
         invoice_id: invoice_id,
         quantity: quantity,
         unit_price: item.unit_price * 100,
-        created_at: Time.now.utc,
-        updated_at: Time.now.utc}, self)
+        created_at: Time.now.to_date,
+        updated_at: Time.now.to_date}, self)
   end
 
   def new_invoice_items(invoice_id, items)

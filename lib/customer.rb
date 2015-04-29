@@ -19,19 +19,11 @@ class Customer
   end
 
   def created_at
-    customer[:created_at]
+    Date.strptime("#{customer[:created_at]}")
   end
 
   def updated_at
-    @customer[:updated_at]
-  end
-
-  def invoices
-    @parent.find_invoices(id)
-  end
-
-  def transactions
-    invoices.flat_map { |invoice| invoice.transactions}
+    Date.strptime("#{customer[:updated_at]}")
   end
 
   def invoices
@@ -39,11 +31,11 @@ class Customer
   end
 
   def transactions
-    invoices.map{ |invoice| invoice.transactions}.flatten
+    invoices.flat_map { |invoice| invoice.transactions}
   end
 
   def merchants
-    invoices.map {|invoice| invoice.merchant}.flatten
+    invoices.flat_map { |invoice| invoice.merchant }
   end
 
   def successful_invoices
@@ -68,13 +60,12 @@ class Customer
 
   def last_transaction
     transactions.max_by do |transaction|
-      Date.strptime("#{transaction.created_at}", '%F')
+      transaction.created_at
     end
   end
 
   def days_since_activity
-    Time.new.to_date.mjd -
-      Date.strptime("#{last_transaction.created_at}", '%F').mjd
+    Time.new.to_date.mjd - last_transaction.created_at.mjd
   end
 
   def favorite_merchant
