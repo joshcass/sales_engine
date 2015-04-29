@@ -95,6 +95,12 @@ class InvoiceItemRepository
     invoice_items.reduce(0) { |sum, invoice_item| sum + invoice_item.quantity }
   end
 
+  def calculate_average_item_quantity(invoice_items)
+    invoice_items.reduce(0) do |sum, invoice_item|
+      sum + BigDecimal(invoice_item.quantity)
+    end
+  end
+
   def group_items_by_quantity(items)
     items.group_by { |item| item }
   end

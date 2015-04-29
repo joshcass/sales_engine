@@ -21,17 +21,17 @@ class SalesEngine
 
   def startup
     @invoice_repository      = InvoiceRepository
-                                 .new(parser('invoices.csv'), self)
+                                 .new(parse('invoices.csv'), self)
     @customer_repository     = CustomerRepository
-                                 .new(parser('customers.csv'), self)
+                                 .new(parse('customers.csv'), self)
     @invoice_item_repository = InvoiceItemRepository
-                                 .new(parser('invoice_items.csv'), self)
+                                 .new(parse('invoice_items.csv'), self)
     @transaction_repository  = TransactionRepository
-                                 .new(parser('transactions.csv'), self)
+                                 .new(parse('transactions.csv'), self)
     @item_repository         = ItemRepository
-                                 .new(parser('items.csv'), self)
+                                 .new(parse('items.csv'), self)
     @merchant_repository     = MerchantRepository
-                                 .new(parser('merchants.csv'), self)
+                                 .new(parse('merchants.csv'), self)
 
   end
 
@@ -81,16 +81,16 @@ class SalesEngine
     end
   end
 
-  def all_transactions_failed?(invoice_id)
-    transaction_repository.transactions_failed?(invoice_id)
-  end
-
   def find_total_revenue(invoice_items)
     invoice_item_repository.calculate_total_revenue(invoice_items)
   end
 
   def find_total_quantity(invoice_items)
     invoice_item_repository.calculate_total_quantity(invoice_items)
+  end
+
+  def average_item_quantity(invoice_items)
+    invoice_item_repository.calculate_average_item_quantity(invoice_items)
   end
 
   def add_new_invoice_items(invoice_id, items)
@@ -102,7 +102,7 @@ class SalesEngine
   end
 
   private
-  def parser(filename)
+  def parse(filename)
     SmarterCSV.process("#{directory}/#{filename}")
   end
 end
