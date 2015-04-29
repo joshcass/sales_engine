@@ -36,12 +36,12 @@ class SalesEngine
   end
 
   def group_builders
-    transaction_repository.build_groups
-    invoice_item_repository.build_groups
-    customer_repository.build_groups
-    item_repository.build_groups
-    merchant_repository.build_groups
-    invoice_repository.build_groups
+    transaction_repository.build_hash_tables
+    invoice_item_repository.build_hash_tables
+    customer_repository.build_hash_tables
+    item_repository.build_hash_tables
+    merchant_repository.build_hash_tables
+    invoice_repository.build_hash_tables
   end
 
   def invoice_status_group_builder

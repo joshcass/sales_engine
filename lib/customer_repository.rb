@@ -7,12 +7,12 @@ class CustomerRepository
     "#<#{self.class} #{@customers.size} rows>"
   end
 
-  def initialize(csv_data, sales_engine)
-    @customers = parse_customers(csv_data, self)
+  def initialize(customer_hashes, sales_engine)
+    @customers = parse_customers(customer_hashes, self)
     @sales_engine = sales_engine
   end
 
-  def build_groups
+  def build_hash_tables
     @id = customers.group_by{|customer| customer.id}
   end
 
@@ -91,7 +91,9 @@ class CustomerRepository
   end
 
   private
-  def parse_customers(csv_data, repo)
-    csv_data.map { |invoice| Customer.new(invoice, repo) }
+  def parse_customers(customer_hashes, repo)
+    customer_hashes.map do |invoice_attributes|
+      Customer.new(invoice_attributes, repo)
+    end
   end
 end
