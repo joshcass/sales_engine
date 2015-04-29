@@ -23,11 +23,11 @@ class Invoice
   end
 
   def created_at
-    invoice[:created_at]
+    Date.strptime("#{invoice[:created_at]}")
   end
 
   def updated_at
-    invoice[:updated_at]
+    Date.strptime("#{invoice[:updated_at]}")
   end
 
   def transactions

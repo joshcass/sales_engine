@@ -61,9 +61,9 @@ class MerchantRepository
   end
 
   def find_invoice_items(invoices)
-    invoices.map do |invoice|
+    invoices.flat_map do |invoice|
       sales_engine.find_all_invoice_items_by_invoice_id(invoice.id)
-    end.flatten
+    end
   end
 
   def total_revenue(invoice_items)
@@ -94,7 +94,7 @@ class MerchantRepository
   def dates_active
     merchants.map do |merchant|
       find_invoices(merchant.id).map do |invoice|
-        Date.strptime("#{invoice.created_at}", '%F')
+        invoice.created_at
       end.uniq
     end.flatten
   end

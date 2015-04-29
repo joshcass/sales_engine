@@ -62,7 +62,7 @@ class InvoiceRepository
 
   def find_all_by_created_at(created)
     invoices.select do |invoice|
-      Date.strptime("#{invoice.created_at}", '%F') == created
+      invoice.created_at == created
     end
   end
 
@@ -96,8 +96,8 @@ class InvoiceRepository
         customer_id: invoice_info[:customer].id,
         merchant_id: invoice_info[:merchant].id,
         status: invoice_info[:status],
-        created_at: "#{Time.now.utc}",
-        updated_at: "#{Time.now.utc}"}, self)
+        created_at: Time.now.to_date,
+        updated_at: Time.now.to_date}, self)
     find_by_id(new_id)
   end
 
@@ -126,7 +126,7 @@ class InvoiceRepository
   def successful_invoice_items(date = nil)
     successful(date).map do |invoice|
       find_all_invoice_items(invoice.id)
-    end.flatten
+    end
   end
 
   def average_revenue(date = nil)
