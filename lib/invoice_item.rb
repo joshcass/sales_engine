@@ -27,11 +27,11 @@ class InvoiceItem
   end
 
   def created_at
-    invoice_item[:created_at]
+    Date.strptime("#{invoice_item[:created_at]}")
   end
 
   def updated_at
-    invoice_item[:updated_at]
+    Date.strptime("#{invoice_item[:updated_at]}")
   end
 
   def invoice

@@ -27,15 +27,14 @@ class Transaction
   end
 
   def created_at
-    transaction[:created_at]
+    Date.strptime("#{transaction[:created_at]}")
   end
 
   def updated_at
-    transaction[:updated_at]
+    Date.strptime("#{transaction[:updated_at]}")
   end
 
   def invoice
     parent.find_invoice(invoice_id)
   end
-
 end

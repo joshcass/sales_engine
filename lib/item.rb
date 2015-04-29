@@ -27,11 +27,11 @@ class Item
   end
 
   def created_at
-    item[:created_at]
+    Date.strptime("#{item[:created_at]}")
   end
 
   def updated_at
-    item[:updated_at]
+    Date.strptime("#{item[:updated_at]}")
   end
 
   def invoice_items
@@ -63,8 +63,8 @@ class Item
   end
 
   def best_day
-    Date.strptime(grouped_by_date.max_by do |date, quantity|
+    grouped_by_date.max_by do |date, quantity|
         quantity.length
-      end.first, '%F')
+      end.first
   end
 end

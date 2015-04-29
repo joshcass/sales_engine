@@ -15,11 +15,11 @@ class Merchant
   end
 
   def created_at
-    merchant[:created_at]
+    Date.strptime("#{merchant[:created_at]}")
   end
 
   def updated_at
-    merchant[:updated_at]
+    Date.strptime("#{merchant[:updated_at]}")
   end
 
   def items
@@ -29,7 +29,7 @@ class Merchant
   def invoices(date = nil)
     if date
       parent.find_invoices(id).select do |invoice|
-        Date.strptime("#{invoice.created_at}", '%F') == date
+        invoice.created_at == date
       end
     else
       parent.find_invoices(id)

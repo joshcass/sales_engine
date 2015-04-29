@@ -95,8 +95,8 @@ class TransactionRepository
         credit_card_number: cc_info[:credit_card_number],
         credit_card_expiration_date: cc_info[:credit_card_expiration_date],
         result: cc_info[:result],
-        created_at: "#{Time.now.utc}",
-        updated_at: "#{Time.now.utc}"}, self)
+        created_at: Time.now.to_date,
+        updated_at: Time.now.to_date}, self)
     find_by_id(new_id)
   end
 
