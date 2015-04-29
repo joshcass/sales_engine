@@ -31,7 +31,12 @@ class Invoice
   end
 
   def transactions
-    parent.find_all_transactions(id)
+    trans = parent.find_all_transactions(id)
+    if trans
+      trans
+    else
+      []
+    end
   end
 
   def invoice_items
@@ -52,8 +57,12 @@ class Invoice
 
   def all_failed?
     transactions.all? do |transaction|
-      transaction.result == 'failed'
+      transaction.result == "failed"
     end
+  end
+
+  def failed?
+    parent.status[true].include?(self)
   end
 
   def charge(credit_card_info)

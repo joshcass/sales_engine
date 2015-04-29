@@ -1,7 +1,11 @@
 require_relative 'item'
 
 class ItemRepository
-  attr_reader :sales_engine, :items
+  attr_reader :sales_engine,
+              :items,
+              :id,
+              :unit_price,
+              :merchant_id
 
   def inspect
     "#<#{self.class} #{@items.size} rows>"
@@ -10,6 +14,12 @@ class ItemRepository
   def initialize(item_hashes, sales_engine)
     @items = parse_items(item_hashes, self)
     @sales_engine = sales_engine
+  end
+
+  def build_groups
+    @id = items.group_by{|item| item.id}
+    @unit_price = items.group_by{|item| item.unit_price}
+    @merchant_id = items.group_by{|item| item.merchant_id}
   end
 
   def all
@@ -21,11 +31,7 @@ class ItemRepository
   end
 
   def find_by_id(search_id)
-    items.detect { |item| search_id == item.id }
-  end
-
-  def find_all_by_id(search_id)
-    items.select { |item| search_id == item.id }
+    id[search_id].first
   end
 
   def find_by_name(search_name)
@@ -37,11 +43,11 @@ class ItemRepository
   end
 
   def find_by_unit_price(search_price)
-    items.detect { |item| item.unit_price == search_price}
+    unit_price[search_price].first
   end
 
   def find_all_by_unit_price(search_price)
-    items.select { |item| search_price == item.unit_price }
+    unit_price[search_price]
   end
 
   def find_by_description(search_description)
@@ -57,11 +63,11 @@ class ItemRepository
   end
 
   def find_by_merchant_id(search_m_id)
-    items.detect { |item| search_m_id == item.merchant_id}
+    merchant_id[search_m_id].first
   end
 
   def find_all_by_merchant_id(search_m_id)
-    items.select { |item| search_m_id == item.merchant_id }
+    merchant_id[search_m_id]
   end
 
   def find_by_created_at(search_time)
@@ -105,7 +111,6 @@ class ItemRepository
   end
 
   private
-
   def parse_items(item_hashes, repo)
     item_hashes.map { |item_hash| Item.new(item_hash, repo) }
   end

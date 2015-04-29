@@ -1,7 +1,7 @@
 require_relative 'customer'
 
 class CustomerRepository
-  attr_reader :sales_engine, :customers, :id_group, :first_name_group
+  attr_reader :sales_engine, :customers, :id
 
   def inspect
     "#<#{self.class} #{@customers.size} rows>"
@@ -10,8 +10,10 @@ class CustomerRepository
   def initialize(csv_data, sales_engine)
     @customers = parse_customers(csv_data, self)
     @sales_engine = sales_engine
-    @id_group = @customers.group_by{ |customer| customer.id }
-    @first_name_group = @customer.group_by{ |customer| customer.first_name}
+  end
+
+  def build_groups
+    @id = customers.group_by{|customer| customer.id}
   end
 
   def all
@@ -23,15 +25,15 @@ class CustomerRepository
   end
 
   def find_by_id(search_id)
-    id_group[search_id].first
+    id[search_id].first
   end
 
   def find_by_first_name(search_name)
-    first_name_group[search_name].first
+    customers.detect { |customer| customer.first_name == search_name }
   end
 
   def find_all_by_first_name(search_name)
-    first_name_group[search_name]
+    customers.select { |customer| customer.first_name == search_name }
   end
 
   def find_by_last_name(search_name)

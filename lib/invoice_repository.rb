@@ -1,7 +1,14 @@
 require_relative 'invoice'
 
 class InvoiceRepository
-  attr_reader :invoices, :sales_engine, :successful, :failed, :id
+  attr_reader :invoices,
+              :sales_engine,
+              :status,
+              :id,
+              :customer_id,
+              :merchant_id,
+              :created_at,
+              :updated_at
 
   def inspect
     "#<#{self.class} #{@invoices.size} rows>"
@@ -10,7 +17,18 @@ class InvoiceRepository
   def initialize(invoice_hashes, sales_engine)
     @invoices = parse_invoices(invoice_hashes, self)
     @sales_engine = sales_engine
-    groups
+  end
+
+  def build_groups
+    @id = invoices.group_by{|invoice| invoice.id}
+    @customer_id = invoices.group_by{|invoice| invoice.customer_id}
+    @merchant_id = invoices.group_by{|invoice| invoice.merchant_id}
+    @created_at = invoices.group_by{|invoice| invoice.created_at}
+    @updated_at = invoices.group_by{|invoice| invoice.updated_at}
+  end
+
+  def build_status_group
+    @status = invoices.group_by{|invoice| invoice.all_failed?}
   end
 
   def all
@@ -21,16 +39,16 @@ class InvoiceRepository
     invoices.sample
   end
 
-  def find_by_id(id)
-    invoices.detect { |invoice| invoice.id == id }
+  def find_by_id(search_id)
+    id[search_id].first
   end
 
-  def find_by_customer_id(customer_id)
-    invoices.detect { |invoice| invoice.customer_id == customer_id }
+  def find_by_customer_id(search_id)
+    customer_id[search_id].first
   end
 
-  def find_by_merchant_id(merchant_id)
-    invoices.detect { |invoice| invoice.merchant_id == merchant_id }
+  def find_by_merchant_id(search_id)
+    merchant_id[search_id].first
   end
 
   def find_by_status(status)
@@ -38,23 +56,19 @@ class InvoiceRepository
   end
 
   def find_by_created_at(created)
-    invoices.detect { |invoice| invoice.created_at == created}
+    created_at[created].first
   end
 
   def find_by_updated_at(updated)
-    invoices.detect { |invoice| invoice.updated_at == updated }
+    updated_at[updated].first
   end
 
-  def find_all_by_id(id)
-    invoices.select { |invoice| invoice.id == id }
+  def find_all_by_customer_id(search_id)
+    customer_id[search_id]
   end
 
-  def find_all_by_customer_id(customer_id)
-    invoices.select { |invoice| invoice.customer_id == customer_id }
-  end
-
-  def find_all_by_merchant_id(merchant_id)
-    invoices.select { |invoice| invoice.merchant_id == merchant_id }
+  def find_all_by_merchant_id(search_id)
+    merchant_id[search_id]
   end
 
   def find_all_by_status(status)
@@ -62,13 +76,11 @@ class InvoiceRepository
   end
 
   def find_all_by_created_at(created)
-    invoices.select do |invoice|
-      invoice.created_at == created
-    end
+   created_at[created]
   end
 
   def find_all_by_updated_at(updated)
-    invoices.select { |invoice| invoice.updated_at == updated }
+    updated_at[updated]
   end
 
   def find_all_transactions(invoice_id)
@@ -92,13 +104,14 @@ class InvoiceRepository
   end
 
   def new_invoice(invoice_info)
-    new_id = invoices.max_by { |invoice| invoice.id }.id + 1
+    new_id = id.max_by { |k, v| k }.first + 1
     invoices << Invoice.new({id: new_id,
         customer_id: invoice_info[:customer].id,
         merchant_id: invoice_info[:merchant].id,
         status: invoice_info[:status],
         created_at: Time.now.to_date,
         updated_at: Time.now.to_date}, self)
+    build_groups
     find_by_id(new_id)
   end
 
@@ -113,31 +126,31 @@ class InvoiceRepository
   end
 
   def pending
-    invoices.select { |invoice| invoice.all_failed? }
+    status[true]
   end
 
-  def successful(date = nil)
+  def processed(date = nil)
     if date
-      find_all_by_created_at(date).reject { |invoice| invoice.all_failed? }
+      status[false].select { |invoice| invoice.created_at == date}
     else
-      invoices.reject { |invoice| invoice.all_failed?}
+      status[false]
     end
   end
 
-  def successful_invoice_items(date = nil)
-    successful(date).map do |invoice|
+  def processed_invoice_items(date = nil)
+    processed(date).flat_map do |invoice|
       find_all_invoice_items(invoice.id)
     end
   end
 
   def average_revenue(date = nil)
-    (sales_engine.find_total_revenue(successful_invoice_items(date)) /
-      successful(date).size).round(2)
+    (sales_engine.find_total_revenue(processed_invoice_items(date)) /
+      processed(date).size).round(2)
   end
 
   def average_items(date = nil)
-    (sales_engine.average_item_quantity(successful_invoice_items(date)) /
-      successful(date).size).round(2)
+    (sales_engine.average_item_quantity(processed_invoice_items(date)) /
+      processed(date).size).round(2)
   end
 
   private
@@ -145,11 +158,5 @@ class InvoiceRepository
     invoice_hashes.map do |attributes_hash|
       Invoice.new attributes_hash, repo
     end
-  end
-
-  def groups
-    @fail = invoices.group_by{|invoice| invoice.all_failed?}
-    @success = invoices.group_by{|invoice| !invoice.all_falied?}
-    @id = invoices.group_by{|invoice| invoice.id}
   end
 end

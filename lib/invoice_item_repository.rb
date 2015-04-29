@@ -2,7 +2,14 @@ require_relative 'invoice_item'
 require 'bigdecimal'
 
 class InvoiceItemRepository
-  attr_reader :sales_engine, :invoice_items
+  attr_reader :sales_engine,
+              :invoice_items,
+              :id,
+              :item_id,
+              :invoice_id,
+              :quantity,
+              :unit_price,
+              :created_at
 
   def inspect
     "#<#{self.class} #{@invoice_items.size} rows>"
@@ -11,6 +18,15 @@ class InvoiceItemRepository
   def initialize(csv_data, sales_engine)
     @invoice_items = parse_invoice_items(csv_data, self)
     @sales_engine = sales_engine
+  end
+
+  def build_groups
+    @id = invoice_items.group_by{|i_item| i_item.id}
+    @item_id = invoice_items.group_by{|i_item| i_item.item_id }
+    @invoice_id = invoice_items.group_by{|i_item| i_item.invoice_id}
+    @quantity = invoice_items.group_by{|i_item| i_item.quantity}
+    @unit_price = invoice_items.group_by{|i_item| i_item.unit_price}
+    @created_at = invoice_items.group_by{|i_item| i_item.created_at}
   end
 
   def all
@@ -22,59 +38,55 @@ class InvoiceItemRepository
   end
 
   def find_by_id(search_id)
-    invoice_items.detect { |item| search_id == item.id }
-  end
-
-  def find_all_by_id(search_id)
-    invoice_items.select { |item| search_id == item.id }
+    id[search_id].first
   end
 
   def find_by_item_id(search_id)
-    invoice_items.detect { |item| search_id == item.item_id }
+    item_id[search_id].first
   end
 
   def find_all_by_item_id(search_id)
-    invoice_items.select { |item| search_id == item.item_id }
+    item_id[search_id]
   end
 
   def find_by_invoice_id(search_id)
-    invoice_items.detect { |item| search_id == item.invoice_id}
+    invoice_id[search_id].first
   end
 
   def find_all_by_invoice_id(search_id)
-    invoice_items.select { |item| search_id == item.invoice_id }
+    invoice_id[search_id]
   end
 
   def find_by_quantity(search_quantity)
-    invoice_items.detect { |item| search_quantity == item.quantity }
+    quantity[search_quantity].first
   end
 
   def find_all_by_quantity(search_quantity)
-    invoice_items.select { |item| search_quantity == item.quantity }
+    quantity[search_quantity]
   end
 
   def find_by_unit_price(search_price)
-    invoice_items.detect { |item| search_price == item.unit_price }
+    unit_price[search_price].first
   end
 
   def find_all_by_unit_price(search_price)
-    invoice_items.select { |item| search_price == item.unit_price }
+    unit_price[search_price]
   end
 
   def find_by_created_at(search_time)
-    invoice_items.detect { |item| search_time == item.created_at}
+    created_at[search_time].first
   end
 
   def find_all_by_created_at(search_time)
-    invoice_items.select { |item| search_time == item.created_at }
+    created_at[search_time]
   end
 
   def find_by_updated_at(search_time)
-    invoice_items.detect { |item| search_time == item.updated_at}
+    invoice_items.detect {|invoice_item| invoice_item.updated_at == search_time}
   end
 
   def find_all_by_updated_at(search_time)
-    invoice_items.select { |item| search_time == item.updated_at }
+    invoice_items.select {|invoice_item| invoice_item.updated_at == search_time}
   end
 
   def find_invoice(invoice_id)
@@ -92,7 +104,9 @@ class InvoiceItemRepository
   end
 
   def calculate_total_quantity(invoice_items)
-    invoice_items.reduce(0) { |sum, invoice_item| sum + invoice_item.quantity }
+    invoice_items.reduce(0) do |sum, invoice_item|
+      sum + invoice_item.quantity
+    end
   end
 
   def calculate_average_item_quantity(invoice_items)
@@ -106,7 +120,7 @@ class InvoiceItemRepository
   end
 
   def add_invoice_item(invoice_id, item, quantity)
-    new_id = invoice_items.max_by { |invoice_item| invoice_item.id }.id + 1
+    new_id = id.max_by { |k, v| k }.first + 1
     invoice_items << InvoiceItem.new({id: new_id,
         item_id: item.id,
         invoice_id: invoice_id,
@@ -114,6 +128,7 @@ class InvoiceItemRepository
         unit_price: item.unit_price * 100,
         created_at: Time.now.to_date,
         updated_at: Time.now.to_date}, self)
+    build_groups
   end
 
   def new_invoice_items(invoice_id, items)

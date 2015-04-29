@@ -27,7 +27,13 @@ class Customer
   end
 
   def invoices
-    parent.find_invoices(id)
+    invs = parent.find_invoices(id)
+    if invs
+      invs
+    else
+      []
+    end
+
   end
 
   def transactions
@@ -39,7 +45,7 @@ class Customer
   end
 
   def successful_invoices
-    invoices.reject { |invoice| invoice.all_failed? }
+    invoices.reject { |invoice| invoice.failed? }
   end
 
   def pending_invoices
