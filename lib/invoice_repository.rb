@@ -1,7 +1,7 @@
 require_relative 'invoice'
 
 class InvoiceRepository
-  attr_reader :invoices, :sales_engine
+  attr_reader :invoices, :sales_engine, :successful, :failed, :id
 
   def inspect
     "#<#{self.class} #{@invoices.size} rows>"
@@ -10,6 +10,7 @@ class InvoiceRepository
   def initialize(invoice_hashes, sales_engine)
     @invoices = parse_invoices(invoice_hashes, self)
     @sales_engine = sales_engine
+    groups
   end
 
   def all
@@ -140,10 +141,15 @@ class InvoiceRepository
   end
 
   private
-
   def parse_invoices(invoice_hashes, repo)
     invoice_hashes.map do |attributes_hash|
       Invoice.new attributes_hash, repo
     end
+  end
+
+  def groups
+    @fail = invoices.group_by{|invoice| invoice.all_failed?}
+    @success = invoices.group_by{|invoice| !invoice.all_falied?}
+    @id = invoices.group_by{|invoice| invoice.id}
   end
 end
