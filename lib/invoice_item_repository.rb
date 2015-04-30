@@ -15,12 +15,12 @@ class InvoiceItemRepository
     "#<#{self.class} #{@invoice_items.size} rows>"
   end
 
-  def initialize(csv_data, sales_engine)
-    @invoice_items = parse_invoice_items(csv_data, self)
+  def initialize(invoice_item_hashes, sales_engine)
+    @invoice_items = parse_invoice_items(invoice_item_hashes, self)
     @sales_engine = sales_engine
   end
 
-  def build_groups
+  def build_hash_tables
     @id = invoice_items.group_by{|i_item| i_item.id}
     @item_id = invoice_items.group_by{|i_item| i_item.item_id }
     @invoice_id = invoice_items.group_by{|i_item| i_item.invoice_id}
@@ -128,7 +128,7 @@ class InvoiceItemRepository
         unit_price: item.unit_price * 100,
         created_at: Time.now.to_date,
         updated_at: Time.now.to_date}, self)
-    build_groups
+    build_hash_tables
   end
 
   def new_invoice_items(invoice_id, items)
@@ -138,7 +138,9 @@ class InvoiceItemRepository
   end
 
   private
-  def parse_invoice_items(csv_data, repo)
-    csv_data.map { |invoice| InvoiceItem.new(invoice, repo) }
+  def parse_invoice_items(invoice_item_hashes, repo)
+    invoice_item_hashes.map do |attributes_hash|
+      InvoiceItem.new(attributes_hash, repo)
+    end
   end
 end

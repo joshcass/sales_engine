@@ -36,11 +36,7 @@ class Item
 
   def invoice_items
     i_items = parent.find_invoice_items(id)
-    if i_items
-      i_items
-    else
-      []
-    end
+    i_items ? i_items : []
   end
 
   def merchant

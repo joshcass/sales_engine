@@ -32,11 +32,7 @@ class Invoice
 
   def transactions
     trans = parent.find_all_transactions(id)
-    if trans
-      trans
-    else
-      []
-    end
+    trans ? trans : []
   end
 
   def invoice_items

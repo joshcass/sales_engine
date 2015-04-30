@@ -16,7 +16,7 @@ class ItemRepository
     @sales_engine = sales_engine
   end
 
-  def build_groups
+  def build_hash_tables
     @id = items.group_by{|item| item.id}
     @unit_price = items.group_by{|item| item.unit_price}
     @merchant_id = items.group_by{|item| item.merchant_id}
@@ -112,6 +112,6 @@ class ItemRepository
 
   private
   def parse_items(item_hashes, repo)
-    item_hashes.map { |item_hash| Item.new(item_hash, repo) }
+    item_hashes.map { |attributes_hash| Item.new(attributes_hash, repo) }
   end
 end

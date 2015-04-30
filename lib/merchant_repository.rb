@@ -7,12 +7,12 @@ class MerchantRepository
     "#<#{self.class} #{@merchants.size} rows>"
   end
 
-  def initialize(csv_data, sales_engine)
-    @merchants = parse_merchants(csv_data, self)
+  def initialize(merchant_hashes, sales_engine)
+    @merchants = parse_merchants(merchant_hashes, self)
     @sales_engine = sales_engine
   end
 
-  def build_groups
+  def build_hash_tables
     @id = merchants.group_by{ |merchant| merchant.id }
   end
 
@@ -88,7 +88,7 @@ class MerchantRepository
 
   def dates_by_revenue(top_n = dates_active.length)
     dates_active.uniq.
-    sort_by { |date| revenue(date) }.reverse[0...top_n]
+      sort_by { |date| revenue(date) }.reverse[0...top_n]
   end
 
   def dates_active
@@ -100,7 +100,9 @@ class MerchantRepository
   end
 
   private
-  def parse_merchants(csv_data, repo)
-    csv_data.map { |merchant| Merchant.new(merchant, repo) }
+  def parse_merchants(merchant_hashes, repo)
+    merchant_hashes.map do |attributes_hash|
+      Merchant.new(attributes_hash, repo)
+    end
   end
 end

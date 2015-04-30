@@ -28,12 +28,13 @@ class Merchant
 
   def invoices(date = nil)
     if date
-      parent.find_invoices(id).select do |invoice|
+      invs = parent.find_invoices(id).select do |invoice|
         invoice.created_at == date
       end
     else
-      parent.find_invoices(id)
+      invs = parent.find_invoices(id)
     end
+    invs ? invs : []
   end
 
   def successful_invoices(date = nil)
@@ -75,6 +76,4 @@ class Merchant
   def customers_with_pending_invoices
     pending_invoices.map { |invoice| invoice.customer}
   end
-
-
 end

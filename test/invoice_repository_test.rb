@@ -6,106 +6,68 @@ require './lib/invoice_repository'
 
 class InvoiceRepositoryTest < Minitest::Test
 
-  def setup
-    @result = InvoiceRepository.new(SmarterCSV.process('./test_data/invoices.csv'), self)
-  end
-
-  def test_can_initialize_with_a_data_file
-    assert @result.is_a?InvoiceRepository
+  def repo
+    hashes = {id: 1, customer_id: 11, merchant_id: 23, status: "shipped", created_at: "2015-04-29", updated_at: "2015-04-29"},
+             {id: 4, customer_id: 5, merchant_id: 116, status: "not shipped", created_at: "2015-04-28", updated_at: "2015-04-28"},
+             {id: 8, customer_id: 11, merchant_id: 23, status: "shipped", created_at: "2015-04-29", updated_at: "2015-04-29"}
+    test_repo = InvoiceRepository.new(hashes, self)
+    test_repo.build_hash_tables
+    test_repo
   end
 
   def test_all_returns_all_instances
-    assert_equal 31, @result.all.count
+    assert_equal 3, repo.all.count
   end
 
   def test_random_returns_a_random_sample_from_the_repository
-    assert @result.invoices.include?@result.random
+    sample = repo.random
+    assert repo.all.any?{|item| item.id == sample.id}
   end
 
   def test_find_a_sample_result_by_id
-    sample_result = @result.find_by_id(6)
-    assert_equal 1, sample_result.customer_id
-    assert_equal 76, sample_result.merchant_id
+    assert_equal 1, repo.find_by_id(1).id
+    assert_equal 4, repo.find_by_id(4).id
   end
 
   def test_find_a_sample_result_by_customer_id
-    sample_result = @result.find_by_customer_id(2)
-    assert_equal 9, sample_result.id
-    assert_equal 27, sample_result.merchant_id
+    assert_equal 1, repo.find_by_customer_id(11).id
+    assert_equal 4, repo.find_by_customer_id(5).id
   end
 
   def test_find_an_sample_result_by_merchant_id
-    sample_result = @result.find_by_merchant_id(33)
-    assert_equal 4, sample_result.id
-    assert_equal 1, sample_result.customer_id
+    assert_equal 1, repo.find_by_merchant_id(23).id
+    assert_equal 4, repo.find_by_merchant_id(116).id
   end
 
   def test_find_a_sample_result_by_status
-    sample_result = @result.find_by_status("shipped")
-    assert_equal "shipped", sample_result.status
+    assert_equal 4, repo.find_by_status("not shipped").id
   end
 
   def test_find_a_sample_result_by_created_at
-    sample_result = @result.find_by_created_at("2012-03-07 19:54:10 UTC")
-    assert_equal 5, sample_result.id
-    assert_equal 1, sample_result.customer_id
+    assert_equal 4, repo.find_by_created_at(Date.parse("Wed, 28 Apr 15")).id
   end
 
   def test_find_a_sampe_result_by_updated_at
-    sample_result = @result.find_by_updated_at("2012-03-07 12:54:10 UTC")
-    assert_equal 9, sample_result.id
-    assert_equal 2, sample_result.customer_id
-  end
-
-  def test_find_all_by_id_returns_array_of_all_objects_with_that_id
-    assert_equal [], @result.find_all_by_id(135581778)
-    sample_result = @result.find_all_by_id(10)
-    assert sample_result.class == Array
-    assert sample_result.length == 1
-    assert sample_result[0].class == Invoice
-    assert sample_result[0].id == 10
+    assert_equal 4, repo.find_by_updated_at(Date.parse("Wed, 28 Apr 15")).id
   end
 
   def test_find_all_by_customer_id_returns_array_of_all_objects_with_that_customer_id
-    assert_equal [], @result.find_all_by_customer_id(10)
-    sample_result = @result.find_all_by_customer_id(4)
-    assert sample_result.class == Array
-    assert_equal 7, sample_result.length
-    assert sample_result.all? {|item| item.class == Invoice}
-    assert sample_result.all? {|item| item.customer_id == 4}
+    assert_equal 2, repo.find_all_by_customer_id(11).count
   end
 
   def test_find_all_by_merchant_id_returns_array_of_all_objects_with_that_merchant_id
-    #Aren't those supposed to be near-unique, though?
-    assert_equal [], @result.find_all_by_merchant_id(150)
-    sample_result = @result.find_all_by_merchant_id(83)
-    assert sample_result.class == Array
-    assert_equal 4, sample_result.length
-    assert sample_result.all? {|item| item.class == Invoice}
-    assert sample_result.all? {|item| item.merchant_id == 83}
+    assert_equal 2, repo.find_all_by_merchant_id(23).count
   end
 
   def test_find_all_by_status_returns_array_of_all_objects_with_that_status
-    assert_equal [], @result.find_all_by_status("not shipped")
-    sample_result = @result.find_all_by_status("shipped")
-    assert sample_result.class == Array
-    assert_equal 31, sample_result.length
-    assert sample_result.all? { |item| item.class == Invoice}
-    assert sample_result.all? { |item| item.status == "shipped"}
+    assert_equal 2, repo.find_all_by_status("shipped").count
   end
 
   def test_find_all_by_created_at_returns_array_of_all_objects_created_then
-    assert_equal [], @result.find_all_by_created_at(Date.strptime("2075-04-21 14:53:59 UTC", '%F'))
-    sample_result = @result.find_all_by_created_at(Date.strptime("2012-03-12 03:54:10 UTC", '%F'))
-    assert_equal 6, sample_result.length
+    assert_equal 2, repo.find_all_by_created_at(Date.parse("Wed, 29 Apr 15")).count
   end
 
   def test_find_all_by_updated_at_returns_array_of_all_objects_updated_then
-    assert_equal [], @result.find_all_by_updated_at("2075-04-21 14:53:59 UTC")
-    sample_result = @result.find_all_by_updated_at("2012-03-16 13:54:11 UTC")
-    assert sample_result.class == Array
-    assert_equal 4, sample_result.length
-    assert sample_result.all? { |item| item.class == Invoice}
-    assert sample_result.all? { |item| item.updated_at == "2012-03-16 13:54:11 UTC"}
+    assert_equal 2, repo.find_all_by_updated_at(Date.parse("Wed, 29 Apr 15")).count
   end
 end
