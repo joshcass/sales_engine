@@ -19,7 +19,7 @@ class InvoiceRepository
     @sales_engine = sales_engine
   end
 
-  def build_groups
+  def build_hash_tables
     @id = invoices.group_by{|invoice| invoice.id}
     @customer_id = invoices.group_by{|invoice| invoice.customer_id}
     @merchant_id = invoices.group_by{|invoice| invoice.merchant_id}
@@ -108,7 +108,7 @@ class InvoiceRepository
         status: invoice_info[:status],
         created_at: Time.now.to_date,
         updated_at: Time.now.to_date}, self)
-    build_groups
+    build_hash_tables
     find_by_id(new_id)
   end
 
@@ -152,8 +152,8 @@ class InvoiceRepository
 
   private
   def parse_invoices(invoice_hashes, repo)
-    invoice_hashes.map do |attributes_hash|
-      Invoice.new attributes_hash, repo
+    invoice_hashes.map do |atrributes_hash|
+      Invoice.new atrributes_hash, repo
     end
   end
 end

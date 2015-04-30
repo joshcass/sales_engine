@@ -92,8 +92,8 @@ class CustomerRepository
 
   private
   def parse_customers(customer_hashes, repo)
-    customer_hashes.map do |invoice_attributes|
-      Customer.new(invoice_attributes, repo)
+    customer_hashes.map do |attributes_hash|
+      Customer.new(attributes_hash, repo)
     end
   end
 end

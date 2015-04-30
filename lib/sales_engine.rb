@@ -32,20 +32,16 @@ class SalesEngine
                                  .new(parse('items.csv'), self)
     @merchant_repository     = MerchantRepository
                                  .new(parse('merchants.csv'), self)
-    group_builders
+    build_hash_tables
   end
 
-  def group_builders
+  def build_hash_tables
     transaction_repository.build_hash_tables
     invoice_item_repository.build_hash_tables
     customer_repository.build_hash_tables
     item_repository.build_hash_tables
     merchant_repository.build_hash_tables
     invoice_repository.build_hash_tables
-  end
-
-  def invoice_status_group_builder
-    invoice_repository.build_status_group
   end
 
   def find_invoices_by_customer_id(customer_id)

@@ -12,12 +12,12 @@ class TransactionRepository
     "#<#{self.class} #{@transactions.size} rows>"
   end
 
-  def initialize(csv_data, sales_engine)
-    @transactions = parse_transactions(csv_data, self)
+  def initialize(transaction_hashes, sales_engine)
+    @transactions = parse_transactions(transaction_hashes, self)
     @sales_engine = sales_engine
   end
 
-  def build_groups
+  def build_hash_tables
     @id = transactions.group_by{|transaction| transaction.id}
     @invoice_id = transactions.group_by{|transaction| transaction.invoice_id}
     @result = transactions.group_by{|transaction| transaction.result}
@@ -105,12 +105,14 @@ class TransactionRepository
         result: cc_info[:result],
         created_at: Time.now.to_date,
         updated_at: Time.now.to_date}, self)
-    build_groups
+    build_hash_tables
     find_by_id(new_id)
   end
 
   private
-  def parse_transactions(csv_data, repo)
-    csv_data.map { |transaction| Transaction.new(transaction, repo) }
+  def parse_transactions(transaction_hashes, repo)
+    transaction_hashes.map do |attributes_hash|
+      Transaction.new(attributes_hash, repo)
+    end
   end
 end

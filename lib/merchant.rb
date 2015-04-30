@@ -75,6 +75,4 @@ class Merchant
   def customers_with_pending_invoices
     pending_invoices.map { |invoice| invoice.customer}
   end
-
-
 end
