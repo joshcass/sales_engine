@@ -42,7 +42,8 @@ class ItemRepositoryTest < Minitest::Test
   def test_find_by_description_returns_one_object_with_a_given_description
     repo = repo_for({id: 1, description: "the best item ever"},
                     {id: 4, description: "the worst item ever"})
-    assert_equal 1, repo.find_by_description("the best item ever").id
+    assert_equal 1,   repo.find_by_description("the best item ever").id
+    assert_equal nil, repo.find_by_description("an average item").id
   end
 
   def test_find_by_unit_price_returns_one_object_with_that_price
@@ -69,55 +70,48 @@ class ItemRepositoryTest < Minitest::Test
   def test_find_by_updated_at_returns_one_object_updated_then
     repo = repo_for({id: 1, created_at: Date.parse("Wed, 29 Apr 15")},
                     {id: 4, created_at: Date.parse("Tue, 28 Apr 15")})
-    assert_equal 5, @test_item_repo.find_by_updated_at(Date.parse("Wed, 29 Apr 15")).id
+    assert_equal 5,   repo.find_by_updated_at(Date.parse("Wed, 29 Apr 15")).id
+    assert_equal nil, repo.find_by_updated_at(Date.parse("Mon, 27 Apr 15")).id
   end
 
   def test_find_all_by_name_returns_array_of_all_objects_with_that_name
-    repo = repo_for({id: 1, created_at: Date.parse("Wed, 29 Apr 15")},
-                    {id: 4, created_at: Date.parse("Tue, 28 Apr 15")})
-    assert_equal [], @test_item_repo.find_all_by_name("Pearl Pillar")
-    sample_result = @test_item_repo.find_all_by_name("Swordbreaker")
-    assert sample_result.class == Array
-    assert_equal 2, sample_result.size
-    assert sample_result[0].class == Item
-    assert sample_result.all? {|item| "Swordbreaker" == item.name}
+    repo = repo_for({name: "Swordbreaker"},
+                    {name: "Oathbreaker"},
+                    {name: "Swordbreaker")
+    assert_equal [], repo.find_all_by_name("Pearl Pillar")
+    assert_equal 2,  repo.find_all_by_name("Swordbreaker").length
   end
 
   def test_find_all_by_unit_price_returns_array_of_all_objects_with_that_price
-    assert_equal [], @test_item_repo.find_all_by_unit_price(0)
-    sample_result = @test_item_repo.find_all_by_unit_price(BigDecimal("1500.0"))
-    assert sample_result.class == Array
-    assert_equal 1, sample_result.length
-    assert sample_result[0].class == Item
-    assert sample_result[0].unit_price == BigDecimal("1500.0")
+    repo = repo_for({unit_price: BigDecimal("1499.99")},
+                    {unit_price: BigDecimal("1.99")})
+                    {unit_price: BigDecimal("1499.99")
+    assert_equal [],repo.find_all_by_unit_price(0)
+    assert_equal 2, repo.find_all_by_unit_price(BigDecimal("1499.99")).length
   end
 
   def test_find_all_by_description_returns_array_of_all_objects_with_that_description
-    #I sure *hope* those are unique, though
-    assert_equal [], @test_item_repo.find_all_by_description("Apparently shovels come in weapon-grade quality; this one could be used pretty well as an axe.")
-    sample_result = @test_item_repo.find_all_by_description("Legendary tome that could contain all the world's knowledge.")
-    assert sample_result.class == Array
-    assert_equal 1, sample_result.length
-    assert sample_result[0].class == Item
-    assert sample_result[0].description == "Legendary tome that could contain all the world's knowledge."
+    repo = repo_for({description: "the best item ever"},
+                    {description: "the worst item ever"},
+                    {description: "the best item ever"})
+    assert_equal 2,   repo.find_all_by_description("the best item ever").length
+    assert_equal nil, repo.find_all_by_description("an average item").length
   end
 
   def test_find_all_by_merchant_id_returns_array_of_all_objects_with_that_merchant_id
-    assert_equal [], @test_item_repo.find_all_by_merchant_id(5430987)
-    sample_result = @test_item_repo.find_all_by_merchant_id(1)
-    assert sample_result.class == Array
-    assert_equal 2, sample_result.length
-    assert sample_result.all? { |item| item.class == Item}
-    assert sample_result.all? { |item| item.merchant_id == 1}
+    repo = repo_for({id: 1, merchant_id: 12},
+                    {id: 4, merchant_id: 5},
+                    {id: 3, merchant_id: 12},)
+    assert_equal 2,   repo.find_all_by_merchant_id(12).length
+    assert_equal nil, repo.find_all_by_merchant_id(99).length
   end
 
   def test_find_all_by_created_at_returns_array_of_all_objects_created_then
-    assert_equal [], @test_item_repo.find_all_by_created_at("2075-04-21 14:53:59 UTC")
-    sample_result = @test_item_repo.find_all_by_created_at("2015-04-21 14:53:59 UTC")
-    assert sample_result.class == Array
-    assert_equal 2, sample_result.length
-    assert sample_result.all? { |item| item.class == Item}
-    assert sample_result.all? { |item| item.created_at == "2015-04-21 14:53:59 UTC"}
+    repo = repo_for({id: 1, created_at: Date.parse("Wed, 29 Apr 15")},
+                    {id: 4, created_at: Date.parse("Tue, 28 Apr 15")},
+                    {id: 3, created_at: Date.parse("Wed, 29 Apr 15"))
+    assert_equal 1,   repo.find_by_created_at(Date.parse("Wed, 29 Apr 15")).id
+    assert_equal nil, repo.find_by_created_at(Date.parse("Mon, 27 Apr 15")).id
   end
 
   def test_find_all_by_updated_at_returns_array_of_all_objects_updated_then
