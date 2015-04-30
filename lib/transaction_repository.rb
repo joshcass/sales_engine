@@ -18,10 +18,10 @@ class TransactionRepository
   end
 
   def build_hash_tables
-    @id = transactions.group_by{|transaction| transaction.id}
-    @invoice_id = transactions.group_by{|transaction| transaction.invoice_id}
-    @result = transactions.group_by{|transaction| transaction.result}
-    @created_at = transactions.group_by{|transaction| transaction.created_at}
+    @id = transactions.group_by{ |transaction| transaction.id }
+    @invoice_id = transactions.group_by{ |transaction| transaction.invoice_id }
+    @result = transactions.group_by{ |transaction| transaction.result }
+    @created_at = transactions.group_by{ |transaction| transaction.created_at }
   end
 
   def all
@@ -40,15 +40,15 @@ class TransactionRepository
     invoice_id[search_id].first
   end
 
-  def find_by_credit_card_number(credit_card_number)
+  def find_by_credit_card_number(search_cc_number)
     transactions.detect do |transaction|
-      transaction.credit_card_number == credit_card_number
+      transaction.credit_card_number == search_cc_number
     end
   end
 
-  def find_by_credit_card_expiration_date(credit_card_expiration_date)
+  def find_by_credit_card_expiration_date(search_cc_expiry_date)
     transactions.detect do |transaction|
-      transaction.credit_card_expiration_date == credit_card_expiration_date
+      transaction.credit_card_expiration_date == search_cc_expiry_date
     end
   end
 
@@ -56,27 +56,29 @@ class TransactionRepository
     result[search_result].first
   end
 
-  def find_by_created_at(created)
-    created_at[created].first
+  def find_by_created_at(search_created)
+    created_at[search_created].first
   end
 
-  def find_by_updated_at(updated)
-    transactions.detect { |transaction| transaction.updated_at == updated }
+  def find_by_updated_at(search_updated)
+    transactions.detect do |transaction|
+      transaction.updated_at == search_updated
+    end
   end
 
   def find_all_by_invoice_id(search_id)
     invoice_id[search_id]
   end
 
-  def find_all_by_credit_card_number(credit_card_number)
+  def find_all_by_credit_card_number(search_cc_number)
     transactions.select do |transaction|
-      transaction.credit_card_number == credit_card_number
+      transaction.credit_card_number == search_cc_number
     end
   end
 
-  def find_all_by_credit_card_expiration_date(credit_card_expiration_date)
+  def find_all_by_credit_card_expiration_date(search_cc_expiry_date)
     transactions.select do |transaction|
-      transaction.credit_card_expiration_date == credit_card_expiration_date
+      transaction.credit_card_expiration_date == search_cc_expiry_date
     end
   end
 
@@ -84,12 +86,14 @@ class TransactionRepository
     result[search_result]
   end
 
-  def find_all_by_created_at(created)
-    created_at[created]
+  def find_all_by_created_at(search_created)
+    created_at[search_created]
   end
 
-  def find_all_by_updated_at(updated)
-    transactions.select { |transaction| transaction.updated_at == updated }
+  def find_all_by_updated_at(search_updated)
+    transactions.select do |transaction|
+      transaction.updated_at == search_updated
+    end
   end
 
   def find_invoice(invoice_id)

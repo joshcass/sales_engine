@@ -13,7 +13,7 @@ class CustomerRepository
   end
 
   def build_hash_tables
-    @id = customers.group_by{|customer| customer.id}
+    @id = customers.group_by{ |customer| customer.id }
   end
 
   def all

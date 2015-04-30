@@ -21,12 +21,12 @@ class InvoiceItemRepository
   end
 
   def build_hash_tables
-    @id = invoice_items.group_by{|i_item| i_item.id}
-    @item_id = invoice_items.group_by{|i_item| i_item.item_id }
-    @invoice_id = invoice_items.group_by{|i_item| i_item.invoice_id}
-    @quantity = invoice_items.group_by{|i_item| i_item.quantity}
-    @unit_price = invoice_items.group_by{|i_item| i_item.unit_price}
-    @created_at = invoice_items.group_by{|i_item| i_item.created_at}
+    @id = invoice_items.group_by{ |i_item| i_item.id }
+    @item_id = invoice_items.group_by{ |i_item| i_item.item_id }
+    @invoice_id = invoice_items.group_by{ |i_item| i_item.invoice_id }
+    @quantity = invoice_items.group_by{ |i_item| i_item.quantity }
+    @unit_price = invoice_items.group_by{ |i_item| i_item.unit_price }
+    @created_at = invoice_items.group_by{ |i_item| i_item.created_at }
   end
 
   def all
@@ -115,6 +115,19 @@ class InvoiceItemRepository
     end
   end
 
+  def new_invoice_items(invoice_id, items)
+    group_items_by_quantity(items).each do |item, quantity|
+      add_invoice_item(invoice_id, item, quantity.length)
+    end
+  end
+
+  private
+  def parse_invoice_items(invoice_item_hashes, repo)
+    invoice_item_hashes.map do |attributes_hash|
+      InvoiceItem.new(attributes_hash, repo)
+    end
+  end
+
   def group_items_by_quantity(items)
     items.group_by { |item| item }
   end
@@ -131,16 +144,4 @@ class InvoiceItemRepository
     build_hash_tables
   end
 
-  def new_invoice_items(invoice_id, items)
-    group_items_by_quantity(items).each do |item, quantity|
-      add_invoice_item(invoice_id, item, quantity.length)
-    end
-  end
-
-  private
-  def parse_invoice_items(invoice_item_hashes, repo)
-    invoice_item_hashes.map do |attributes_hash|
-      InvoiceItem.new(attributes_hash, repo)
-    end
-  end
 end
