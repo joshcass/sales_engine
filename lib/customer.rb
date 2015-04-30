@@ -28,11 +28,7 @@ class Customer
 
   def invoices
     invs = parent.find_invoices(id)
-    if invs
-      invs
-    else
-      []
-    end
+    invs ? invs : []
   end
 
   def transactions

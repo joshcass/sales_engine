@@ -1,82 +1,55 @@
 gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'date'
 require './lib/merchant_repository'
 
 class MerchantRepositoryTest < Minitest::Test
 
-  def setup
-    @result = MerchantRepository.new(SmarterCSV.process('./test_data/merchants.csv'), self)
-  end
-
-  def test_can_initialize_with_a_data_file
-    assert @result.is_a?MerchantRepository
+  def repo
+    hashes = {id: 1, name: "Harry's Haberdasher", created_at: "2015-04-29", updated_at: "2015-04-29"},
+             {id: 4, name: "Bob's Books", created_at: "2015-04-28", updated_at: "2015-04-28"},
+             {id: 8, name: "Harry's Haberdasher", created_at: "2015-04-29", updated_at: "2015-04-29"}
+    test_repo = MerchantRepository.new(hashes, self)
+    test_repo.build_hash_tables
+    test_repo
   end
 
   def test_all_returns_all_instances
-    assert_equal 32, @result.merchants.count
+    assert_equal 3, repo.all.count
   end
 
   def test_random_returns_a_random_sample_from_the_repository
-    assert @result.merchants.include?@result.random
+    sample = repo.random
+    assert repo.all.any?{|item| item.id == sample.id}
   end
 
   def test_find_a_merchant_by_id
-    merchant = @result.find_by_id(1)
-    assert_equal "Schroeder-Jerde", merchant.name
+    assert_equal 4, repo.find_by_id(4).id
+    assert_equal 1, repo.find_by_id(1).id
   end
 
   def test_find_a_merchant_by_name
-    merchant = @result.find_by_name("Schroeder-Jerde")
-    assert_equal 1, merchant.id
+    assert_equal 4, repo.find_by_name("Bob's Books").id
   end
 
   def test_find_a_merchant_by_created_at
-    merchant = @result.find_by_created_at("2012-03-27 14:53:59 UTC")
-    assert_equal 1, merchant.id
-    assert_equal "Schroeder-Jerde", merchant.name
+    assert_equal 4, repo.find_by_created_at(Date.parse("Wed, 28 Apr 15")).id
   end
 
   def test_find_by_updated_at
-    merchant = @result.find_by_updated_at("2012-03-27 14:53:59 UTC")
-    assert_equal 1, merchant.id
-    assert_equal "Schroeder-Jerde", merchant.name
-  end
-
-  def test_find_all_by_id_returns_array_of_all_objects_with_that_id
-    #Aren't those supposed to be unique, though?
-    assert_equal [], @result.find_all_by_id(50)
-    sample_result = @result.find_all_by_id(28)
-    assert sample_result.class == Array
-    assert_equal 1, sample_result.length
-    assert sample_result[0].class == Merchant
-    assert sample_result[0].id == 28
+    assert_equal 4, repo.find_by_updated_at(Date.parse("Wed, 28 Apr 15")).id
   end
 
   def test_find_all_by_name_returns_array_of_all_objects_with_that_name
-    assert_equal [], @result.find_all_by_name("bob's used cars")
-    sample_result = @result.find_all_by_name("Schulist, Wilkinson and Leannon")
-    assert sample_result.class == Array
-    assert_equal 1, sample_result.length
-    assert sample_result.all? {|merchant| merchant.class == Merchant}
-    assert sample_result.all? {|merchant| merchant.name == "Schulist, Wilkinson and Leannon"}
+    assert_equal 2, repo.find_all_by_name("Harry's Haberdasher").count
   end
 
   def test_find_all_by_created_at_returns_array_of_all_objects_created_then
-    assert_equal [], @result.find_all_by_created_at("2075-04-21 14:53:59 UTC")
-    sample_result = @result.find_all_by_created_at("2012-03-27 14:54:00 UTC")
-    assert sample_result.class == Array
-    assert_equal 12, sample_result.length
-    assert sample_result.all? {|merchant| merchant.class == Merchant}
-    assert sample_result.all? {|merchant| merchant.created_at == "2012-03-27 14:54:00 UTC"}
+    assert_equal 2, repo.find_all_by_created_at(Date.parse("Wed, 29 Apr 15")).count
   end
 
   def test_find_all_by_updated_at_returns_array_of_all_objects_updated_then
-    assert_equal [], @result.find_all_by_updated_at("2075-04-21 14:53:59 UTC")
-    sample_result = @result.find_all_by_updated_at("2012-03-27 14:54:01 UTC")
-    assert sample_result.class == Array
-    assert_equal 11, sample_result.length
-    assert sample_result.all? {|merchant| merchant.class == Merchant}
-    assert sample_result.all? {|merchant| merchant.updated_at == "2012-03-27 14:54:01 UTC"}
+    assert_equal 2, repo.find_all_by_updated_at(Date.parse("Wed, 29 Apr 15")).count
   end
 end

@@ -42,6 +42,7 @@ class SalesEngine
     item_repository.build_hash_tables
     merchant_repository.build_hash_tables
     invoice_repository.build_hash_tables
+    invoice_repository.build_status_hash_table
   end
 
   def find_invoices_by_customer_id(customer_id)
