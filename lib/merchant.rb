@@ -37,18 +37,8 @@ class Merchant
     invs ? invs : []
   end
 
-  def successful_invoices(date = nil)
-    invoices(date).reject do |invoice|
-      invoice.failed?
-    end
-  end
-
   def pending_invoices
     invoices.select { |invoice| invoice.failed? }
-  end
-
-  def successful_invoice_items(date = nil)
-    parent.find_invoice_items(successful_invoices(date))
   end
 
   def revenue(range_of_dates = nil)
@@ -75,5 +65,16 @@ class Merchant
 
   def customers_with_pending_invoices
     pending_invoices.map { |invoice| invoice.customer}
+  end
+
+  private
+  def successful_invoices(date = nil)
+    invoices(date).reject do |invoice|
+      invoice.failed?
+    end
+  end
+
+  def successful_invoice_items(date = nil)
+    parent.find_invoice_items(successful_invoices(date))
   end
 end

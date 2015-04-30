@@ -35,16 +35,6 @@ class SalesEngine
     build_hash_tables
   end
 
-  def build_hash_tables
-    transaction_repository.build_hash_tables
-    invoice_item_repository.build_hash_tables
-    customer_repository.build_hash_tables
-    item_repository.build_hash_tables
-    merchant_repository.build_hash_tables
-    invoice_repository.build_hash_tables
-    invoice_repository.build_status_hash_table
-  end
-
   def find_invoices_by_customer_id(customer_id)
     invoice_repository.find_all_by_customer_id(customer_id)
   end
@@ -114,5 +104,15 @@ class SalesEngine
   private
   def parse(filename)
     SmarterCSV.process("#{directory}/#{filename}")
+  end
+
+  def build_hash_tables
+    transaction_repository.build_hash_tables
+    invoice_item_repository.build_hash_tables
+    customer_repository.build_hash_tables
+    item_repository.build_hash_tables
+    merchant_repository.build_hash_tables
+    invoice_repository.build_hash_tables
+    invoice_repository.build_status_hash_table
   end
 end

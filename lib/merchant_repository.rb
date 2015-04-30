@@ -28,32 +28,32 @@ class MerchantRepository
     id[search_id].first
   end
 
-  def find_by_name(name)
-    merchants.detect { |merchant| merchant.name == name }
+  def find_by_name(search_name)
+    merchants.detect { |merchant| merchant.name == search_name }
   end
 
-  def find_by_created_at(created)
-    merchants.detect { |merchant| merchant.created_at == created }
+  def find_by_created_at(search_created)
+    merchants.detect { |merchant| merchant.created_at == search_created }
   end
 
-  def find_by_updated_at(updated)
-    merchants.detect { |merchant| merchant.updated_at == updated }
+  def find_by_updated_at(search_updated)
+    merchants.detect { |merchant| merchant.updated_at == search_updated }
   end
 
-  def find_all_by_name(name)
-    merchants.select { |merchant| merchant.name == name }
+  def find_all_by_name(search_name)
+    merchants.select { |merchant| merchant.name == search_name }
   end
 
-  def find_all_by_created_at(created)
-    merchants.select { |merchant| merchant.created_at == created }
+  def find_all_by_created_at(search_created)
+    merchants.select { |merchant| merchant.created_at == search_created }
   end
 
-  def find_all_by_updated_at(updated)
-    merchants.select { |merchant| merchant.updated_at == updated }
+  def find_all_by_updated_at(search_updated)
+    merchants.select { |merchant| merchant.updated_at == search_updated }
   end
 
-  def find_invoices(merchant_id)
-    sales_engine.find_all_invoices_by_merchant_id(merchant_id)
+  def find_invoices(search_m_id)
+    sales_engine.find_all_invoices_by_merchant_id(search_m_id)
   end
 
   def find_items(merchant_id)
@@ -91,6 +91,13 @@ class MerchantRepository
       sort_by { |date| revenue(date) }.reverse[0...top_n]
   end
 
+  private
+  def parse_merchants(merchant_hashes, repo)
+    merchant_hashes.map do |attributes_hash|
+      Merchant.new(attributes_hash, repo)
+    end
+  end
+
   def dates_active
     merchants.map do |merchant|
       find_invoices(merchant.id).map do |invoice|
@@ -99,10 +106,4 @@ class MerchantRepository
     end.flatten
   end
 
-  private
-  def parse_merchants(merchant_hashes, repo)
-    merchant_hashes.map do |attributes_hash|
-      Merchant.new(attributes_hash, repo)
-    end
-  end
 end

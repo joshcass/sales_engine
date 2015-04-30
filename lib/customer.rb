@@ -39,16 +39,8 @@ class Customer
     invoices.flat_map { |invoice| invoice.merchant }
   end
 
-  def successful_invoices
-    invoices.reject { |invoice| invoice.failed? }
-  end
-
   def pending_invoices
     invoices.select { |invoice| invoice.all_failed? }
-  end
-
-  def successful_invoice_items
-    parent.find_invoice_items(successful_invoices)
   end
 
   def items_purchased
@@ -75,5 +67,14 @@ class Customer
       end.max_by do |merchant, quantity|
         quantity.length
       end.first
+  end
+
+  private
+  def successful_invoice_items
+    parent.find_invoice_items(successful_invoices)
+  end
+
+  def successful_invoices
+    invoices.reject { |invoice| invoice.failed? }
   end
 end

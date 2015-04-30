@@ -17,9 +17,9 @@ class ItemRepository
   end
 
   def build_hash_tables
-    @id = items.group_by{|item| item.id}
-    @unit_price = items.group_by{|item| item.unit_price}
-    @merchant_id = items.group_by{|item| item.merchant_id}
+    @id = items.group_by{ |item| item.id }
+    @unit_price = items.group_by{ |item| item.unit_price }
+    @merchant_id = items.group_by{ |item| item.merchant_id }
   end
 
   def all
@@ -38,8 +38,8 @@ class ItemRepository
     items.detect { |item| search_name.downcase == item.name.downcase }
   end
 
-  def find_all_by_name(name)
-    items.select {|item| item.name == name}
+  def find_all_by_name(search_name)
+    items.select { |item| item.name == search_name }
   end
 
   def find_by_unit_price(search_price)
